@@ -1,0 +1,15 @@
+# Attribution System
+
+Boost's built-in attribution tracking and transaction-based indexer streamlines the allocation and analysis of incentives by identifying the origin of each Boost Recipient.&#x20;
+
+Here’s a breakdown of how attribution tracking works on Boost:
+
+1. Boost Issuer creates and funds a smart contract with rewards.
+2. Boost Recipients find the incentive offer on a Boost Client app and execute the onchain action on the native protocol platform.
+3. The Boost transaction-based indexer finds the transaction hash and verifies the onchain action, enabling the smart contract to release the token rewards.
+4. A portion of rewards and fees are distributed among participants and the transaction event log is stored publicly onchain where anyone can verify, audit and analyze.  [View Boost Protocol’s official Dune Dashboard](https://dune.com/rabbithole/quest-protocol-dashboard) as an example of the type of data that can be measured and analyzed.
+
+By having attribution capabilities embedded into the protocol, it makes it easy to:
+
+* Incentivize anyone to refer boosts and get paid
+* Track and measure the impact of your incentive offers

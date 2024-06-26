@@ -1,0 +1,79 @@
+---
+description: How to sign in to Boost using Sign-In with Ethereum
+---
+
+# Sign in to Boost
+
+An authorization token from the Boost API is required for certain protected routes, such as the [create boost endpoint](create-a-boost.md#submitting-the-create-boost-request). This can be acquired with an [ERC-4361 SIWE message](https://eips.ethereum.org/EIPS/eip-4361) and signature from the end user, posted to the [/auth/login](https://api.boost.xyz/docs#tag/auth/paths/\~1auth\~1login/post) endpoint.
+
+### Generating a SIWE message
+
+While any properly formatted SIWE message with the statement `'Sign in with Ethereum.'` and a nonce value from the [/auth/nonce](https://api.boost.xyz/docs#tag/auth/paths/\~1auth\~1nonce/get) endpoint should suffice, we recommend [the siwe library](https://www.npmjs.com/package/siwe) for JavaScript applications, to ensure all required fields are present.
+
+Here is an example of SIWE message generation using [the siwe library](https://www.npmjs.com/package/siwe):&#x20;
+
+```typescript
+import { SiweMessage } from 'siwe';
+
+const boostNonce = await fetch('https://boost.xyz/auth/nonce').then(response => {
+  return response.text();
+});
+
+const siweMessage = new SiweMessage({
+  version: '1',
+  domain: window.location.host, // can also be 'boost.xyz'
+  uri: window.location.origin,
+  statement: 'Sign in with Ethereum.',
+  nonce: boostNonce,
+  address: '0xe44588f9b431ae714Ff16BB3310a2Ed6D9FE3104',
+  chainId: 8453,
+});
+
+const formattedSiweMessage = siweMessage.prepareMessage();
+```
+
+### Getting an access token
+
+After generating the SIWE message and requesting a signature of the message from the end user's wallet client, send the message and signature in a POST request to the [/auth/login](https://api.boost.xyz/docs#tag/auth/paths/\~1auth\~1login/post) endpoint.
+
+_Note that the `origin` and `user-agent` headers are mandatory, though they are usually included automatically by the browser._
+
+```typescript
+const loginResult = await fetch('https://api.boost.xyz/auth/login', {
+  method: 'POST',
+  headers: {
+    'Content-type': 'application/json',
+    'Origin': 'https://boost.xyz',
+    'User-agent': '...user agent string...'
+  },
+  body: {
+    message: formattedSiweMessage,
+    signature: '...signature of SIWE message from wallet client...',
+  },
+});
+
+const { accessToken, refreshToken } = await loginResult.json();
+```
+
+A successful response will return a body with an `accessToken` and a `refreshToken`:&#x20;
+
+* The `accessToken` should be passed as the authorization header value for protected routes.
+* The `refreshToken` can be stored to allow for re-authentication without another message signature when the `accessToken` expires using the [/auth/refresh](https://api.boost.xyz/docs#tag/auth/paths/\~1auth\~1refresh/post) endpoint, which returns a new access token for the given refresh token.
+
+### Getting a refreshed access token
+
+When the end user's access token expires (currently every 24 hours), the stored `refreshToken` can be used to get a new access token without requiring a new SIWE signature from the end user. Refresh tokens expire in 30 days, after which a full login with a new SIWE signature from the end user is required.
+
+```typescript
+const refreshResult = await fetch('https://api.boost.xyz/auth/refresh', {
+  method: 'POST',
+  headers: {
+    'Content-type': 'application/json',
+  },
+  body: {
+    refreshToken
+  },
+});
+
+const { accessToken } = await refreshResult.json();
+```

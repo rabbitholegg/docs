@@ -1,0 +1,103 @@
+---
+description: How to query all Boosts with various filters
+---
+
+# Fetch Boosts
+
+### Querying boosts by creator address
+
+To fetch all Boosts created by a given address, use the [GET /boosts endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1/get) with the `creatorAddresses` query parameter:
+
+```typescript
+const creatorFilteredBoostsResponse = await fetch(
+  'https://api.boost.xyz/boosts?creatorAddresses=0x242c295E88760559A6cA8E8F02bB52cdcF7f7422'
+);
+
+const { boosts } = await creatorFilteredBoostsResponse.json();
+```
+
+### Querying boosts by project
+
+To query all boosts for a specific project, use the [GET /boosts endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1/get) with the `projectIds` query parameter. Project ID values can be queried from the [GET /manager/projects](https://api.boost.xyz/docs#tag/manager/paths/\~1manager\~1projects/get) endpoint, detailed on the [Create a Boost page](create-a-boost.md#querying-approved-projects-and-tasks).
+
+The following example queries all Aerodrome and Velodrome boosts created by a set of addresses:
+
+```typescript
+const creatorAddresses = [
+  '0x242c295E88760559A6cA8E8F02bB52cdcF7f7422',
+  '0xB052c50175D635E45DBC218F179407A921B9B11B',
+  '0x9685f3751719b6b005Ee9c800fC4c612B9BF96CC',
+];
+const projectIds = [
+  'a3ef04f7-f09f-4b7d-8417-a221b7f2d072', // Velodrome project ID
+  '538b37ab-9cab-41fe-b741-b100e527faf1', // Aerodrome project ID
+];
+
+const queryParams = new URLSearchParams({
+  projectIds: projectIds.join(','),
+  creatorAddresses, // note that URLSearchParams will format arrays into CSV strings
+});
+
+const boostsByProjectResponse = await fetch(
+  'https://api.boost.xyz/boosts?' + queryParams.toString()
+);
+
+const { boosts } = await boostsByProjectResponse.json();
+```
+
+### Querying boosts by reward network and token
+
+Boosts can be filtered by reward network and by specific reward tokens using the [GET /boosts endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1/get). The Boost API uses chain IDs to reference networks, which can be viewed on [ChainList](https://chainlist.org/) or found in the tasks array of the [GET /manager/projects](https://api.boost.xyz/docs#tag/manager/paths/\~1manager\~1projects/get) response.
+
+> Note that if rewardTokenAddresses is included, the rewardTokenChainIds array must be included as a matching array of chain IDs, one for each rewardTokenAddress in the same order
+
+```typescript
+// query by reward token network
+const boostsByRewardNetwork = await fetch(
+  'https://api.boost.xyz/boosts?rewardTokenChainIds=10,42161'
+);
+const { boosts: boostsByNetwork } = await boostsByRewardNetwork.json();
+
+// query by specific reward tokens
+const rewardTokenQueryParams = new URLSearchParams({
+  rewardTokenChainIds: [8453, 8453], // both of these specific tokens are on Base
+  rewardTokenAddresses: [
+    '0x0578d8A44db98B23BF096A382e016e29a5Ce0ffe',
+    '0xc9034c3e7f58003e6ae0c8438e7c8f4598d5acaa',
+  ],
+});
+
+const boostsByRewardToken =  = await fetch(
+  'https://api.boost.xyz/boosts?' + rewardTokenQueryParams.toString()
+);
+const { boosts: boostsByToken } = await boostsByRewardToken.json();
+```
+
+### Querying boosts by action network
+
+To only query boosts with actions on a specific network or set of networks, query the [GET /boosts endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1/get) using the `actionChainIds` query param, which again can be viewed on [ChainList](https://chainlist.org/) or found in the tasks array of the [GET /manager/projects](https://api.boost.xyz/docs#tag/manager/paths/\~1manager\~1projects/get) response.
+
+```typescript
+// query by action network
+const queryParams = new URLSearchParams({
+  actionChainIds: [10, 8453],
+});
+
+const boostsByActionNetwork = await fetch(
+  'https://api.boost.xyz/boosts?' + queryParams.toString()
+);
+const { boosts } = await boostsByActionNetwork.json();
+```
+
+### Querying details for a specific boost
+
+To query detailed information about a specific boost, including metadata about the boosted action such as the image URL for an boosted NFT mint, as well as current boost completion stats like the list of participating addresses that have claimed the boost, use the [boost details endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1%7BboostId%7D/get):
+
+```typescript
+const boostId = 'b5657a78-682d-41ee-984d-dd4729548a63'; // can be any valid boost ID
+const boostDetailsResponse = await fetch(
+  'https://api.boost.xyz/boosts/' + boostId
+);
+
+const { metadata, participants } = await boostDetailsResponse.json();
+```
