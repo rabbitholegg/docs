@@ -64,8 +64,8 @@ Once the reward token and chain have been specified by the end user, your applic
 ```typescript
 const queryParams = new URLSearchParams({
   taskId: zoraMintTaskId,
-  tokenAddress: '0x4ed4e862860bed51a9570b96d89af5e1b0efefed', // reward token contract address
-  chainId: 8453, // reward token chain ID
+  rewardTokenAddress: '0x4ed4e862860bed51a9570b96d89af5e1b0efefed',
+  rewardChainId: 8453,
 });
 const estimateResult = await fetch(
   'https://api.boost.xyz/manager/reward-estimate?' + queryParams.toString()
@@ -77,6 +77,28 @@ const { low, mid, high } = await estimateResult.json();
 The three individual reward estimates returned, `low`, `mid`, and `high`, are based on previous boost performance and current gas costs. Choosing the `high` value is more likely to result in a higher number of boost completions.
 
 > Note that the end result of any boost may still be profit or loss for the boost deployer or boost reward claimers regardless of which if any reward estimate is chosen, depending on the specific action's costs and fees, as well as on the price of gas at the time of boost completion.
+
+#### Getting a mint reward amount estimate (optional)
+
+For boosted mints specifically, the [/manager/mint-reward-estimate](https://api.boost.xyz/docs#tag/manager/paths/\~1manager\~1mint-reward-estimate/get) endpoint provides a more specific reward amount estimate, which takes into account project fees and other mint-specific costs.
+
+```typescript
+const queryParams = new URLSearchParams({
+  taskId: zoraMintTaskId,
+  rewardTokenAddress: '0x4ed4e862860bed51a9570b96d89af5e1b0efefed',
+  rewardChainId: 8453,
+  // additional parameters are specific to the boosted mint action
+  actionChainId: 8453,
+  actionContractAddress: '0xa0487df3ab7a9e7ba2fd6bb9acda217d0930217b',
+  actionTokenId: 64,
+});
+
+const estimateResult = await fetch(
+  'https://api.boost.xyz/manager/mint-reward-estimate?' + queryParams.toString()
+);
+
+const { mid } = await estimateResult.json();
+```
 
 #### Calculating the maximum participant limit
 
