@@ -1,0 +1,180 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Boost Docs",
+  "logo": {
+    "dark": "/assets/boost-icon.svg",
+    "light": "/assets/boost-icon.svg"
+  },
+  "favicon": "/assets/boost-icon.svg",
+  "colors": {
+    "primary": "#202042",
+    "light": "#43e661",
+    "dark": "#202042",
+    "anchors": {
+      "from": "#202042",
+      "to": "#43e661"
+    }
+  },
+  "openapi": "https://api-staging.boost.xyz/openapi.json",
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "mailto:support@boost.xyz"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "boost.xyz",
+    "url": "https://boost.xyz"
+  },
+  "tabs": [
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Old API Reference",
+      "icon": "book-open-cover",
+      "url": "https://api.boost.xyz/docs"
+    },
+    {
+      "name": "Blog",
+      "icon": "newspaper",
+      "url": "https://blog.boost.xyz"
+    },
+    {
+      "name": "openapi.json",
+      "icon": "asterisk",
+      "url": "https://api.boost.xyz/openapi.json"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Get Started",
+      "pages": [
+        "examples/introduction",
+        "examples/quickstart",
+        "examples/development"
+      ]
+    },
+    {
+      "group": "Essentials",
+      "pages": [
+        "examples/markdown",
+        "examples/code",
+        "examples/images",
+        "examples/settings",
+        "examples/navigation",
+        "examples/reusable-snippets"
+      ]
+    },
+    {
+      "group": "auth",
+      "pages": [
+        "api-reference/auth/nonce",
+        "api-reference/auth/login",
+        "api-reference/auth/refresh",
+        "api-reference/auth/logout",
+        "api-reference/auth/session"
+      ]
+    },
+    {
+      "group": "manager",
+      "pages": [
+        "api-reference/manager/reward-estimates",
+        "api-reference/manager/mint-reward-estimates",
+        "api-reference/manager/computed-name",
+        "api-reference/manager/projects",
+        "api-reference/manager/registry",
+        "api-reference/manager/recent-completions",
+        "api-reference/manager/creator-summary"
+      ]
+    },
+    {
+      "group": "metrics",
+      "pages": [
+        "api-reference/metrics/boost-protocol-metrics-by-boost",
+        "api-reference/metrics/boost-protocol-metrics",
+        "api-reference/metrics/boost-stats",
+        "api-reference/metrics/boost-leaderboard",
+        "api-reference/metrics/user-rank",
+        "api-reference/metrics/recent-activity",
+        "api-reference/metrics/trending-quests",
+        "api-reference/metrics/reward-tokens",
+        "api-reference/metrics/supported-tokens",
+        "api-reference/metrics/token-details"
+      ]
+    },
+    {
+      "group": "accesslists",
+      "pages": [
+        "api-reference/accesslists/accesslists-by-user-id",
+        "api-reference/accesslists/update-accesslist",
+        "api-reference/accesslists/create-accesslist",
+        "api-reference/accesslists/archive-accesslist",
+        "api-reference/accesslists/accesslist-status",
+        "api-reference/accesslists/recommended-accesslists",
+        "api-reference/accesslists/create-accesslist-via-boost-id",
+        "api-reference/accesslists/process-access-list"
+      ]
+    },
+    {
+      "group": "boosts",
+      "pages": [
+        "api-reference/boosts/participants-by-boost",
+        "api-reference/boosts/participants-search",
+        "api-reference/boosts/download-participants",
+        "api-reference/boosts/submit-issue",
+        "api-reference/boosts/signature",
+        "api-reference/boosts/insights",
+        "api-reference/boosts/boost-status-and-tx-data",
+        "api-reference/boosts/boost-details",
+        "api-reference/boosts/boosts",
+        "api-reference/boosts/create-boost"
+      ]
+    },
+    {
+      "group": "users",
+      "pages": [
+        "api-reference/users/user-profile",
+        "api-reference/users/user-details",
+        "api-reference/users/update-profile",
+        "api-reference/users/eth-earned-by-user",
+        "api-reference/users/update-notification-preferences",
+        "api-reference/users/farcaster-profile",
+        "api-reference/users/farcaster-verification-status",
+        "api-reference/users/add-neynar-connection",
+        "api-reference/users/remove-neynar-connection",
+        "api-reference/users/add-twitter-connection",
+        "api-reference/users/delete-twitter-connection",
+        "api-reference/users/user-notifications",
+        "api-reference/users/read-notifications",
+        "api-reference/users/user-rewards",
+        "api-reference/users/protocol-rewards-summary",
+        "api-reference/users/protocol-rewards-earnings",
+        "api-reference/users/referrals-summary",
+        "api-reference/users/referrals-earnings",
+        "api-reference/users/referrals-feed",
+        "api-reference/users/total-referral-earnings",
+        "api-reference/users/referrals-activity-feed",
+        "api-reference/users/activecompleted-boosts-referrals-feed"
+      ]
+    },
+    {
+      "group": "inboxes",
+      "pages": [
+        "api-reference/inboxes/user-inboxes",
+        "api-reference/inboxes/inbox-whitelist-check",
+        "api-reference/inboxes/get-a-boost-inbox",
+        "api-reference/inboxes/create-inbox",
+        "api-reference/inboxes/delete-inbox",
+        "api-reference/inboxes/update-inbox"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "x": "https://x.com/boost_xyz",
+    "github": "https://github.com/rabbitholegg"
+  }
+}
