@@ -14,7 +14,7 @@ Only ERC20 rewards can be used on Boost at this time, but we’ll be adding supp
 
 **What are the fees or costs of deploying a boost?**
 
-Boost takes a 10% fee, which is split onchain with the Boost Guild, a high quality group of contributors, and the affiliate that drives the Boost, aligning incentives between all parties. Learn more about the [Protocol Fees](../../overview/protocol-concepts/protocol-fees.md).
+Boost takes a 10% fee, which is split onchain with the Boost Guild, a high quality group of contributors, and the affiliate that drives the Boost, aligning incentives between all parties. Learn more about the [Protocol Fees](../../protocol-concepts/protocol-fees.md).
 
 **Where does the boost appear once it deploys?**
 

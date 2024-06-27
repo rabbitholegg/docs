@@ -63,6 +63,15 @@
       ]
     },
     {
+      "group": "Protocol Concepts",
+      "pages": [
+        "protocol-concepts/attribution-system",
+        "protocol-concepts/protocol-fees",
+        "protocol-concepts/affiliate-referrals",
+        "protocol-concepts/boost-guild-treasury"
+      ]
+    },
+    {
       "group": "Get Started",
       "pages": [
         "examples/introduction",
