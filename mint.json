@@ -54,8 +54,12 @@
       "group": "Overview",
       "pages": [
         "overview/introduction",
+        "overview/what-is-a-boost",
+        "overview/how-it-works",
         "overview/boost-protocol",
-        "overview/what-is-a-boost"
+        "overview/boost-manager",
+        "overview/boost-clients",
+        "overview/boost-sdk"
       ]
     },
     {
