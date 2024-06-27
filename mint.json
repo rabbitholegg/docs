@@ -51,6 +51,14 @@
   ],
   "navigation": [
     {
+      "group": "Overview",
+      "pages": [
+        "overview/introduction",
+        "overview/boost-protocol",
+        "overview/what-is-a-boost"
+      ]
+    },
+    {
       "group": "Get Started",
       "pages": [
         "examples/introduction",
