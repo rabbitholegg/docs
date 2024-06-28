@@ -102,12 +102,12 @@ const { mid } = await estimateResult.json();
 
 #### Calculating the maximum participant limit
 
-After choosing an individual reward amount and desired total budget for the boost, the below formula can be used to calculate the participant limit. The `feePercentage` variable represents a sum of the Boost **protocol fee** **of** **1%** and optional **boost creator fees** and **affiliate referral fees** **of up to 10%** total.
+After choosing an individual reward amount and desired total budget for the boost, the below formula can be used to calculate the participant limit. The `feePercentage` variable represents a sum of the Boost **protocol fee** **of 2.5%** and **boost affiliate referral fee** **of 2.5%** .
 
 ```typescript
 // example values
 const totalDesiredBudget = 100; // quantity of reward tokens to be deposited into boost
-const feePercentage = 0.11; // includes protocol fees and creator / affiliate fees
+const feePercentage = 0.05; // includes protocol fee and affiliate referral fee
 
 // formula
 const availableBudget = totalDesiredBudget * (1 - feePercentage);
