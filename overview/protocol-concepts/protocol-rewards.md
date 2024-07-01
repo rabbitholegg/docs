@@ -6,23 +6,19 @@ By sharing revenue, all participants are incentivized to continue contributing, 
 
 ### **Fee split (per Boost completion)**
 
-Boost Issuers are required to deposit an additional 20% of the total token amount of the boost incentive being deployed. Half of this amount is distributed back to the Boost Issuer and the other half is distributed to the Boost Guild to reinvest back into Boost Protocol.
+Boost Issuers are required to deposit an additional 5% of the total token amount of the boost incentive being deployed. Half of this amount is distributed to the Boost Guild to reinvest back into Boost Protocol and up to the other half is distributed to the Boost Affiliates. Any unused fees to affiliates will go back to the Boost Issuer.
 
-| Network Participant | Reward Distributed      |
-| ------------------- | ----------------------- |
-| Boost Issuer        | 50% of the protocol fee |
-| Boost Affiliate     | 25% of the protocol fee |
-| Boost Guild         | 25% of the protocol fee |
-
-<figure><img src="../../.gitbook/assets/Untitled Slide 01.png" alt=""><figcaption></figcaption></figure>
+| Network Participant | Reward Distributed                                                     |
+| ------------------- | ---------------------------------------------------------------------- |
+| Boost Affiliate     | 50% of the protocol fee (unused amounts will go back to Boost Issuers) |
+| Boost Guild         | 50% of the protocol fee                                                |
 
 ### **Total Rewards Summary**
 
 Collectively each role earns the following rewards:
 
-| Network Participant | Reward Distributed                            |
-| ------------------- | --------------------------------------------- |
-| Boost Issuer        | 10% of the protocol fee per boost transaction |
-| Boost Affiliate     | 5% of the protocol fee per boost transaction  |
-| Boost Guild         | 5% of the protocol fee per boost transaction  |
-| Boost Recipient     | Boost reward amount                           |
+| Network Participant | Reward Distributed                                                                                   |
+| ------------------- | ---------------------------------------------------------------------------------------------------- |
+| Boost Recipient     | Boost reward amount                                                                                  |
+| Boost Affiliate     | 0% or 2.5% of the reward amount per boost transaction (unused amounts will go back to Boost Issuers) |
+| Boost Guild         | 2.5% of the reward amount per boost transaction                                                      |
