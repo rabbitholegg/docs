@@ -1,0 +1,177 @@
+---
+title: 'How to Deploy a Boost'
+---
+
+The Boost Manager app is the main interface for anyone to deploy, manage and track boosts. Within minutes, you can boost a variety of onchain activity, such as token swapping, deposits into liquidity pools, staking, delegating governance tokens, minting NFTs, or bridging assets across chains.
+
+There are 3 main parts to the deploy a boost:
+
+1. **Set your goal and target:** Configure the smart contract parameters with the onchain action you'd like incentivize.
+2. **Select your target allowlist:** Upload a CSV or choose from a list of preset audiences to create a custom-targeted allowlist (optional).
+3. **Deposit and deploy instantly**: Deposit as little a cent and only pay for results.
+
+[//]: # (TODO: revise the language in step 3?)
+[//]: # (TODO: update links)
+[//]: # (TODO: update images in this file)
+[//]: # (TODO: update reward networks)
+
+Start by connecting your wallet to the [Boost Manager app](https://manager.boost.xyz).
+
+<img src="/assets/manager-screenshot.png" alt="Screenshot of Boost Manager interface" />
+
+## Selecting an Action
+
+To create a boost, you must first select the project you want to issue a boost for and the onchain action you'd like to incentivize.
+
+Boost Protocol currently supports creating boosts for 60+ projects. For the full list of supported projects and action types, [view the Boost Registry page](https://manager.boost.xyz/registry). New projects are added weekly by the Boost Studios team, but anyone can also build their own Boost Plugin to register their smart contracts to the protocol. Learn more about [how build a Boost Plugin](https://docs.boost.xyz/boost-protocol/for-developers/boost-sdk-plugins/).
+
+<Frame caption="When deploying your boost, you have the option to set specific parameters, like amounts.">
+    <img src="/assets/manager-action.png" alt="Boost Manager interface showing project and action selection" />
+</Frame>
+
+Once the project is selected, you can select the available action type(s) associated to the project. Boost Protocol currently supports the following onchain actions: swap, deposit, stake, delegate, mint, open a position and bridge.
+
+To add an existing action type to a project, view the documentation for [building a plugin](https://docs.boost.xyz/boost-protocol/for-developers/boost-sdk-plugins/). To request a completely new action that is not currently available on Boost Protocol, please [fill out this form](https://airtable.com/appkNrxZJM6bGsQa9/shrLVU8kSFnJPLjNn).
+
+<Tip>
+    When selecting the action type, consider your goals for deploying boosts. If it's to acquire new users, you'll want to choose an easier action (i.e. swapping a token that users often have instead of a less popular token). The higher the bar to accomplish the action, the narrower the group of users it'll attract.
+
+    Certain action types are set up to give you the ability to further define the action criteria. For instance, you can require the end user to spend a minimum amount or use a specific token or network. Providing more transaction details will help align boosts closer to your goals.
+</Tip>
+
+## Selecting an Audience
+
+Choosing the right target users is one of the most important steps to achieve your goals. Boost Manager comes with a variety of preset audience lists that you can select from. Easily choose who should be eligible to receive the boost incentive and who should be excluded. You can also upload your own list of wallet addresses to create custom audience lists.
+
+<img src="/assets/manager-audience.png" alt="Audience selection interface in Boost Manager" />
+
+<Tip>
+    Selecting no audiences will default the boost to public, meaning any wallet address will be eligible to receive the boost. It is highly recommended to select an audience to protect from sybil and farmers.
+</Tip>
+
+### Creating Your Own Audience
+
+To upload your own custom audience, navigate to the "Audiences" tab. You have three options to create your audience:
+
+1. **Manual input:** Copy and paste the list of wallet addresses into the text box. Addresses must start with 0x (no ENS) and are separated by commas or whitespace.
+2. **Paste existing Boost ID:** Pull wallet address data from a previously deployed boost. This can be your own boost, a competitor's boost or boost that targets a similar audience as you. Find the Boost ID in the details page of the boost you'd like to pull user data from and input the information.
+3. **Upload a CSV file:** Upload a .csv file with one column listing all the wallet addresses. Addresses must start with 0x (no ENS).
+
+<img src="/assets/manager-create-audience.png" alt="Interface for creating custom audience in Boost Manager" />
+
+Once the custom audience is created, you can find the list saved and always available to you when selecting an audience during boost creation. Find the custom audience under the 'My Audiences' tab and add or exclude as needed.
+
+<img src="/assets/manager-my-audiences.png" alt="My Audiences tab in Boost Manager" />
+
+## Select the Reward
+
+[//]: # (TODO: update networks)
+
+To incentivize your target recipients to transact, you must select the ERC20 token you'd like to reward users with. Start by selecting the network you want users to receive the token on. Boost currently supports the following networks for token rewards:
+
+* Arbitrum
+* Base
+* Ethereum
+* Optimism
+* Polygon
+
+<Tip>
+    Note that the network the token is on can be different than the network the onchain action is set on in step 1.
+</Tip>
+
+After selecting the network, pick the token for rewarding users. Choose from the preset list of tokens, or choose '**Other**' to input a custom token. Ensure the correct network is chosen and enter the token address in the provided field.
+
+<img src="/assets/manager-reward.jpeg" alt="Reward token selection interface in Boost Manager" />
+
+After selecting the token, input the **total amount of tokens** you'd like to allocate to the boost. You will then have to select how much tokens you'd like to reward to each user that completes a boost transaction. This will determine how many boosts can be distributed, or in other words, how many users can receive the boost reward.
+
+<Tip>
+    One of the key benefits of Boost is that you can deploy boosts with as little as a cent. This completely lowers the barrier to implement with incentive distribution strategies by providing a platform to experiment and iterate with low overhead.
+</Tip>
+
+<img src="/assets/manager-reward-estimate.jpeg" alt="Reward amount selection interface in Boost Manager" />
+
+You have three options on how to select a reward amount per user:
+
+* **Gas rebate:** a recommended amount that will cover the cost of gas for the user to complete the boost
+* **Recommended:** a recommended amount based on previous boost data with similar attributes.
+* **Custom:** input your own custom reward amount.
+
+Selecting the reward amount is critical to the success of the boost. If you choose a low reward amount, users may not complete the boost transaction due to high gas costs. If you choose too high of a reward with poor audience targeting, you risk reaching the wrong users.
+
+## Schedule the Boost
+
+You can choose to deploy a boost immediately or you can schedule it at an exact time or date in the future. A boost can be active for a maximum of 30 days. Dates are displayed in your local timezone.
+
+<img src="/assets/manager-schedule.png" alt="Boost scheduling interface in Boost Manager" />
+
+## Deploy the Smart Contract
+
+Review all the boost details to ensure the require action, target audience and reward amount is correct. To deploy the boost, you will need to deposit the total reward funds into the smart contract, plus the [Protocol Fee](../../protocol-concepts/protocol-fees.md). Deploying a boost requires two contract interactions: an approval of tokens and boost deployment.
+
+<Tip>
+    Note that if you close your window, you will need to start the boost creation flow over again.
+</Tip>
+
+Once the boost has been deployed, you will be directed to a link to view the boost details where performance data is updated in real-time.
+
+<Frame>
+    <img src="/assets/manager-deploy.png" alt="Boost Manager contract deployment interface" />
+</Frame>
+
+## Monitor a Boost
+
+Anyone can see all the active, expired and upcoming boosts under the "Boost" tab in the navigation bar. You can click into any boost to view its detailed description and the performance and user insights:
+
+* **Performance insights:** shows the total number of users that completed the boost transaction and total rewards distributed.
+* **User insights:** shows details of the users that completed the boost, like the hourly/daily breakdown of completions, top protocols used, average wallet balance in ETH, and other transaction history.
+
+<img src="/assets/manager-boost-details.png" alt="Boost monitoring interface showing performance and user insights" />
+
+## Withdrawing Funds
+
+A key benefit of Boost is that you only pay for results. If you deployed a boost and there are still remaining funds left after it has expired, you can easily withdraw the tokens. Head to the details page of the boost you deployed and on the top left, you will see an option to "Withdraw".
+
+<img src="/assets/manager-boost-details-zoom.png" alt="Boost withdrawal option in the details page" />
+
+Once clicking Withdraw, a confirmation will appear showing the breakdown of how many tokens you will receive for withdrawing. Alternatively, you can also choose to keep these leftover funds on the platform to be used for the next boost you deploy.
+
+<img src="/assets/manager-withdraw.png" alt="Withdrawal confirmation interface showing token breakdown" />
+
+## FAQ
+
+[//]: # (TODO: update networks)
+
+<AccordionGroup>
+    <Accordion title="What networks does Boost support?">
+        Actions can currently be tracked on Ethereum, Polygon, Optimism, Arbitrum, and zkSync. Rewards can be distributed on Ethereum, Polygon, Optimism and Arbitrum. If you'd like to add support for a new network, please fill out this request form.
+    </Accordion>
+
+    <Accordion title="Can you support offchain action types?">
+        Boost Protocol only supports onchain actions to maintain full transparency. A few of the action types that are currently supported are swap, deposit, stake, delegate, mint, bridge and derivatives trades.
+    </Accordion>
+
+    <Accordion title="What rewards can I distribute on Boost?">
+        Only ERC20 rewards can be used on Boost at this time, but we'll be adding support for ERC1155 and onchain points soon.
+    </Accordion>
+
+    <Accordion title="What are the fees or costs of deploying a boost?">
+        Boost takes a 10% fee, which is split onchain with the Boost Guild, a high quality group of contributors, and the affiliate that drives the Boost, aligning incentives between all parties. Learn more about the [Protocol Fees](../../protocol-concepts/protocol-fees.md).
+    </Accordion>
+
+    <Accordion title="Where does the boost appear once it deploys?">
+        When the boost is deployed, it appears on the ecosystem of Boost Client apps such as Boost Inbox. Learn more about [Boost Client](../../overview/how-it-works/boost-clients.md) apps.
+    </Accordion>
+
+    <Accordion title="Can I cancel or pause a boost I deployed?">
+        If you issued a boost and need to stop it, you can use Etherscan to pause the contract. Once successful, you should be able to see the status of the boost on the details page as 'paused'.
+    </Accordion>
+
+    <Accordion title="What if not all the token rewards were distributed at the end of the boost?">
+        If there are any tokens left in the contract once the boost has expired, you can easily withdraw the unused funds by heading the the Details Page of the boost. The same applies for unused funds from the Protocol Fee deposit. Learn more about [how to withdraw funds](withdrawing-funds.md).
+    </Accordion>
+
+    <Accordion title="Why is no one completing my boost?">
+        There are many reasons why your boost may not be getting any transactions. One of the most common reasons is due to high gas fees. When network activity is up, users will have to pay more gas to transact. In this case, you may want to increase the boost reward amount to cover gas fees at minimum. Another common reason for poor boost performance may be related to incorrect audience targeting. You want to make sure that your boost is targeting the right users by leveraging the preset allowlists on Boost Manager or uploading your own CSV list.
+    </Accordion>
+</AccordionGroup>

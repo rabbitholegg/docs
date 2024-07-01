@@ -72,6 +72,13 @@
       ]
     },
     {
+      "group": "User Guides",
+      "pages": [
+        "user-guides/how-to-add-your-project",
+        "user-guides/how-to-deploy-a-boost"
+      ]
+    },
+    {
       "group": "Get Started",
       "pages": [
         "examples/introduction",
