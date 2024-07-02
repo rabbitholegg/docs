@@ -1,16 +1,15 @@
 ---
+title: 'Create a Boost'
 description: How to create a boost using the Boost API
 ---
 
-# Create a Boost
-
-### Overview
+## Overview
 
 Creating a boost via the Boost API requires the following:
 
 * An [access token](sign-in-to-boost.md) from the Boost API for the end user deploying the boost
-* ActionParam type definitions from the BoostDK, which can be referenced [here](https://github.com/rabbitholegg/questdk/blob/main/src/actions/types.ts) or installed with:\
-  `npm install @boostxyz/boostdk`
+* ActionParam type definitions from the BoostDK, which can be referenced [here](https://github.com/rabbitholegg/questdk/blob/main/src/actions/types.ts) or installed with:
+`npm install @boostxyz/boostdk`
 * The ABI file for the boost factory contract, which can be found [here](https://github.com/rabbitholegg/questdk/blob/main/src/abi/quest-factory.ts)
 * Project ID and task ID values for the chosen action to boost, [queried from the Boost API](create-a-boost.md#querying-approved-projects-and-tasks)
 * An [individual reward amount and boost participant limit](create-a-boost.md#selecting-a-reward-amount-and-participant-limit)
@@ -18,7 +17,7 @@ Creating a boost via the Boost API requires the following:
 
 All of the above data is [submitted to the POST /boosts endpoint](create-a-boost.md#submitting-the-create-boost-request), after which a [transaction must be submitted](create-a-boost.md#deploying-the-boost-contract) to the blockchain on the reward token blockchain to deploy a new contract specific to the newly created boost.
 
-### Querying approved projects and tasks
+## Querying approved projects and tasks
 
 Each action to be boosted consists of a **project** (e.g. Zora) and a **task** (e.g. "mint" or "create"), along with a **network** for the task. Some actions require specific [action parameter](https://github.com/rabbitholegg/questdk/blob/main/src/actions/types.ts) values (e.g. contract address is required for the "mint" action), while other actions can be boosted with or without specific action parameters.
 
@@ -37,11 +36,13 @@ const zoraMintTaskId = zoraMintTask.id;
 const zoraMintSupportedChainIds = zoraMintTask.chainIds;
 ```
 
-### Populating the action parameters
+## Populating the action parameters
 
 Once the project, task, and network have been chosen, find the ActionParam type matching the chosen task type from the `@boostxyz/boostdk` package, and populate the values. This example will use the [MintActionParams type](https://github.com/rabbitholegg/questdk/blob/main/src/actions/types.ts#L44).
 
-> _Be sure to include a valid, mintable token ID when boosting an ERC-1155 mint. The Boost API simulates the on-chain action specified in each create boost request, and any failure stops the boost from being created._
+<Tip>
+    Be sure to include a valid, mintable token ID when boosting an ERC-1155 mint. The Boost API simulates the on-chain action specified in each create boost request, and any failure stops the boost from being created.
+</Tip>
 
 ```typescript
 import { type MintActionParams } from '@boostxyz/boostdk';
@@ -53,11 +54,11 @@ const mintActionParamsData: MintActionParams = {
 };
 ```
 
-### Selecting a reward amount and participant limit
+## Selecting a reward amount and participant limit
 
 Each boost requires an individual reward amount of any ERC20 token as well as a maximum number of potential participants, which are used to calculate the total budget necessary for the boost. Choosing a proper individual reward amount is crucial for ensuring the boost performs well and has adequate participation, so the Boost API has tools to help with this process.
 
-#### Getting an individual reward amount estimate (optional)
+### Getting an individual reward amount estimate (optional)
 
 Once the reward token and chain have been specified by the end user, your application can optionally query the [/manager/reward-estimate](https://api.boost.xyz/docs#tag/manager/paths/\~1manager\~1reward-estimate/get) endpoint for a set of recommended individual reward amounts.
 
@@ -76,9 +77,11 @@ const { low, mid, high } = await estimateResult.json();
 
 The three individual reward estimates returned, `low`, `mid`, and `high`, are based on previous boost performance and current gas costs. Choosing the `high` value is more likely to result in a higher number of boost completions.
 
-> Note that the end result of any boost may still be profit or loss for the boost deployer or boost reward claimers regardless of which if any reward estimate is chosen, depending on the specific action's costs and fees, as well as on the price of gas at the time of boost completion.
+<Tip>
+    Note that the end result of any boost may still be profit or loss for the boost deployer or boost reward claimers regardless of which if any reward estimate is chosen, depending on the specific action's costs and fees, as well as on the price of gas at the time of boost completion.
+</Tip>
 
-#### Getting a mint reward amount estimate (optional)
+### Getting a mint reward amount estimate (optional)
 
 For boosted mints specifically, the [/manager/mint-reward-estimate](https://api.boost.xyz/docs#tag/manager/paths/\~1manager\~1mint-reward-estimate/get) endpoint provides a more specific reward amount estimate, which takes into account project fees and other mint-specific costs.
 
@@ -100,7 +103,7 @@ const estimateResult = await fetch(
 const { mid } = await estimateResult.json();
 ```
 
-#### Calculating the maximum participant limit
+### Calculating the maximum participant limit
 
 After choosing an individual reward amount and desired total budget for the boost, the below formula can be used to calculate the participant limit. The `feePercentage` variable represents a sum of the Boost **protocol fee** **of** **1%** and optional **boost creator fees** and **affiliate referral fees** **of up to 10%** total.
 
@@ -116,7 +119,7 @@ const maxParticipants = Math.floor(availableBudget / individualRewardAmount);
 
 Ultimately, any participant limit value up to the maximum participant value is valid. If a participant limit below the maximum is chosen, the boost contract will have funds leftover that can be withdrawn by the boost creator after the boost has ended.
 
-### Submitting the create boost request
+## Submitting the create boost request
 
 After querying and selecting all the required values, the next step is to submit everything to the [POST /boosts](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1/post) endpoint:
 
@@ -147,15 +150,18 @@ const createBoostResponse = await fetch('https://api.boost.xyz/boosts', {
 const { project, boost, reward } = await createBoostResponse.json();
 ```
 
-### Deploying the boost contract
+## Deploying the boost contract
 
 The final step is to send a transaction to the blockchain of the chosen boost action network, calling a function on the boost factory contract to deploy a new contract specifically to the new boost. Below is an example using the `viem` package to deploy a boost contract.
 
 Find all the official Boost contract addresses [here](../contracts.md). Boosts are created from the BoostFactory contract. This transaction also requires the ABI file for the boost factory contract, which can be found [here](https://github.com/rabbitholegg/questdk/blob/main/src/abi/quest-factory.ts).
 
-> Note that for the transaction submission, the reward amount is an integer value of the wei-equivalent denomination of the reward token, so for an individual reward of 1 $DEGEN for example, which uses 18 decimals, the `rewardAmount` would be `1000000000000000000`. These values can also be found under `reward.amount` and `reward.decimals` in the response body from the [create boost endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1/post).
+<Tip>
+    Note that for the transaction submission, the reward amount is an integer value of the wei-equivalent denomination of the reward token, so for an individual reward of 1 $DEGEN for example, which uses 18 decimals, the `rewardAmount` would be `1000000000000000000`. These values can also be found under `reward.amount` and `reward.decimals` in the response body from the [create boost endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1/post).
+</Tip>
 
-<pre class="language-typescript"><code class="lang-typescript">import { type WalletClient, type PublicClient } from 'viem';
+```typescript
+import { type WalletClient, type PublicClient } from 'viem';
 import { ActionType } from '@boostxyz/boostdk';
 import boostFactoryAbi from './abis/boostFactory';
 
@@ -176,8 +182,8 @@ async function deployBoost(
   projectName: string, // taken from project.name in POST /boosts response
   referralRewardFee = 250, // reward for referred boost completions in basis points (250 BP = 2.5%)
 ) {
-<strong>  const { request } = await publicClient.simulateContract({
-</strong>    account: walletClient.account.address,
+  const { request } = await publicClient.simulateContract({
+    account: walletClient.account.address,
     chain: walletClient.chain, // should be the reward token chain
     address: BOOST_FACTORY_ADDRESS,
     abi: boostFactoryAbi,
@@ -199,7 +205,6 @@ async function deployBoost(
 
   return walletClient.writeContract(request);
 }
-
-</code></pre>
+```
 
 Once the above transaction succeeds, the boost has been created and will appear on all relevant Boost client apps! Use the Boost ID value from the [POST /boosts response](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1/post) to lookup the new boost on [boost.xyz](https://boost.xyz) or through the [boost details endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1%7BboostId%7D/get).

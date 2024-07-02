@@ -79,22 +79,12 @@
       ]
     },
     {
-      "group": "Get Started",
+      "group": "Boost API",
       "pages": [
-        "examples/introduction",
-        "examples/quickstart",
-        "examples/development"
-      ]
-    },
-    {
-      "group": "Essentials",
-      "pages": [
-        "examples/markdown",
-        "examples/code",
-        "examples/images",
-        "examples/settings",
-        "examples/navigation",
-        "examples/reusable-snippets"
+        "boost-api/sign-in-to-boost",
+        "boost-api/create-a-boost",
+        "boost-api/fetch-boosts",
+        "boost-api/claim-a-boost"
       ]
     },
     {

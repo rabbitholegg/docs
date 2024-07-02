@@ -1,8 +1,7 @@
 ---
+title: 'Claim a Boost'
 description: How to claim a Boost for an end user
 ---
-
-# Claim a Boost
 
 Once an end user has completed a boosted action, the boost reward can be claimed by submitting a transaction signed by the end user on the chain of the reward token.
 
@@ -12,7 +11,7 @@ Prerequisites for claiming a boost include:
 * the boost factory contract ABI, which can be found [here](https://github.com/rabbitholegg/questdk/blob/main/src/abi/quest-factory.ts)
 * a signature from the Boost API vouching that a specific end user has completed the action for a currently active boost
 
-### Getting a boost completion signature
+## Getting a boost completion signature
 
 Before submitting the claim transaction, a signature verifying the completion of the specific boost action by the end user must be requested from [the /boosts/get-signature endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1get-signature/post).
 
@@ -29,9 +28,11 @@ const getSignatureResponse = await fetch(
 const { signature, compressedBytes, fee } = await getSignatureResponse.json();
 ```
 
-> While the raw `signature` is available in the response, the `compressedBytes` parameter of the response can be passed directly to the claim transaction below. Additionally, the required gas `fee` to claim the boost is available in the response for convenience.
+<Tip>
+    While the raw `signature` is available in the response, the `compressedBytes` parameter of the response can be passed directly to the claim transaction below. Additionally, the required gas `fee` to claim the boost is available in the response for convenience.
+</Tip>
 
-### Claiming a boost reward
+## Claiming a boost reward
 
 The following example demonstrates a claim of a reward in $DEGEN token on Base using the `viem` package and the `compressedBytes` param from the previous section:
 
