@@ -9,13 +9,8 @@
   "colors": {
     "primary": "#202042",
     "light": "#43e661",
-    "dark": "#202042",
-    "anchors": {
-      "from": "#202042",
-      "to": "#43e661"
-    }
+    "dark": "#202042"
   },
-  "openapi": "https://api-staging.boost.xyz/openapi.json",
   "topbarLinks": [
     {
       "name": "Support",
@@ -34,17 +29,12 @@
   ],
   "anchors": [
     {
-      "name": "Old API Reference",
-      "icon": "book-open-cover",
-      "url": "https://api.boost.xyz/docs"
-    },
-    {
       "name": "Blog",
       "icon": "newspaper",
       "url": "https://blog.boost.xyz"
     },
     {
-      "name": "openapi.json",
+      "name": "OpenAPI.json",
       "icon": "asterisk",
       "url": "https://api.boost.xyz/openapi.json"
     }
