@@ -5,6 +5,16 @@
     "title": "Boost.xyz Core API",
     "description": "Welcome to the Boost API!"
   },
+  "servers": [
+    {
+      "url": "https://api-staging.boost.xyz",
+      "description": "staging API"
+    },
+    {
+      "url": "https://api.boost.xyz",
+      "description": "production API"
+    }
+  ],
   "components": {
     "schemas": {
       "JsonFragmentTypeRecursive": {
