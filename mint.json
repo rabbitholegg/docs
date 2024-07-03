@@ -11,7 +11,7 @@
     "light": "#43e661",
     "dark": "#202042"
   },
-  "openapi": ["/api-reference/openapi.json"],
+  "openapi": "https://api-staging.boost.xyz/openapi.json",
   "topbarLinks": [
     {
       "name": "Support",
