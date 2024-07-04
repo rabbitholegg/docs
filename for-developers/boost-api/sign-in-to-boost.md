@@ -46,10 +46,10 @@ const loginResult = await fetch('https://api.boost.xyz/auth/login', {
     'Origin': 'https://boost.xyz',
     'User-agent': '...user agent string...'
   },
-  body: {
+  body: JSON.stringify({
     message: formattedSiweMessage,
     signature: '...signature of SIWE message from wallet client...',
-  },
+  }),
 });
 
 const { accessToken, refreshToken } = await loginResult.json();
@@ -70,9 +70,9 @@ const refreshResult = await fetch('https://api.boost.xyz/auth/refresh', {
   headers: {
     'Content-type': 'application/json',
   },
-  body: {
+  body: JSON.stringify({
     refreshToken
-  },
+  }),
 });
 
 const { accessToken } = await refreshResult.json();

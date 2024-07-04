@@ -16,18 +16,19 @@ Prerequisites for claiming a boost include:
 
 Before submitting the claim transaction, a signature verifying the completion of the specific boost action by the end user must be requested from [the /boosts/get-signature endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1get-signature/post).
 
-```typescript
-const queryParams = new URLSearchParams({
-  boostId: 'b5657a78-682d-41ee-984d-dd4729548a63',
-  address: '0x242c295E88760559A6cA8E8F02bB52cdcF7f7422', // end-user address
+<pre class="language-typescript"><code class="lang-typescript"><strong>const getSignatureResponse = await fetch('http://api.boost.xyz/boosts/get-signature', {
+</strong>  method: 'POST',
+  headers: {
+    'Content-type': 'application/json',
+  },
+  body: JSON.stringify({
+<strong>    boostId: 'c79de3f3-8741-4281-a1cb-4b6947e4060d',
+</strong>    address: '0x242c295E88760559A6cA8E8F02bB52cdcF7f7422', // end-user address
+  })
 });
 
-const getSignatureResponse = await fetch(
-  'https://api.boost.xyz/boosts/get-signature?' + queryParams.toString()
-);
-
 const { signature, compressedBytes, fee } = await getSignatureResponse.json();
-```
+</code></pre>
 
 > While the raw `signature` is available in the response, the `compressedBytes` parameter of the response can be passed directly to the claim transaction below. Additionally, the required gas `fee` to claim the boost is available in the response for convenience.
 

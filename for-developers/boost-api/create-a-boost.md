@@ -127,7 +127,7 @@ const createBoostResponse = await fetch('https://api.boost.xyz/boosts', {
     'Content-type': 'application/json',
     'Authorization': accessToken,
   },
-  body: {
+  body: JSON.stringify({
     chainId: 8453, // chain ID of boosted action
     projectId: zoraProjectId,
     taskId: zoraMintTaskId,
@@ -141,7 +141,7 @@ const createBoostResponse = await fetch('https://api.boost.xyz/boosts', {
     participantLimit: maxParticipants,
     startTime: new Date().toISOString(), // optional: defaults to now
     endTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(), // one week from now
-  },
+  }),
 });
 
 const { project, boost, reward } = await createBoostResponse.json();
