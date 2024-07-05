@@ -44,8 +44,8 @@ async function claimBoostReward(
   publicClient: PublicClient,
   walletClient: WalletClient,
   boostContractAddress: string, // taken from GET /boosts/[boostId] response
-  compressedBytes: string, // taken from GET/boosts/get-signature response
-  fee: string, // taken from GET/boosts/get-signature response
+  compressedBytes: string, // taken from POST /boosts/get-signature response
+  fee: string, // taken from POST /boosts/get-signature response
 ) {
   const { request } = await publicClient.simulateContract({
     account: walletClient.account.address,
