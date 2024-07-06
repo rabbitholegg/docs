@@ -16,14 +16,14 @@ Prerequisites for claiming a boost include:
 
 Before submitting the claim transaction, a signature verifying the completion of the specific boost action by the end user must be requested from [the /boosts/get-signature endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1get-signature/post).
 
-<pre class="language-typescript"><code class="lang-typescript"><strong>const getSignatureResponse = await fetch('http://api.boost.xyz/boosts/get-signature', {
+<pre class="language-typescript"><code class="lang-typescript"><strong>const getSignatureResponse = await fetch('https://api.boost.xyz/boosts/get-signature', {
 </strong>  method: 'POST',
   headers: {
     'Content-type': 'application/json',
   },
   body: JSON.stringify({
-<strong>    boostId: 'c79de3f3-8741-4281-a1cb-4b6947e4060d',
-</strong>    address: '0x242c295E88760559A6cA8E8F02bB52cdcF7f7422', // end-user address
+    boostId: '44aa700e-dad7-41cc-beee-73cce9f60598',
+    address: '0x242c295e88760559a6ca8e8f02bb52cdcf7f7422'
   })
 });
 
