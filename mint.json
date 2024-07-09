@@ -9,7 +9,11 @@
   "colors": {
     "primary": "#202042",
     "light": "#43e661",
-    "dark": "#202042"
+    "dark": "#202042",
+    "anchors": {
+      "from": "#43e661",
+      "to": "#43e661"
+    }
   },
   "openapi": "https://api-staging.boost.xyz/openapi.json",
   "topbarLinks": [
@@ -29,11 +33,6 @@
     }
   ],
   "anchors": [
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://blog.boost.xyz"
-    },
     {
       "name": "OpenAPI.json",
       "icon": "asterisk",
