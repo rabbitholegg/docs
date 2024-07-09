@@ -7,7 +7,6 @@ Once an end user has completed a boosted action, the boost reward can be claimed
 
 Prerequisites for claiming a boost include:
 
-* the boost contract address (specific to each boost), which can be queried using [the boost details endpoint](fetch-boosts.md#querying-details-for-a-specific-boost) or found at `boost.contractAddress` in the response from [the create boost endpoint](create-a-boost.md#submitting-the-create-boost-request)
 * the boost factory contract ABI, which can be found [here](https://github.com/rabbitholegg/questdk/blob/main/src/abi/quest-factory.ts)
 * a signature from the Boost API vouching that a specific end user has completed the action for a currently active boost
 
@@ -45,13 +44,12 @@ import boostFactoryAbi from './abis/boostFactory';
 async function claimBoostReward(
   publicClient: PublicClient,
   walletClient: WalletClient,
-  boostContractAddress: string, // taken from GET /boosts/[boostId] response
   compressedBytes: string, // taken from GET/boosts/get-signature response
   fee: string, // taken from GET/boosts/get-signature response
 ) {
   const { request } = await publicClient.simulateContract({
     account: walletClient.account.address,
-    address: boostContractAddress,
+    address: '0x52629961F71C1C2564C5aa22372CB1b9fa9EBA3E', // boost factory contract
     abi: boostFactoryAbi,
     functionName: 'claimCompressed',
     args: [compressedBytes as Hex],
