@@ -57,3 +57,30 @@ async function claimBoostReward(
   const txHash = await walletClient.writeContract(request);
 }
 ```
+
+### Batching claims
+
+For applications where batching of user claims is preferable, use [the /boosts/get-signature-batch endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1get-signature-batch/post) to query multiple signatures at once:
+
+```typescript
+const getSignatureBatchResponse = await fetch('https://api.boost.xyz/boosts/get-signature-batch', {
+  method: 'POST',
+  headers: {
+    'Content-type': 'application/json',
+  },
+  body: JSON.stringify([
+    {
+      boostId: '44aa700e-dad7-41cc-beee-73cce9f60598',
+      address: '0x242c295e88760559a6ca8e8f02bb52cdcf7f7422'
+    },
+    {
+      boostId: '44aa700e-dad7-41cc-beee-73cce9f60598',
+      address: '0x242c295e88760559a6ca8e8f02bb52cdcf7f7422'
+    },
+  ])
+});
+
+const signatureObjects = await getSignatureBatchResponse.json();
+```
+
+Note that individual signature request failures fail silently for [the /boosts/get-signature-batch endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1get-signature-batch/post), resulting in the failing signature requests being omitted from the response. To get error information on a specific signature request failure, use the singular [/boosts/get-signature endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1get-signature/post).
