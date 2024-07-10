@@ -23,7 +23,7 @@ Start by connecting your wallet to the [Boost Manager app](https://manager.boost
 
 To create a boost, you must first select the project you want to issue a boost for and the onchain action you'd like to incentivize.
 
-Boost Protocol currently supports creating boosts for 60+ projects. For the full list of supported projects and action types, [view the Boost Registry page](https://manager.boost.xyz/registry). New projects are added weekly by the Boost Studios team, but anyone can also build their own Boost Plugin to register their smart contracts to the protocol. Learn more about [how build a Boost Plugin](https://docs.boost.xyz/boost-protocol/for-developers/boost-sdk-plugins/).
+Boost Protocol currently supports creating boosts for 60+ projects. For the full list of supported projects and action types, [view the Boost Registry page](https://manager.boost.xyz/registry).
 
 <Frame caption="When deploying your boost, you have the option to set specific parameters, like amounts.">
     <img src="/assets/manager-action.png" alt="Boost Manager interface showing project and action selection" />
@@ -31,7 +31,7 @@ Boost Protocol currently supports creating boosts for 60+ projects. For the full
 
 Once the project is selected, you can select the available action type(s) associated to the project. Boost Protocol currently supports the following onchain actions: swap, deposit, stake, delegate, mint, open a position and bridge.
 
-To add an existing action type to a project, view the documentation for [building a plugin](https://docs.boost.xyz/boost-protocol/for-developers/boost-sdk-plugins/). To request a completely new action that is not currently available on Boost Protocol, please [fill out this form](https://airtable.com/appkNrxZJM6bGsQa9/shrLVU8kSFnJPLjNn).
+To add an existing action type to a project or request a new action that is not currently available on Boost Protocol, please [fill out this form](https://airtable.com/appkNrxZJM6bGsQa9/shrLVU8kSFnJPLjNn).
 
 <Tip>
     When selecting the action type, consider your goals for deploying boosts. If it's to acquire new users, you'll want to choose an easier action (i.e. swapping a token that users often have instead of a less popular token). The higher the bar to accomplish the action, the narrower the group of users it'll attract.
@@ -65,8 +65,6 @@ Once the custom audience is created, you can find the list saved and always avai
 
 ## Select the Reward
 
-[//]: # (TODO: update networks)
-
 To incentivize your target recipients to transact, you must select the ERC20 token you'd like to reward users with. Start by selecting the network you want users to receive the token on. Boost currently supports the following networks for token rewards:
 
 * Arbitrum
@@ -74,6 +72,12 @@ To incentivize your target recipients to transact, you must select the ERC20 tok
 * Ethereum
 * Optimism
 * Polygon
+* Zora
+* zkSync
+* Mantle
+* Blast
+* Degen
+* Cyber
 
 <Tip>
     Note that the network the token is on can be different than the network the onchain action is set on in step 1.
@@ -144,7 +148,7 @@ Once clicking Withdraw, a confirmation will appear showing the breakdown of how 
 
 <AccordionGroup>
     <Accordion title="What networks does Boost support?">
-        Actions can currently be tracked on Ethereum, Polygon, Optimism, Arbitrum, and zkSync. Rewards can be distributed on Ethereum, Polygon, Optimism and Arbitrum. If you'd like to add support for a new network, please fill out this request form.
+        Actions can currently be tracked and rewards can be distributed on Arbitrum, Optimism, Base, Polygon, Ethereum, Zora, zkSync, Mantle, Blast, Degen, and Cyber. If you'd like to add support for a new network, please fill out this request form.
     </Accordion>
 
     <Accordion title="Can you support offchain action types?">
