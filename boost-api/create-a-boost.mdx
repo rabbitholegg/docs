@@ -9,7 +9,7 @@ Creating a boost via the Boost API requires the following:
 
 * An [access token](/boost-api/sign-in-to-boost) from the Boost API for the end user deploying the boost
 * ActionParam type definitions from the BoostDK, which can be referenced [here](https://github.com/rabbitholegg/questdk/blob/main/src/actions/types.ts) or installed with:
-`npm install @boostxyz/boostdk`
+`npm install @rabbitholegg/questdk`
 * The ABI file for the boost factory contract, which can be found [here](https://github.com/rabbitholegg/questdk/blob/main/src/abi/quest-factory.ts)
 * Project ID and task ID values for the chosen action to boost, [queried from the Boost API](/boost-api/create-a-boost#querying-approved-projects-and-tasks)
 * An [individual reward amount and boost participant limit](/boost-api/create-a-boost#selecting-a-reward-amount-and-participant-limit)
@@ -38,14 +38,14 @@ const zoraMintSupportedChainIds = zoraMintTask.chainIds;
 
 ## Populating the action parameters
 
-Once the project, task, and network have been chosen, find the ActionParam type matching the chosen task type from the `@boostxyz/boostdk` package, and populate the values. This example will use the [MintActionParams type](https://github.com/rabbitholegg/questdk/blob/main/src/actions/types.ts#L44).
+Once the project, task, and network have been chosen, find the ActionParam type matching the chosen task type from the `@rabbitholegg/questdk` package, and populate the values. This example will use the [MintActionParams type](https://github.com/rabbitholegg/questdk/blob/main/src/actions/types.ts#L44).
 
 <Tip>
     Be sure to include a valid, mintable token ID when boosting an ERC-1155 mint. The Boost API simulates the on-chain action specified in each create boost request, and any failure stops the boost from being created.
 </Tip>
 
 ```typescript
-import { type MintActionParams } from '@boostxyz/boostdk';
+import { type MintActionParams } from '@rabbitholegg/questdk';
 
 const mintActionParamsData: MintActionParams = {
   chainId: 8453,
@@ -105,12 +105,12 @@ const { mid } = await estimateResult.json();
 
 ### Calculating the maximum participant limit
 
-After choosing an individual reward amount and desired total budget for the boost, the below formula can be used to calculate the participant limit. The `feePercentage` variable represents a sum of the Boost **protocol fee** **of** **1%** and optional **boost creator fees** and **affiliate referral fees** **of up to 10%** total.
+After choosing an individual reward amount and desired total budget for the boost, the below formula can be used to calculate the participant limit. The `feePercentage` variable represents a sum of the Boost **protocol fee** **of** **2.5%** and **affiliate referral fee** **of 2.5%**.
 
 ```typescript
 // example values
 const totalDesiredBudget = 100; // quantity of reward tokens to be deposited into boost
-const feePercentage = 0.11; // includes protocol fees and creator / affiliate fees
+const feePercentage = 0.05; // includes protocol fees and creator / affiliate fees
 
 // formula
 const availableBudget = totalDesiredBudget * (1 - feePercentage);
@@ -165,7 +165,7 @@ Boosts are created from the BoostFactory contract (still named "QuestFactory" on
 
 ```typescript
 import { type WalletClient, type PublicClient } from 'viem';
-import { ActionType } from '@boostxyz/boostdk';
+import { ActionType } from '@rabbitholegg/questdk';
 import boostFactoryAbi from './abis/boostFactory';
 
 const BOOST_FACTORY_ADDRESS = '0x52629961F71C1C2564C5aa22372CB1b9fa9EBA3E';
