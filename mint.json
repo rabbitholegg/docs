@@ -37,6 +37,11 @@
       "name": "OpenAPI.json",
       "icon": "asterisk",
       "url": "https://api.boost.xyz/openapi.json"
+    },
+    {
+      "name": "Auto-generated API Reference",
+      "icon": "book",
+      "url": "https://api.boost.xyz/docs"
     }
   ],
   "navigation": [

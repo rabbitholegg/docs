@@ -29,7 +29,7 @@ Boost Protocol currently supports creating boosts for 60+ projects. For the full
     <img src="/assets/manager-action.png" alt="Boost Manager interface showing project and action selection" />
 </Frame>
 
-Once the project is selected, you can select the available action type(s) associated to the project. Boost Protocol currently supports the following onchain actions: swap, deposit, stake, delegate, mint, open a position and bridge.
+Once the project is selected, you can select the available action type(s) associated to the project. See all actions currently supported by Boost Protocol [here](https://github.com/rabbitholegg/questdk/blob/main/src/actions/types.ts#L125).
 
 To add an existing action type to a project or request a new action that is not currently available on Boost Protocol, please [fill out this form](https://airtable.com/appkNrxZJM6bGsQa9/shrLVU8kSFnJPLjNn).
 
@@ -111,7 +111,7 @@ You can choose to deploy a boost immediately or you can schedule it at an exact 
 
 ## Deploy the Smart Contract
 
-Review all the boost details to ensure the require action, target audience and reward amount is correct. To deploy the boost, you will need to deposit the total reward funds into the smart contract, plus the [Protocol Fee](../../protocol-concepts/protocol-fees.md). Deploying a boost requires two contract interactions: an approval of tokens and boost deployment.
+Review all the boost details to ensure the require action, target audience and reward amount is correct. To deploy the boost, you will need to deposit the total reward funds into the smart contract, plus the [Protocol Fee](/protocol-concepts/protocol-fees). Deploying a boost requires two contract interactions: an approval of tokens and boost deployment.
 
 <Tip>
     Note that if you close your window, you will need to start the boost creation flow over again.
@@ -160,11 +160,11 @@ Once clicking Withdraw, a confirmation will appear showing the breakdown of how 
     </Accordion>
 
     <Accordion title="What are the fees or costs of deploying a boost?">
-        Boost takes a 10% fee, which is split onchain with the Boost Guild, a high quality group of contributors, and the affiliate that drives the Boost, aligning incentives between all parties. Learn more about the [Protocol Fees](../../protocol-concepts/protocol-fees.md).
+        Boost takes a 10% fee, which is split onchain with the Boost Guild, a high quality group of contributors, and the affiliate that drives the Boost, aligning incentives between all parties. Learn more about the [Protocol Fees](/protocol-concepts/protocol-fees).
     </Accordion>
 
     <Accordion title="Where does the boost appear once it deploys?">
-        When the boost is deployed, it appears on the ecosystem of Boost Client apps such as Boost Inbox. Learn more about [Boost Client](../../overview/how-it-works/boost-clients.md) apps.
+        When the boost is deployed, it appears on the ecosystem of Boost Client apps such as Boost Inbox. Learn more about [Boost Client](/overview/boost-clients) apps.
     </Accordion>
 
     <Accordion title="Can I cancel or pause a boost I deployed?">
@@ -172,7 +172,7 @@ Once clicking Withdraw, a confirmation will appear showing the breakdown of how 
     </Accordion>
 
     <Accordion title="What if not all the token rewards were distributed at the end of the boost?">
-        If there are any tokens left in the contract once the boost has expired, you can easily withdraw the unused funds by heading the the Details Page of the boost. The same applies for unused funds from the Protocol Fee deposit. Learn more about [how to withdraw funds](withdrawing-funds.md).
+        If there are any tokens left in the contract once the boost has expired, you can easily withdraw the unused funds by heading the the Details Page of the boost in [Boost Manager](https://manager.boost.xyz). The same applies for unused funds from the Protocol Fee deposit.
     </Accordion>
 
     <Accordion title="Why is no one completing my boost?">
