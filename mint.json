@@ -2,10 +2,10 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Boost Docs",
   "logo": {
-    "dark": "/assets/boost-icon.svg",
-    "light": "/assets/boost-icon.svg"
+    "dark": "/assets/boost-icon-white.svg",
+    "light": "/assets/boost-icon-black.svg"
   },
-  "favicon": "/assets/boost-icon.svg",
+  "favicon": "/assets/boost-icon-black.svg",
   "colors": {
     "primary": "#202042",
     "light": "#43e661",
