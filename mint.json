@@ -80,6 +80,16 @@
       ]
     },
     {
+      "group": "Boost SDK",
+      "pages": [
+        "boost-sdk/overview",
+        "boost-sdk/installation",
+        "boost-sdk/quick-start",
+        "boost-sdk/guides-and-concepts",
+        "boost-sdk/api-reference"
+      ]
+    },
+    {
       "group": "auth",
       "pages": [
         "api-reference/auth/nonce",
