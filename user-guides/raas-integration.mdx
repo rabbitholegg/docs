@@ -1,0 +1,131 @@
+---
+title: "Integration Guide for Rollups"
+description: "Learn how to integrate Boost Protocol into your Rollup"
+---
+
+## Introduction
+
+This guide outlines how Rollups can integrate Boost Protocol into their ecosystems. Boost Protocol is a powerful toolkit for programmatic token distribution, enabling networks to incentivize on-chain actions and grow their ecosystem sustainably.
+
+## Why Integrate Boost?
+
+By integrating Boost Protocol, Rollups can benefit from:
+
+1. Sustainable growth mechanisms
+2. Programmable incentives for any on-chain action
+3. Transparent, attributable reward distribution
+4. Flexible deployment options (no-code and SDK solutions)
+
+## How Boost Operates Across Multiple Chains
+
+Before diving into the integration details, it's crucial to understand how Boost Protocol operates in a multichain environment. The following diagram illustrates the multichain architecture of Boost:
+
+<img
+  src="https://assets.boost.xyz/assets/boost-core-edges.png"
+  alt="Boost Network Architecture"
+/>
+
+This architecture allows Boost to operate seamlessly across multiple chains. The Boost Core Protocol acts as a central coordinator, while the Boost Edges serve as network-specific interfaces, enabling a unified system for creating, managing, and distributing incentives for on-chain actions, regardless of which specific EVM network those actions occur on.
+
+## Integration Overview
+
+To integrate Boost Protocol, Rollups need to:
+
+1. Deploy the [Boost Edge contracts](https://github.com/rabbitholegg/boost-protocol/tree/main) on the network
+2. Register the network with Boost ecosystem
+
+### 1. Deploying Boost Edge Contracts
+
+The Boost Edge is a critical component that enables a network to participate in the Boost ecosystem. Rollups should deploy Boost Edge contracts to their network.
+
+Boost Edge contracts handle:
+
+- Rewards management
+- Action execution
+- Relaying boosted actions to the Boost Network
+
+### 2. Registering the Network
+
+After deploying Boost Edge contracts, Rollups have the option to register the network with the Boost ecosystem. While registration is not strictly necessary for Boost Protocol to function, it offers several significant benefits that enhance usability and scalability. Registered networks appear in Boost ecosystem apps, making it easier for users and developers to find and interact with a new network.
+
+## Integration Steps
+
+1. **Prepare the Network**: Ensure your Rollup is fully operational.
+
+2. **Deploy Boost Edge Contracts**:
+
+   - Obtain the latest Boost Edge contract code from the Boost Protocol team.
+   - Deploy these contracts to your network using your standard deployment process.
+
+3. **Configure Boost Edge**:
+
+   - Set up the necessary parameters for the Boost Edge to communicate with the Boost Network.
+   - Ensure proper permissions are in place for reward distribution and action validation.
+
+4. **Register the Network**:
+
+   - Use the Boost API to register your network.
+   - Example API call:
+
+     ```bash
+     curl -X POST https://api.boost.xyz/register-network \
+       -H "Content-Type: application/json" \
+       -d '{
+             "networkId": "1234",
+             "boostEdgeContractAddress": "0xYourContractAddress",
+             "metadata": {
+               "name": "Your Network Name",
+               "description": "Description of your network"
+             }
+           }'
+     ```
+
+   - Required parameters:
+     - Network ID
+     - Boost Edge contract address
+     - Network metadata (name, description, etc.)
+
+5. **Verify Integration**:
+
+   - Perform test actions to ensure the Boost Edge is correctly relaying information to the Boost Network.
+   - Confirm that rewards can be distributed on your network.
+
+6. **Documentation and Support**:
+   - Provide documentation to your users on how to use Boost Protocol features on your network.
+   - Offer support for setting up initial Boost campaigns.
+
+## Boost Protocol Features
+
+Rollups can leverage these Boost Protocol features:
+
+<CardGroup cols={2}>
+  <Card title="Boost Accounts" icon="user">
+    ERC4337 contract accounts for permissioned incentives and onchain
+    attribution.
+  </Card>
+  <Card title="Action Registry" icon="list-check">
+    Catalog of boostable actions across networks.
+  </Card>
+  <Card title="Boost Core" icon="network-wired">
+    Centralized validation and reward distribution system.
+  </Card>
+</CardGroup>
+
+By integrating Boost Protocol, Rollups can empower their ecosystem with powerful tools for growth and user engagement.
+
+## Choosing a Rollup-as-a-Service Provider
+
+If you're in the process of launching a new Rollup, you may want to consider using a Rollup-as-a-Service (RaaS) provider to streamline your deployment and management processes. When selecting a provider, consider factors such as:
+
+- Infrastructure reliability and scalability
+- Developer tools and support
+- Ecosystem integration and reach
+
+One provider to consider is [Alchemy Rollups](http://alchemy.com/rollups), a comprehensive solution for launching and growing your own chain. Their platform provides robust infrastructure, developer tools, and access to a large developer community.
+
+<img
+  id="badge-button"
+  style={{ height: "38px" }}
+  src="https://static.alchemyapi.io/images/marketing/rollups-badge-dark-1.png"
+  alt="Alchemy Supercharged"
+/>
