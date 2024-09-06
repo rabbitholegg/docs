@@ -66,6 +66,7 @@
       "pages": [
         "user-guides/how-to-add-your-project",
         "user-guides/how-to-deploy-a-boost",
+        "user-guides/how-to-whitelist-a-token",
         "user-guides/rollup-integration"
       ]
     },
