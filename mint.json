@@ -88,12 +88,13 @@
     },
     {
       "group": "Boost SDK",
+      "version": "v2",
       "pages": [
-        "boost-sdk/overview",
-        "boost-sdk/installation",
-        "boost-sdk/quick-start",
-        "boost-sdk/guides-and-concepts",
-        "boost-sdk/api-reference"
+        "v2/boost-sdk/overview",
+        "v2/boost-sdk/installation",
+        "v2/boost-sdk/quick-start",
+        "v2/boost-sdk/guides-and-concepts",
+        "v2/boost-sdk/api-reference"
       ]
     },
     {
