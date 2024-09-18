@@ -1,6 +1,7 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "Boost Docs",
+  "versions": ["v1"],
   "logo": {
     "dark": "/assets/boost-icon-white.svg",
     "light": "/assets/boost-icon-black.svg"
@@ -29,157 +30,170 @@
   "tabs": [
     {
       "name": "API Reference",
-      "url": "api-reference"
+      "url": "api-reference",
+      "version": "v1"
     }
   ],
   "anchors": [
     {
       "name": "OpenAPI.json",
       "icon": "asterisk",
-      "url": "https://api.boost.xyz/openapi.json"
+      "url": "https://api.boost.xyz/openapi.json",
+      "version": "v1"
     }
   ],
   "navigation": [
     {
       "group": "Overview",
+      "version": "v1",
       "pages": [
-        "overview/introduction",
-        "overview/what-is-a-boost",
-        "overview/how-it-works",
-        "overview/boost-protocol",
-        "overview/boost-manager",
-        "overview/boost-clients",
-        "overview/boost-sdk"
+        "v1/overview/introduction",
+        "v1/overview/what-is-a-boost",
+        "v1/overview/how-it-works",
+        "v1/overview/boost-protocol",
+        "v1/overview/boost-manager",
+        "v1/overview/boost-clients",
+        "v1/overview/boost-sdk"
       ]
     },
     {
       "group": "Protocol Concepts",
+      "version": "v1",
       "pages": [
-        "protocol-concepts/attribution-system",
-        "protocol-concepts/protocol-fees",
-        "protocol-concepts/affiliate-referrals",
-        "protocol-concepts/boost-guild-treasury"
+        "v1/protocol-concepts/attribution-system",
+        "v1/protocol-concepts/protocol-fees",
+        "v1/protocol-concepts/affiliate-referrals",
+        "v1/protocol-concepts/boost-guild-treasury"
       ]
     },
     {
       "group": "User Guides",
+      "version": "v1",
       "pages": [
-        "user-guides/how-to-add-your-project",
-        "user-guides/how-to-deploy-a-boost",
-        "user-guides/how-to-whitelist-a-token",
-        "user-guides/rollup-integration"
+        "v1/user-guides/how-to-add-your-project",
+        "v1/user-guides/how-to-deploy-a-boost",
+        "v1/user-guides/how-to-whitelist-a-token",
+        "v1/user-guides/rollup-integration"
       ]
     },
     {
       "group": "Boost API",
+      "version": "v1",
       "pages": [
-        "boost-api/sign-in-to-boost",
-        "boost-api/create-a-boost",
-        "boost-api/fetch-boosts",
-        "boost-api/claim-a-boost"
+        "v1/boost-api/sign-in-to-boost",
+        "v1/boost-api/create-a-boost",
+        "v1/boost-api/fetch-boosts",
+        "v1/boost-api/claim-a-boost"
       ]
     },
     {
       "group": "auth",
+      "version": "v1",
       "pages": [
-        "api-reference/auth/nonce",
-        "api-reference/auth/login",
-        "api-reference/auth/refresh",
-        "api-reference/auth/logout",
-        "api-reference/auth/session"
+        "v1/api-reference/auth/nonce",
+        "v1/api-reference/auth/login",
+        "v1/api-reference/auth/refresh",
+        "v1/api-reference/auth/logout",
+        "v1/api-reference/auth/session"
       ]
     },
     {
       "group": "manager",
+      "version": "v1",
       "pages": [
-        "api-reference/manager/reward-estimates",
-        "api-reference/manager/mint-reward-estimates",
-        "api-reference/manager/computed-name",
-        "api-reference/manager/projects",
-        "api-reference/manager/registry",
-        "api-reference/manager/recent-completions",
-        "api-reference/manager/creator-summary"
+        "v1/api-reference/manager/reward-estimates",
+        "v1/api-reference/manager/mint-reward-estimates",
+        "v1/api-reference/manager/computed-name",
+        "v1/api-reference/manager/projects",
+        "v1/api-reference/manager/registry",
+        "v1/api-reference/manager/recent-completions",
+        "v1/api-reference/manager/creator-summary"
       ]
     },
     {
       "group": "metrics",
+      "version": "v1",
       "pages": [
-        "api-reference/metrics/boost-protocol-metrics-by-boost",
-        "api-reference/metrics/boost-protocol-metrics",
-        "api-reference/metrics/boost-stats",
-        "api-reference/metrics/boost-leaderboard",
-        "api-reference/metrics/user-rank",
-        "api-reference/metrics/recent-activity",
-        "api-reference/metrics/trending-quests",
-        "api-reference/metrics/reward-tokens",
-        "api-reference/metrics/supported-tokens",
-        "api-reference/metrics/token-details"
+        "v1/api-reference/metrics/boost-protocol-metrics-by-boost",
+        "v1/api-reference/metrics/boost-protocol-metrics",
+        "v1/api-reference/metrics/boost-stats",
+        "v1/api-reference/metrics/boost-leaderboard",
+        "v1/api-reference/metrics/user-rank",
+        "v1/api-reference/metrics/recent-activity",
+        "v1/api-reference/metrics/trending-quests",
+        "v1/api-reference/metrics/reward-tokens",
+        "v1/api-reference/metrics/supported-tokens",
+        "v1/api-reference/metrics/token-details"
       ]
     },
     {
       "group": "accesslists",
+      "version": "v1",
       "pages": [
-        "api-reference/accesslists/accesslists-by-user-id",
-        "api-reference/accesslists/update-accesslist",
-        "api-reference/accesslists/create-accesslist",
-        "api-reference/accesslists/archive-accesslist",
-        "api-reference/accesslists/accesslist-status",
-        "api-reference/accesslists/recommended-accesslists",
-        "api-reference/accesslists/create-accesslist-via-boost-id",
-        "api-reference/accesslists/process-access-list"
+        "v1/api-reference/accesslists/accesslists-by-user-id",
+        "v1/api-reference/accesslists/update-accesslist",
+        "v1/api-reference/accesslists/create-accesslist",
+        "v1/api-reference/accesslists/archive-accesslist",
+        "v1/api-reference/accesslists/accesslist-status",
+        "v1/api-reference/accesslists/recommended-accesslists",
+        "v1/api-reference/accesslists/create-accesslist-via-boost-id",
+        "v1/api-reference/accesslists/process-access-list"
       ]
     },
     {
       "group": "boosts",
+      "version": "v1",
       "pages": [
-        "api-reference/boosts/participants-by-boost",
-        "api-reference/boosts/participants-search",
-        "api-reference/boosts/download-participants",
-        "api-reference/boosts/submit-issue",
-        "api-reference/boosts/signature",
-        "api-reference/boosts/insights",
-        "api-reference/boosts/boost-status-and-tx-data",
-        "api-reference/boosts/boost-details",
-        "api-reference/boosts/boosts",
-        "api-reference/boosts/create-boost"
+        "v1/api-reference/boosts/participants-by-boost",
+        "v1/api-reference/boosts/participants-search",
+        "v1/api-reference/boosts/download-participants",
+        "v1/api-reference/boosts/submit-issue",
+        "v1/api-reference/boosts/signature",
+        "v1/api-reference/boosts/insights",
+        "v1/api-reference/boosts/boost-status-and-tx-data",
+        "v1/api-reference/boosts/boost-details",
+        "v1/api-reference/boosts/boosts",
+        "v1/api-reference/boosts/create-boost"
       ]
     },
     {
       "group": "users",
+      "version": "v1",
       "pages": [
-        "api-reference/users/user-profile",
-        "api-reference/users/user-details",
-        "api-reference/users/update-profile",
-        "api-reference/users/eth-earned-by-user",
-        "api-reference/users/update-notification-preferences",
-        "api-reference/users/farcaster-profile",
-        "api-reference/users/farcaster-verification-status",
-        "api-reference/users/add-neynar-connection",
-        "api-reference/users/remove-neynar-connection",
-        "api-reference/users/add-twitter-connection",
-        "api-reference/users/delete-twitter-connection",
-        "api-reference/users/user-notifications",
-        "api-reference/users/read-notifications",
-        "api-reference/users/user-rewards",
-        "api-reference/users/protocol-rewards-summary",
-        "api-reference/users/protocol-rewards-earnings",
-        "api-reference/users/referrals-summary",
-        "api-reference/users/referrals-earnings",
-        "api-reference/users/referrals-feed",
-        "api-reference/users/total-referral-earnings",
-        "api-reference/users/referrals-activity-feed",
-        "api-reference/users/activecompleted-boosts-referrals-feed"
+        "v1/api-reference/users/user-profile",
+        "v1/api-reference/users/user-details",
+        "v1/api-reference/users/update-profile",
+        "v1/api-reference/users/eth-earned-by-user",
+        "v1/api-reference/users/update-notification-preferences",
+        "v1/api-reference/users/farcaster-profile",
+        "v1/api-reference/users/farcaster-verification-status",
+        "v1/api-reference/users/add-neynar-connection",
+        "v1/api-reference/users/remove-neynar-connection",
+        "v1/api-reference/users/add-twitter-connection",
+        "v1/api-reference/users/delete-twitter-connection",
+        "v1/api-reference/users/user-notifications",
+        "v1/api-reference/users/read-notifications",
+        "v1/api-reference/users/user-rewards",
+        "v1/api-reference/users/protocol-rewards-summary",
+        "v1/api-reference/users/protocol-rewards-earnings",
+        "v1/api-reference/users/referrals-summary",
+        "v1/api-reference/users/referrals-earnings",
+        "v1/api-reference/users/referrals-feed",
+        "v1/api-reference/users/total-referral-earnings",
+        "v1/api-reference/users/referrals-activity-feed",
+        "v1/api-reference/users/activecompleted-boosts-referrals-feed"
       ]
     },
     {
       "group": "inboxes",
+      "version": "v1",
       "pages": [
-        "api-reference/inboxes/user-inboxes",
-        "api-reference/inboxes/inbox-whitelist-check",
-        "api-reference/inboxes/get-a-boost-inbox",
-        "api-reference/inboxes/create-inbox",
-        "api-reference/inboxes/delete-inbox",
-        "api-reference/inboxes/update-inbox"
+        "v1/api-reference/inboxes/user-inboxes",
+        "v1/api-reference/inboxes/inbox-whitelist-check",
+        "v1/api-reference/inboxes/get-a-boost-inbox",
+        "v1/api-reference/inboxes/create-inbox",
+        "v1/api-reference/inboxes/delete-inbox",
+        "v1/api-reference/inboxes/update-inbox"
       ]
     }
   ],
