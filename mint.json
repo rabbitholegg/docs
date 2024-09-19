@@ -1,6 +1,10 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "Boost Docs",
+<<<<<<< Updated upstream
+=======
+  "versions": ["v1", "v2"],
+>>>>>>> Stashed changes
   "logo": {
     "dark": "/assets/boost-icon-white.svg",
     "light": "/assets/boost-icon-black.svg"
@@ -180,6 +184,20 @@
         "api-reference/inboxes/create-inbox",
         "api-reference/inboxes/delete-inbox",
         "api-reference/inboxes/update-inbox"
+      ]
+    },
+    {
+      "group": "Action Creation Guide",
+      "version": "v2",
+      "pages": [
+        "v2/action-creation/introduction",
+        "v2/action-creation/getting-started",
+        "v2/action-creation/action-section",
+        "v2/action-creation/parameter-filters",
+        "v2/action-creation/logs-section",
+        "v2/action-creation/claimant-information",
+        "v2/action-creation/practical-tips",
+        "v2/action-creation/effective-actions"
       ]
     }
   ],
