@@ -1,3 +1,78 @@
 ---
 title: "Quick Start"
 ---
+
+This code snippet briefly illustrates a few core concepts of `@boostxyz/sdk`
+# TODO make a stackblitz
+
+```ts
+import { BoostCore, EventAction, SimpleAllowList } from '@boostxyz/sdk'
+// or using subpath exports, if you prefer
+import { BoostCore } from '@boostxyz/sdk/BoostCore'
+import { EventAction } from '@boostxyz/sdk/Actions/EventAction'
+import { SimpleAllowList } from '@boostxyz/sdk/AllowLists/SimpleAllowList'
+import { SimpleDenyList } from '@boostxyz/sdk/AllowLists/SimpleDenyList'
+
+// Peer dependencies
+import { createConfig, http } from '@wagmi/core'
+import { mainnet, sepolia } from '@wagmi/core/chains'
+
+// You'll likely want the following if you're in a Node environment
+import { createWalletClient, http, publicActions } from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
+import { mainnet } from 'viem/chains'
+
+// Create your Wagmi config. If using `React` or `Vue`, you can also use the [Wagmi `useConfig` API](https://wagmi.sh/react/api/hooks/useConfig)
+let config = createConfig({
+  chains: [sepolia],
+  transports: {
+    [sepolia.id]: http('https://sepolia.example.com'),
+  },
+})
+
+// If you are in a Node environment and signing transactions, you'll additionally want to configure a [Viem Local Account](https://viem.sh/docs/accounts/local) and a [Viem client](https://viem.sh/docs/clients/intro)
+const account = privateKeyToAccount('PRIVATE_KEY')
+config = createConfig({
+  ssr: true,
+  chains: [sepolia],
+  transports: {
+    [sepolia.id]: http('https://sepolia.example.com'),
+  },
+  client: ({ chain }) => {
+    return createWalletClient({
+      account,
+      chain,
+      transport: http()
+    }).extend(publicActions)
+  },
+})
+
+// Instantiate a new Boost Core, supplying your config and local account, if needed.
+const core = new BoostCore({ config, ...(!!account && { account }) })
+
+// Get a single Boost, this will automatically instantiate the Boost's core components.
+const boost = await core.getBoost(0n)
+const canIClaim = await boost.allowList.isAllowed('0xdeadb33f')
+
+// Some Boost components can be of a few different types...
+if(boost.allowList instanceof SimpleAllowList) {
+  await boost.setAllowed(
+    ['0xdeadb33f'], [true]
+  )
+}
+// so you can infer it for dynamic functionality
+if(boost.allowList instanceof SimpleDenyList) {
+  await boost.setDenied(
+    ['0xdeadb33f'], [false]
+    // For every public method that reads or writes, the last parameter is an optional object where you can override default values for the operation. For more information, see [Wagmi's readContract](https://wagmi.sh/core/api/actions/readContract) and [writeContract](https://wagmi.sh/core/api/actions/writeContract)
+    {
+      account: privateKeyToAccount('DIFFERENT_KEY')
+      value: parseEther('0.01'),
+      gasPrice: parseGwei('20'),
+      maxFeePerGas: parseGwei('20'),
+      maxFeePerGas: parseGwei('20'),
+      maxPriorityFeePerGas: parseGwei('2'),
+    }
+  )
+}
+```

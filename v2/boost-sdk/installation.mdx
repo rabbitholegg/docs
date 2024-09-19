@@ -1,3 +1,64 @@
 ---
 title: "Installation"
 ---
+
+You can install `@boostxyz/sdk` via [NPM](https://www.npmjs.com/package/@boostxyz/sdk)
+
+### NPM
+
+```bash
+npm i @boostxyz/sdk
+```
+
+or
+
+```bash
+pnpm add @boostxyz/sdk
+```
+
+or
+
+```bash
+yarn add @boostxyz/sdk
+```
+
+or
+
+```bash
+bun add @boostxyz/sdk
+```
+
+### Peer Dependencies
+
+Boost SDK is designed to work with [Wagmi Configurations](https://wagmi.sh/core/api/createConfig#config) and requires the following peer dependencies
+
+```
+"@wagmi/core": "2",
+"viem": "2",
+"abitype": "1"
+```
+
+which, if they are not already in your project, you can include with the following command
+
+```bash
+npm i @wagmi/core @wagmi/connectors viem@2.x
+# or
+pnpm add @wagmi/core @wagmi/connectors viem@2.x
+# or
+yarn add @wagmi/core @wagmi/connectors viem@2.x
+# or
+bun add @wagmi/core @wagmi/connectors viem@2.x
+```
+
+### Runtime Requirements
+
+Boost SDK is optimized for modern browsers. It is compatible with the following browsers config
+
+```
+Chrome >= 87
+Firefox >= 78
+Edge >= 88
+Safari >= 14
+```
+
+> If you want to support older browsers, you need to transpile the library from `node_modules` yourselves.
