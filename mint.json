@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "Boost Docs",
-  "versions": ["v1"],
+  "versions": ["v1", "v2"],
   "logo": {
     "dark": "/assets/boost-icon-white.svg",
     "light": "/assets/boost-icon-black.svg"
@@ -43,6 +43,76 @@
     }
   ],
   "navigation": [
+    {
+      "group": "Introduction",
+      "version": "v2",
+      "pages": [
+        "v2/introduction/introduction",
+        "v2/introduction/why-we-built-boost",
+        "v2/introduction/vision-of-boost",
+        "v2/introduction/use-cases",
+        {
+          "group": "Case Studies",
+          "pages": [
+            "v2/introduction/case-studies/zora",
+            "v2/introduction/case-studies/coop-records"
+          ]
+        }
+      ]
+    },
+    {
+      "group": "How it works",
+      "version": "v2",
+      "pages": [
+        "v2/how-it-works/deploying-boosts",
+        {
+          "group": "Action Selection",
+          "pages": [
+            "v2/action-selection/introduction",
+            "v2/action-selection/understanding-etherscan-data",
+            "v2/action-selection/setting-up-boost-actions",
+            "v2/action-selection/advanced-techniques"
+          ]
+        },
+        {
+          "group": "Reward Selection",
+          "version": "v2",
+          "pages": [
+            "v2/reward-selection/tokens-supported",
+            "v2/reward-selection/strategies-for-reward-distribution",
+            "v2/reward-selection/budget-accounts"
+          ]
+        },
+        "v2/how-it-works/claiming-rewards"
+      ]
+    },
+    {
+      "group": "For Developers",
+      "version": "v2",
+      "pages": [
+        {
+          "group": "Building with BoostSDK",
+          "pages": [
+            "v2/building-with-boostsdk/introduction-to-boostsdk",
+            "v2/building-with-boostsdk/setting-up-developer-environment",
+            "v2/building-with-boostsdk/key-features-and-functionality",
+            "v2/building-with-boostsdk/code-examples-and-best-practices"
+          ]
+        },
+        "v2/architecture/core-boost-v2",
+        "v2/architecture/boost-v2-vs-v1"
+      ]
+    },
+    {
+      "group": "Support",
+      "version": "v2",
+      "pages": [
+        "v2/community-and-support/joining-boost-community",
+        "v2/community-and-support/discord-group",
+        "v2/community-and-support/telegram-group",
+        "v2/support/faqs"
+      ]
+    },
     {
       "group": "Overview",
       "version": "v1",
