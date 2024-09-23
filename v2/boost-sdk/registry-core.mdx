@@ -80,3 +80,33 @@ A base implementation is any deployed contract registered with the registry, thu
 
 The `Boost Core` is the main entrypoint to create Boosts, claim incentives, and learn about protocol fees.
 
+```ts
+import { BoostCore, BOOST_CORE_CLAIM_FEE } from '@boostxyz/sdk/BoostCore'
+import { prepareSignerValidatorClaimDataPayload } from '@boostxyz/sdk/utils'
+
+const core = core = new BoostCore({ config: wagmiConfig })
+
+// Create a boost
+const { id, ...restOfBoost } = await core.createBoost({...})
+// Get a boost
+const boost = await core.getBoost(boost.id)
+// Claim an incentive, see []()
+await core.claimIncentive(boost.id, 0n, '0xREFERRER', prepareSignerValidatorClaimDataPayload({...}), { value: BOOST_CORE_CLAIM_FEE })
+//
+```
+
+The best way to learn about how to use `Boost Core` works is by example.
+
+<CardGroup cols={1}>
+    <Card
+        title="See examples"
+        icon="folder"
+        href="https://github.com/rabbitholegg/boost-protocol/blob/main/packages/sdk/test/zora-fork-mint.test.ts"
+    >
+    </Card>
+    <Card
+      title="Technical Documentation"
+      icon="code"
+      href="https://boost-protocol.vercel.app/classes/BoostCore.html"
+    ></Card>
+</CardGroup>
