@@ -99,17 +99,6 @@
       ]
     },
     {
-      "group": "Boost SDK",
-      "version": "v2",
-      "pages": [
-        "v2/boost-sdk/overview",
-        "v2/boost-sdk/installation",
-        "v2/boost-sdk/quick-start",
-        "v2/boost-sdk/guides-and-concepts",
-        "v2/boost-sdk/api-reference"
-      ]
-    },
-    {
       "group": "auth",
       "pages": [
         "api-reference/auth/nonce",
