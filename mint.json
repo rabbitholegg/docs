@@ -93,12 +93,7 @@
         "v2/boost-sdk/overview",
         "v2/boost-sdk/installation",
         "v2/boost-sdk/quick-start",
-        "v2/boost-sdk/concepts/registry-core",
-        "v2/boost-sdk/concepts/actions",
-        "v2/boost-sdk/concepts/allowlists",
-        "v2/boost-sdk/concepts/budgets",
-        "v2/boost-sdk/concepts/incentives",
-        "v2/boost-sdk/concepts/validators"
+        "v2/boost-sdk/registry-core",
       ]
     },
     {
