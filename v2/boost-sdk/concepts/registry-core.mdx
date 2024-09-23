@@ -1,0 +1,82 @@
+---
+title: "Registry & Core"
+description: Learn about the role the Registry and Core plays in the protocol
+---
+
+- [Boost Registry](https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/BoostRegistry.sol)
+- [Boost Core](https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/BoostCore.sol)
+
+The Registry and Core contracts are the bread and butter of the Boost V2 Protocol, exposing all the requisite functionality to create Boosts, claim incentives, manage permissions, track campaign progress, and retrieve deployed Boost components.
+
+<Tip>
+  Unless you're an advanced user, you will likely never need to deploy your own `core` and `registry` contracts. The `SDK` comes preconfigured with the correct contract addresses for all deployed core implementations.
+</Tip>
+
+## Boost Registry
+
+The `Boost Registry` is just that, a registry of valid `Action`, `AllowList`, `Budget`, `Incentive` and `Validator` implementations that can be utilized and extended by clients of the protocol.
+
+<Tip>
+  Going forward, the term `component` in reference to a Boost, refers to any `Action`, `AllowList`, `Budget`, `Incentive` or `Validator`.
+</Tip>
+
+As opposed to upgrading the source of the protocol contracts over time to add features, the Boost team will, as needed, register new implementations that adhere to `Action`, `AllowList`, `Budget`, `Incentive` or `Validator` interfaces that can then be leveraged in the creation of new Boosts.
+
+In most cases, you'll be interacting with the registry to initialize budgets that you can then use and reuse in your Boosts. For example,
+
+```ts
+import { BoostCore } from '@boostxyz/sdk/BoostCore'
+import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
+import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
+
+const registry = new BoostRegistry({ config: wagmiConfig }),
+  core = new BoostCore({ config: wagmiConfig })
+const coreAddress = core.assertValidAddress()
+
+// to create a new budget and grant the correct permissions to the protocol
+const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
+  owner: '0xME',
+  authorized: ['0xME', coreAddress],
+  roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER]
+}))
+// or use an existing one, ensuring the protocol has the correct level of access
+budget = core.ManagedBudget('0xEXISTING_BUDGET_ADDRESS')
+// if you've successfully used this budget with the protocol before, you won't need to do this
+if((await budget.isAuthorized(coreAddress)) === false) {
+  await budget.grantRoles([coreAddress])
+}
+```
+
+Ideally, you'll store a record of your budgets in some database, but the registry does contain some helpers to retrieve information about components you've initialized. For example, you can retrieve the address of the budget initialized above with the following flow.
+
+```ts
+import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
+import { RegistryType } from '@boostxyz/sdk/BoostRegistry'
+
+// get the initialized budget's unique identifier
+const identifier = await registry.getCloneIdentifier(RegistryType.BUDGET, ManagedBudget.BASE, '0xME', "MyNewBudget")
+// use the identifier to retrieve the deployed address
+const budgetAddress = await registry.getClone(identifier)
+// instantiate a `ManagedBudget` to access further SDK functionality
+const budget = core.ManagedBudget(budgetAddress)
+```
+
+Any component you initialize through the registry can be retrieved this way as well by passing the address you used to interact with the registry.
+
+[//]: # (TODO: should we add an SDK abstraction to instantiate all SDK components from a list of addreses?)
+
+```ts
+const identifiers = await registry.getClones('0xME')time
+const allCloneAddresses = await Promise.all(identifiers.map(identifier => registry.getClone(identifier)))
+```
+
+### What does it mean to `clone` a `base` implmentation?
+
+Boost components aren't instantiated traditionally, with parameters supplied to the contract's constructor on deployment. Instead, to ensure each Boost component is compliant with a registered base implementation, and save on gas, components are either cloned from a deployed base contract and initialized ahead of time through registry before being referenced in Boost creation, or, for some components, initialized at time of Boost creation, like `Incentives`.
+
+A base implementation is any deployed contract registered with the registry, thus valid for use with Boost creation, that satisfies the interfaces for either `Action`, `AllowList`, `Budget`, `Incentive` or `Validator`. For example, [ManagedBudget](https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/budgets/ManagedBudget.sol) is a base implementation that satisfies the [Budget](https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/budgets/ABudget.sol) interface.
+
+## Boost Core
+
+The `Boost Core` is the main entrypoint to create Boosts, claim incentives, and learn about protocol fees.
+
