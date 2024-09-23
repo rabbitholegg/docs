@@ -39,6 +39,7 @@
       "url": "https://api.boost.xyz/openapi.json"
     }
   ],
+  "versions": ["v1", "v2"],
   "navigation": [
     {
       "group": "Overview",
@@ -91,6 +92,13 @@
         "v2/boost-sdk/guides/budgets",
         "v2/boost-sdk/guides/incentives",
         "v2/boost-sdk/guides/validators"
+      ]
+    },
+    {
+      "group": "SDK Examples",
+      "version": "v2",
+      "pages": [
+        "v2/boost-sdk/examples/zora-mint"
       ]
     },
     {
