@@ -6,16 +6,18 @@ description: Learn how to reward users with ERC20 rewards when they mint an NFT 
 In this example, you've created an NFT on Zora, and want to incentivize users to mint it by offering additional rewards.
 
 <Warning>
-Make sure you've completed the [quick start](/v2/boost-sdk/quick-start) guide before proceeding with this example.
+Make sure you've completed the [quick start](/v2/boost-sdk/quick-start) guide.
 </Warning>
 
 First you'll need to either initialize a new budget, or use an existing one, and allow the budget to spend a certain amount of your selected ERC20.
 
-```ts
+<CodeGroup>
+```ts index.ts
 import { BoostCore } from '@boostxyz/sdk/BoostCore'
 import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
 import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
 import { parseUnits } from 'viem'
+import { wagmiConfig } from '../config'
 
 // Initialize the BoostCore and BoostRegistry modules
 const registry = new BoostRegistry({ config: wagmiConfig }),
@@ -49,6 +51,21 @@ await budget.allocate({
   target: '0xME',
 })
 ```
+
+```ts config.ts
+import { http, createConfig } from '@wagmi/core'
+import { mainnet, sepolia } from '@wagmi/core/chains'
+
+export const wagmiConfig = createConfig({
+  chains: [mainnet, sepolia],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
+})
+```
+
+</CodeGroup>
 
 Next you'll need to define the action that qualifies a user to claim the reward.
 
