@@ -6,7 +6,7 @@ description: Learn how to reward users with ERC20 rewards when they mint an NFT 
 In this example, you've created an NFT on Zora, and want to incentivize users to mint it by offering additional rewards.
 
 <Warning>
-Make sure you've completed the [quick start](/v2/boost-sdk/quick-start) guide.
+Make sure you've completed the [quick start](/v2/boost-sdk/quick-start) guide before proceeding with this example.
 </Warning>
 
 First you'll need to either initialize a new budget, or use an existing one, and allow the budget to spend a certain amount of your selected ERC20.
@@ -16,7 +16,8 @@ First you'll need to either initialize a new budget, or use an existing one, and
 import { BoostCore } from '@boostxyz/sdk/BoostCore'
 import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
 import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
-import { parseUnits } from 'viem'
+import { parseUnits, erc20Abi } from 'viem'
+import { getAccount } from '@wagmi/core'
 import { wagmiConfig } from '../config'
 
 // Initialize the BoostCore and BoostRegistry modules
@@ -26,29 +27,32 @@ const core = new BoostCore({ config: wagmiConfig })
 // Get the address of the BoostCore module
 const coreAddress = core.assertValidAddress()
 
+// Get the connected account
+const { address: account } = getAccount(wagmiConfig)
+
 // Create a new budget and grant the correct permissions to the protocol
 const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
-  owner: '0xME',
-  authorized: ['0xME', coreAddress],
-  roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER]
+  owner: account,
+  authorized: [account, coreAddress], // authorized addresses
+  roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER] // roles that the budget can assign to the protocol
 }))
 
-// Allow the budget to spend your ERC20 token
+// Allow the budget to spend your ERC20 token.
 await writeContract(wagmiConfig, {
-  abi,
-  address: '0xERC20', // The address of the ERC20 token you want to approve
+  abi: erc20Abi,
+  address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // The address of the ERC20 token you want to approve
   functionName: 'approve',
   args: [
-    budget.assertValidAddress(),
-    parseUnits('100', 18) // The amount of ERC20 token you want to approve
-  ]
+    budget.assertValidAddress(), // The address of the budget account
+    parseUnits('1', 18) // The amount of ERC20 token you want to approve
+  ],
 })
 
 // Allocate assets to the budget
 await budget.allocate({
-  amount: parseUnits('100', 18),
-  asset: '0xERC20',
-  target: '0xME',
+  amount: parseUnits('1', 18), // 1 WETH
+  asset: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+  target: account,
 })
 ```
 
@@ -64,7 +68,6 @@ export const wagmiConfig = createConfig({
   },
 })
 ```
-
 </CodeGroup>
 
 Next you'll need to define the action that qualifies a user to claim the reward.
