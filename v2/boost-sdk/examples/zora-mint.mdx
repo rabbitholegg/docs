@@ -80,6 +80,7 @@ which has the event signature `Purchased(address,address,uint256,uint256,uint256
 </Frame>
 
 Here is how you can structure the EventActionPayload to target the `Purchased` event.
+The important parameters to target in the event data are the tokenId and the NFT contract address.
 
 <Tip>
   If you're using a known event, you can use the selectors package to get the signature.
@@ -107,17 +108,19 @@ const selectedSignature = selectors[
   'Purchased(address,address,uint256,uint256,uint256)'
 ] as Hex;
 
+// https://basescan.org/tx/0x17a4d7e08acec16f385d2a038b948359919e3675eca22a09789b462a9178a769#eventlog#187
+
 // The EventAction step outlines the criteria that the validator uses to determine eligibility for reward redemption.
 const eventActionStep: ActionStep = {
   signature: selectedSignature,
   signatureType: SignatureType.EVENT,
-  targetContract: '0xZORA', // Address of the contract to observe for the event
+  targetContract: '0x9D2FC5fFE5939Efd1d573f975BC5EEFd364779ae', // The address of the Zora NFT contract
   // We want to target the `tokenId` property on the Purchase event
   actionParameter: {
     filterType: FilterType.EQUAL, // Filter to check for equality
     fieldType: PrimitiveType.UINT, // The field we're filtering is the tokenId
-    fieldIndex: 3,
-    filterData: '0xUINT256_TOKEN_ID', // We'll validate by comparing purchase events with a token ID that equals the this field
+    fieldIndex: 3, // The index of the tokenId in the event data
+    filterData: 3, // Targetting tokenId 3 on the collection
   },
 };
 
@@ -132,40 +135,37 @@ The purpose of the `eventAction` is to track and reward users based on their int
 1. **actionClaimant**: This object defines the conditions under which a user is eligible to claim rewards. It includes:
    - `signatureType`: Specifies that the signature type is an event.
    - `signature`: The event signature we are targeting, in this case, the `Purchased` event.
-   - `fieldIndex`: Indicates which field in the event data we are interested in; here, it targets the 'from' address (the address that initiated the purchase).
+   - `fieldIndex`: Indicates which field in the event data we are interested in; We can target any field that contains the claimants address.
    - `targetContract`: The address of the contract we are monitoring for the event.
 
 2. **actionSteps**: This array can contain up to four action steps that outline the specific actions or conditions that must be met for the event action to be valid. In this example, we include the previously defined `eventActionStep`.
 
-Next, we initialize the `EventAction` class from the `bases` module, passing in the default options and the constructed `eventActionPayload`. This creates a new event action.
+Next, we create an `EventAction`, passing in the constructed `eventActionPayload`.
 
 ```ts
 const eventActionPayload = {
   actionClaimant: {
     signatureType: SignatureType.EVENT,
     signature: selectedSignature, // Purchased event signature
-    fieldIndex: 0, // Targeting the 'from' address
-    targetContract: targetContract, // The contract we're monitoring
+    fieldIndex: 0, // Targeting the 'sender' field which is the address that initiated the purchase
+    targetContract: '0x9D2FC5fFE5939Efd1d573f975BC5EEFd364779ae', // The address of the Zora NFT contract
   },
   actionSteps: [eventActionStep] // use can place up to 4 action steps
 };
 
-// Initialize EventAction with the custom payload
-const eventAction = new bases.EventAction(
-  defaultOptions,
-  eventActionPayload,
-);
+// create the EventAction with the custom payload
+const eventAction = core.EventAction(eventActionPayload);
 ```
 
 Once the event action is created, we can set up the incentives and deploy our boost.
 
 ```ts
-// This allows for 100 participants to be rewarded with 1 ERC20 token each
+// This allows for 10 participants to be rewarded with 1 WETH each
 const incentives = [
-    new bases.ERC20Incentive(defaultOptions, {
-      asset: erc20.assertValidAddress(),
+    core.ERC20Incentive({
+      asset: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
       reward: parseEther('1'),
-      limit: 100n,
+      limit: 10n,
       strategy: StrategyType.POOL,
     }),
   ],
@@ -174,7 +174,7 @@ const incentives = [
 ```ts
 // Deploy the boost
 await core.createBoost({
-  maxParticipants: 100n, // Set a max number of participants
+  maxParticipants: 10n, // Set a max number of participants
   budget: budget, // Use the ManagedBudget we set up earlier
   action: eventAction, // Pass the manually created EventAction
   incentives: incentives,
@@ -182,10 +182,7 @@ await core.createBoost({
     signers: [owner, trustedSigner.account],
     validatorCaller: core.assertValidAddress(), 
   }),
-  // The boost is available to all addresses. If you want to limit it to a specific address, you can use a SimpleAllowList
-  allowList: new bases.SimpleDenyList(defaultOptions, {
-    owner: owner,
-    denied: [],
-  }),
+  // The boost is available to all addresses. If you want to limit it to specific addresses, you can use a SimpleAllowList
+  allowList: core.OpenAllowList(),
 });
 ```
