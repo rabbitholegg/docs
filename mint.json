@@ -42,6 +42,7 @@
       "version": "v1"
     }
   ],
+  "versions": ["v1", "v2"],
   "navigation": [
     {
       "group": "Overview",
@@ -93,8 +94,13 @@
         "v2/boost-sdk/overview",
         "v2/boost-sdk/installation",
         "v2/boost-sdk/quick-start",
-        "v2/boost-sdk/registry-core",
+        "v2/boost-sdk/registry-core"
       ]
+    },
+    {
+      "group": "SDK Examples",
+      "version": "v2",
+      "pages": ["v2/boost-sdk/examples/agora-vote"]
     },
     {
       "group": "auth",
