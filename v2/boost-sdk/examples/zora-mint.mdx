@@ -28,8 +28,8 @@ const coreAddress = core.assertValidAddress()
 
 // Create a new budget and grant the correct permissions to the protocol
 const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
-  owner: account,
-  authorized: [account, coreAddress], // authorized addresses
+  owner: "0xME",
+  authorized: ["0xME", coreAddress], // authorized addresses
   roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER] // roles that the budget can assign to the protocol
 }))
 
@@ -48,7 +48,7 @@ await writeContract(wagmiConfig, {
 await budget.allocate({
   amount: parseUnits('1', 18), // 1 WETH
   asset: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
-  target: account,
+  target: "0xME",
 })
 ```
 
@@ -174,7 +174,7 @@ await core.createBoost({
   budget: budget, // Use the ManagedBudget we set up earlier
   action: eventAction, // Pass the manually created EventAction
   incentives: incentives,
-  validator: new bases.SignerValidator(defaultOptions, {
+  validator: core.SignerValidator(defaultOptions, {
     signers: [owner, trustedSigner.account],
     validatorCaller: core.assertValidAddress(), 
   }),
