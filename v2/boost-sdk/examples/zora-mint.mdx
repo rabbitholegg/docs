@@ -17,18 +17,14 @@ import { BoostCore } from '@boostxyz/sdk/BoostCore'
 import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
 import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
 import { parseUnits, erc20Abi } from 'viem'
-import { getAccount } from '@wagmi/core'
 import { wagmiConfig } from '../config'
 
 // Initialize the BoostCore and BoostRegistry modules
-const registry = new BoostRegistry({ config: wagmiConfig }),
+const registry = new BoostRegistry({ config: wagmiConfig })
 const core = new BoostCore({ config: wagmiConfig })
 
 // Get the address of the BoostCore module
 const coreAddress = core.assertValidAddress()
-
-// Get the connected account
-const { address: account } = getAccount(wagmiConfig)
 
 // Create a new budget and grant the correct permissions to the protocol
 const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
