@@ -88,6 +88,8 @@ The important parameters to target in the event data are the tokenId and the NFT
     ```
 </Tip>
 
+[Here is an example of the Purchased event](https://basescan.org/tx/0x17a4d7e08acec16f385d2a038b948359919e3675eca22a09789b462a9178a769#eventlog#187)
+
 ```ts
 import { 
   EventActionPayload, 
@@ -103,8 +105,6 @@ import { selectors } from '@boostxyz/signatures/events'
 const selectedSignature = selectors[
   'Purchased(address,address,uint256,uint256,uint256)'
 ] as Hex;
-
-// https://basescan.org/tx/0x17a4d7e08acec16f385d2a038b948359919e3675eca22a09789b462a9178a769#eventlog#187
 
 // The EventAction step outlines the criteria that the validator uses to determine eligibility for reward redemption.
 const eventActionStep: ActionStep = {
