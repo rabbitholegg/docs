@@ -156,6 +156,8 @@ const eventAction = core.EventAction(eventActionPayload);
 Once the event action is created, we can set up the incentives and deploy our boost.
 
 ```ts
+import { StrategyType } from '@boostxyz/sdk/Incentives'
+
 // This allows for 10 participants to be rewarded with 1 WETH each
 const incentives = [
     core.ERC20Incentive({
