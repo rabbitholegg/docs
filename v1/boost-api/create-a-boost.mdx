@@ -21,7 +21,7 @@ All of the above data is [submitted to the POST /boosts endpoint](/boost-api/cre
 
 Each action to be boosted consists of a **project** (e.g. Zora) and a **task** (e.g. "mint" or "create"), along with a **network** for the task. Some actions require specific [action parameter](https://github.com/rabbitholegg/questdk/blob/main/src/actions/types.ts) values (e.g. contract address is required for the "mint" action), while other actions can be boosted with or without specific action parameters.
 
-The ID values of projects and tasks approved for the Boost Protocol can be queried using the [/manager/projects endpoint](/api-reference/manager/projects):
+The ID values of projects and tasks approved for the Boost Protocol can be queried using the [/manager/projects endpoint](/v1/api-reference/manager/projects):
 
 ```typescript
 const projectsResult = await fetch('https://api.boost.xyz/manager/projects');
@@ -60,7 +60,7 @@ Each boost requires an individual reward amount of any ERC20 token as well as a 
 
 ### Getting an individual reward amount estimate (optional)
 
-Once the reward token and chain have been specified by the end user, your application can optionally query the [/manager/reward-estimate endpoint](/api-reference/manager/reward-estimates) for a set of recommended individual reward amounts.
+Once the reward token and chain have been specified by the end user, your application can optionally query the [/manager/reward-estimate endpoint](/v1/api-reference/manager/reward-estimates) for a set of recommended individual reward amounts.
 
 ```typescript
 const queryParams = new URLSearchParams({
@@ -83,7 +83,7 @@ The three individual reward estimates returned, `low`, `mid`, and `high`, are ba
 
 ### Getting a mint reward amount estimate (optional)
 
-For boosted mints specifically, the [/manager/mint-reward-estimate endpoint](/api-reference/manager/mint-reward-estimates) provides a more specific reward amount estimate, which takes into account project fees and other mint-specific costs.
+For boosted mints specifically, the [/manager/mint-reward-estimate endpoint](/v1/api-reference/manager/mint-reward-estimates) provides a more specific reward amount estimate, which takes into account project fees and other mint-specific costs.
 
 ```typescript
 const queryParams = new URLSearchParams({
@@ -121,7 +121,7 @@ Ultimately, any participant limit value up to the maximum participant value is v
 
 ## Submitting the create boost request
 
-After querying and selecting all the required values, the next step is to submit everything to the [create boost endpoint](/api-reference/boosts/create-boost):
+After querying and selecting all the required values, the next step is to submit everything to the [create boost endpoint](/v1/api-reference/boosts/create-boost):
 
 ```typescript
 const createBoostResponse = await fetch('https://api.boost.xyz/boosts', {
@@ -160,7 +160,7 @@ The final step is to send a transaction to the blockchain of the chosen boost ac
 Boosts are created from the BoostFactory contract (still named "QuestFactory" on chain for now). This transaction also requires the ABI file for the boost factory contract, which can be found [here](https://github.com/rabbitholegg/questdk/blob/main/src/abi/quest-factory.ts).
 
 <Tip>
-    Note that for the transaction submission, the reward amount is an integer value of the wei-equivalent denomination of the reward token, so for an individual reward of 1 $DEGEN for example, which uses 18 decimals, the `rewardAmount` would be `1000000000000000000`. These values can also be found under `reward.amount` and `reward.decimals` in the response body from the [create boost endpoint](/api-reference/boosts/create-boost).
+    Note that for the transaction submission, the reward amount is an integer value of the wei-equivalent denomination of the reward token, so for an individual reward of 1 $DEGEN for example, which uses 18 decimals, the `rewardAmount` would be `1000000000000000000`. These values can also be found under `reward.amount` and `reward.decimals` in the response body from the [create boost endpoint](/v1/api-reference/boosts/create-boost).
 </Tip>
 
 ```typescript
@@ -210,4 +210,4 @@ async function deployBoost(
 }
 ```
 
-Once the above transaction succeeds, the boost has been created and will appear on all relevant Boost client apps! Use the Boost ID value from the [create boost response](/api-reference/boosts/create-boost) to lookup the new boost on [boost.xyz](https://boost.xyz) or through the [boost details endpoint](/api-reference/boosts/boost-details).
+Once the above transaction succeeds, the boost has been created and will appear on all relevant Boost client apps! Use the Boost ID value from the [create boost response](/v1/api-reference/boosts/create-boost) to lookup the new boost on [boost.xyz](https://boost.xyz) or through the [boost details endpoint](/v1/api-reference/boosts/boost-details).
