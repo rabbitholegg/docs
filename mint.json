@@ -48,7 +48,8 @@
         "overview/how-it-works",
         "overview/boost-protocol",
         "overview/boost-manager",
-        "overview/boost-clients"
+        "overview/boost-clients",
+        "overview/boost-sdk"
       ]
     },
     {
@@ -86,6 +87,13 @@
         "v2/boost-sdk/installation",
         "v2/boost-sdk/quick-start",
         "v2/boost-sdk/registry-core",
+      ]
+    },
+    {
+      "group": "SDK Examples",
+      "version": "v2",
+      "pages": [
+        "v2/boost-sdk/examples/zora-mint"
       ]
     },
     {
