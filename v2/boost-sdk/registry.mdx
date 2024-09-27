@@ -1,10 +1,21 @@
 ---
-title: "Registry & Core"
-description: Learn about the role the Registry and Core plays in the protocol
+title: "Registry"
+description: Learn about the role the Registry plays in the SDK
 ---
 
-- [Boost Registry](https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/BoostRegistry.sol)
-- [Boost Core](https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/BoostCore.sol)
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+
+<SDKDisclaimer />
+
+<CardGroup cols={3}>
+  <Card title="Smart Contract" icon="file-contract" href="https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/BoostRegistry.sol">
+    Read the smart contracts
+  </Card>
+  <Card title="Typedoc" icon="file-lines" href="https://boost-protocol.vercel.app/classes/BoostRegistry.html">See technical documentation</Card>
+  <Card title="SDK Implementation" icon="file-code" href="https://github.com/rabbitholegg/boost-protocol/blob/main/packages/sdk/src/BoostCore.ts">
+    See the source
+  </Card>
+</CardGroup>
 
 The Registry and Core contracts are the bread and butter of the Boost V2 Protocol, exposing all the requisite functionality to create Boosts, claim incentives, manage permissions, track campaign progress, and retrieve deployed Boost components.
 

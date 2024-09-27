@@ -2,7 +2,12 @@
 title: "Quick Start"
 ---
 
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+
+<SDKDisclaimer />
+
 This code snippet briefly illustrates a few core concepts of `@boostxyz/sdk`
+
 [//]: # (TODO: make a stackblitz?)
 
 ```ts
@@ -52,7 +57,15 @@ const core = new BoostCore({ config, ...(!!account && { account }) })
 
 // Get a single Boost, this will automatically instantiate the Boost's core components.
 const boost = await core.getBoost(0n)
-const canIClaim = await boost.allowList.isAllowed('0xdeadb33f')
+// or, if you'd like to avoid extra read calls or just want the on chain representation,
+await core.readBoost(0n)
+
+// a Boost is comprised of several components
+const validator: SignerValidator = boost.validator
+const budget: ManagedBudget = boost.budget
+const allowList: SimpleAllowList | SimpleDenyList = boost.allowList
+const action: EventAction = boost.action
+const incentives: Array<AllowListIncentive | CGDAIncentive | ERC20Incentive | PointsIncentive> = boost.incentives
 
 // Some Boost components can be of a few different types...
 if(boost.allowList instanceof SimpleAllowList) {
@@ -64,9 +77,18 @@ if(boost.allowList instanceof SimpleAllowList) {
 if(boost.allowList instanceof SimpleDenyList) {
   await boost.setDenied(
     ['0xdeadb33f'], [false]
-    // For every public method that reads or writes, the last parameter is an optional object where you can override default values for the operation. For more information, see [Wagmi's readContract](https://wagmi.sh/core/api/actions/readContract) and [writeContract](https://wagmi.sh/core/api/actions/writeContract)
+    // For every public method that reads or writes, the last parameter is an optional object where you can supply additional values for the operation if desired.
+    // For more information, see:
+    // https://wagmi.sh/core/api/actions/readContract
+    // https://wagmi.sh/core/api/actions/writeContract
     {
-      account: privateKeyToAccount('DIFFERENT_KEY')
+      chainId: 31137,
+      blockNumber: 1337n,
+      blockTag: 'latest',
+      dataSuffix: '0x',
+      account: privateKeyToAccount('DIFFERENT_KEY')\
+      gas: 0n,
+      nonce: 1,
       value: parseEther('0.01'),
       gasPrice: parseGwei('20'),
       maxFeePerGas: parseGwei('20'),
@@ -75,4 +97,8 @@ if(boost.allowList instanceof SimpleDenyList) {
     }
   )
 }
+
+// if you need, you can access the ABI for any Boost component either of two ways
+const abi = boost.allowList.abi
+import { simpleAllowListAbi } from '@boostxyz/sdk/AllowLists/SimpleAllowList'
 ```

@@ -1,0 +1,68 @@
+---
+title: "Working with Events"
+description: "Learn how to get logs and listen for new events emitted by the protocol"
+---
+
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+
+<SDKDisclaimer />
+
+<CardGroup cols={2}>
+<Card title="getLogs Reference" icon="file-lines" href="https://boost-protocol.vercel.app/classes/Contract.html#getLogs">See technical documentation for `Contract.getLogs`</Card>
+<Card title="subscribe Reference" icon="file-lines" href="https://boost-protocol.vercel.app/classes/Contract.html#subscribe">See technical documentation for `Contract.subscribe`</Card>
+</CardGroup>
+
+Any accessible `Contract` exposed by the SDK exposes 2 public methods to help retrieve typed event information.
+
+```ts getLogsExample.ts
+import { BoostCore, BoostCoreLog } from '@boostxyz/sdk'
+
+// instantiate a protocol contract
+const core = new BoostCore({ config })
+
+// you can import typed log types for your own utility
+const anyLogs: BoostCoreLog[]
+const boostCreatedLogs: BoostCoreLog<'BoostCreated'>[]
+
+boostCreatedLogs = await core.getLogs({
+  // If you provide a specific event name, the returned log type will have typesafe values
+  eventName: 'BoostCreated'
+  // you can also pass an array of event names
+  eventNames: ['BoostCreated'],
+  // you can pass any parameters you would give to https://viem.sh/docs/actions/public/getLogs#getlogs
+  fromBlock: 16330000n,
+  toBlock: 16330050n
+})
+```
+
+```ts subscribeExample.ts
+import { BoostCore, BoostCoreLog } from '@boostxyz/sdk'
+
+// instantiate a protocol contract
+const core = new BoostCore({ config })
+
+// you can import typed log types for your own utility
+const anyLogs: BoostCoreLog[]
+const boostCreatedLogs: BoostCoreLog<'BoostCreated'>[]
+
+// if you provide an eventName to listen to, you don't need to explicitly type the callback, this is just a reference
+const unsubscribe = core.subscribe(
+  (log: BoostCoreLog<'BoostCreated'>) => {
+    boostCreatedLogs.push(log)
+  },
+  {
+    eventName: 'BoostCreated',
+    // you can pass any parameters you would give to https://wagmi.sh/core/api/actions/watchContractEvent#watchcontractevent
+    batch: true,
+    chainId: 31337,
+    onError: (e: Error) => {},
+    poll: false,
+    pollingInterval: 1000,
+    strict: true,
+    syncConnectedChain: false,
+  }
+)
+
+// call unsubscribe to clean up your listener
+unsubscribe()
+```

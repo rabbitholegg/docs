@@ -1,0 +1,177 @@
+---
+title: "Usage With React"
+description: Learn how to use with React or Next.js
+---
+
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+
+<SDKDisclaimer />
+
+While the Boost SDK does not currently offer a React adapter, it's simple to integrate the V2 protocol into your application.
+
+As a prerequisite, you should have a basic [Wagmi](https://wagmi.sh/) integration set up.
+
+<Card title="Wagmi/React Setup" icon="code" href="https://wagmi.sh/react/getting-started">
+  Learn how to integrate `Wagmi` into your React application.
+</Card>
+
+Afterwards, you can use the following basic snippets as a reference.
+
+<CodeGroup>
+
+```tsx app.tsx
+'use client';
+import { type ReactNode, useEffect, useState } from 'react';
+
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { WagmiProvider } from 'wagmi';
+
+import { BoostProvider } from '@/components/BoostContext';
+import { wagmiConfig } from '@/wagmi';
+
+export function Providers({ children }: Readonly<{ children: ReactNode }>) {
+  const queryClient = new QueryClient();
+
+  const appInfo = {
+    appName: 'Boost SDK Examples',
+  };
+
+  return (
+    <WagmiProvider config={wagmiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider coolMode appInfo={appInfo}>
+          <BoostProvider>{children}</BoostProvider>
+        </RainbowKitProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
+}
+```
+
+```tsx BoostContext.tsx
+'use client';
+
+import { wagmiConfig } from '@/wagmi';
+import {
+  BoostCore,
+  type BoostCoreConfig,
+  BoostRegistry,
+  type BoostRegistryConfig,
+} from '@boostxyz/sdk';
+import { createContext, useContext, useMemo } from 'react';
+import {
+  WagmiProviderNotFoundError,
+  getAccount,
+  useAccount,
+  useConfig,
+} from 'wagmi';
+
+export interface IBoostContext {
+  registry: BoostRegistry;
+  core: BoostCore;
+}
+
+export const BoostContext = createContext<IBoostContext>({
+  core: new BoostCore({ config: wagmiConfig }),
+  registry: new BoostRegistry({ config: wagmiConfig }),
+});
+
+export type BoostProviderProps = {
+  core?: Omit<BoostCoreConfig, 'config'>;
+  registry?: Omit<BoostRegistryConfig, 'config'>;
+};
+
+export function useBoost() {
+  return useContext(BoostContext);
+}
+
+export function BoostProvider({
+  children,
+  core,
+  registry,
+}: React.PropsWithChildren<BoostProviderProps>) {
+  const config = useConfig();
+  const chainId = useChainId();
+
+  if (!config) throw new Error('No Wagmi config provided');
+
+  // we'll want to re-instantiate whenever the chain changes to ensure we're always targeting the correct protocol addresses
+  const value = useMemo(() => {
+    return {
+      core: new BoostCore({ ...core, config }),
+      registry: new BoostRegistry({ ...registry, config }),
+    };
+  }, [core, registry, chainId]);
+
+  return (
+    <BoostContext.Provider value={value}>{children}</BoostContext.Provider>
+  );
+}
+```
+
+```ts useBoostCoreInfo.ts
+import { useBoost } from '@/components/BoostContext';
+import { useQuery } from '@tanstack/react-query';
+import { zeroAddress } from 'viem';
+
+export function useBoostCoreInfo() {
+  const { core } = useBoost();
+  return useQuery({
+    queryKey: ['useBoostCoreInfo', core],
+    initialData: {
+      protocolFee: 0n,
+      protocolFeeReceiver: zeroAddress,
+      claimFee: 0n,
+    },
+    queryFn: async () => {
+      const [protocolFee, protocolFeeReceiver, claimFee] = await Promise.all([
+        core.protocolFee(),
+        core.protocolFeeReceiver(),
+        core.claimFee(),
+      ]);
+      return {
+        protocolFee,
+        protocolFeeReceiver,
+        claimFee,
+      };
+    },
+  });
+}
+```
+
+```ts useBoostCount.ts
+import { useBoost } from '@/components/BoostContext';
+import { useQuery } from '@tanstack/react-query';
+
+export function useBoostCount() {
+  const { core } = useBoost();
+  const res = useQuery({
+    queryKey: ['getBoostCount', core],
+    initialData: 0n,
+    queryFn: async () => {
+      return await core.getBoostCount();
+    },
+  });
+
+  return res;
+}
+```
+
+```ts useBoostById.ts
+import { useBoost } from '@/components/BoostContext';
+import { useQuery } from '@tanstack/react-query';
+
+export function useBoostById({ boostId }: { boostId: number }) {
+  const { core } = useBoost();
+  const res = useQuery({
+    queryKey: ['getBoostCount', core, boostId],
+    queryFn: async () => {
+      return await core.getBoost(boostId);
+    }
+  });
+
+  return res;
+}
+```
+</CodeGroup>

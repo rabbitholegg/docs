@@ -87,7 +87,9 @@
         "v2/boost-sdk/overview",
         "v2/boost-sdk/installation",
         "v2/boost-sdk/quick-start",
-        "v2/boost-sdk/registry-core"
+        "v2/boost-sdk/usage-with-react",
+        "v2/boost-sdk/working-with-events",
+        "v2/boost-sdk/registry"
       ]
     },
     {
