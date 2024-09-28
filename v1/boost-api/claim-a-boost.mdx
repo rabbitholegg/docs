@@ -12,7 +12,7 @@ Prerequisites for claiming a boost include:
 
 ## Getting a boost completion signature
 
-Before submitting the claim transaction, a signature verifying the completion of the specific boost action by the end user must be requested from [the /boosts/get-signature endpoint](/api-reference/boosts/signature).
+Before submitting the claim transaction, a signature verifying the completion of the specific boost action by the end user must be requested from [the /boosts/get-signature endpoint](/v1/api-reference/boosts/signature).
 
 ```typescript
 const getSignatureResponse = await fetch('https://api.boost.xyz/boosts/get-signature', {
@@ -89,5 +89,5 @@ const signatureObjects = await getSignatureBatchResponse.json();
 [//]: # (TODO: update get-signature-batch link once API reference is updated)
 <Tip>
     Note that individual signature request failures fail silently for [the /boosts/get-signature-batch endpoint](https://api.boost.xyz/docs#tag/boosts/paths/\~1boosts\~1get-signature-batch/post), resulting in the failing signature requests being omitted from the response.
-    To get error information on a specific signature request failure, use the singular [/boosts/get-signature endpoint](/api-reference/boosts/signature).
+    To get error information on a specific signature request failure, use the singular [/boosts/get-signature endpoint](/v1/api-reference/boosts/signature).
 </Tip>
