@@ -74,8 +74,6 @@ const budget = core.ManagedBudget(budgetAddress)
 
 Any component you initialize through the registry can be retrieved this way as well by passing the address you used to interact with the registry.
 
-[//]: # (TODO: should we add an SDK abstraction to instantiate all SDK components from a list of addreses?)
-
 ```ts
 const identifiers = await registry.getClones('0xME')time
 const allCloneAddresses = await Promise.all(identifiers.map(identifier => registry.getClone(identifier)))
