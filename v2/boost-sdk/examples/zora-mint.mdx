@@ -1,0 +1,188 @@
+---
+title: "Boost an NFT Mint on Zora"
+description: Learn how to reward users with ERC20 rewards when they mint an NFT on Zora.
+---
+
+In this example, you've created an NFT on Zora, and want to incentivize users to mint it by offering additional rewards.
+
+<Warning>
+Make sure you've completed the [quick start](/v2/boost-sdk/quick-start) guide before proceeding with this example.
+</Warning>
+
+First you'll need to either initialize a new budget, or use an existing one, and allow the budget to spend a certain amount of your selected ERC20.
+
+<CodeGroup>
+```ts index.ts
+import { BoostCore } from '@boostxyz/sdk/BoostCore'
+import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
+import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
+import { parseUnits, erc20Abi } from 'viem'
+import { wagmiConfig } from '../config'
+
+// Initialize the BoostCore and BoostRegistry modules
+const registry = new BoostRegistry({ config: wagmiConfig })
+const core = new BoostCore({ config: wagmiConfig })
+
+// Get the address of the BoostCore module
+const coreAddress = core.assertValidAddress()
+
+// Create a new budget and grant the correct permissions to the protocol
+const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
+  owner: "0xME",
+  authorized: ["0xME", coreAddress], // authorized addresses
+  roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER] // roles that the budget can assign to the protocol
+}))
+
+// Allow the budget to spend your ERC20 token.
+await writeContract(wagmiConfig, {
+  abi: erc20Abi,
+  address: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', // The address of the ERC20 token you want to approve
+  functionName: 'approve',
+  args: [
+    budget.assertValidAddress(), // The address of the budget account
+    parseUnits('1', 18) // The amount of ERC20 token you want to approve
+  ],
+})
+
+// Allocate assets to the budget
+await budget.allocate({
+  amount: parseUnits('1', 18), // 1 WETH
+  asset: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+  target: "0xME",
+})
+```
+
+```ts config.ts
+import { http, createConfig } from '@wagmi/core'
+import { mainnet, sepolia } from '@wagmi/core/chains'
+
+export const wagmiConfig = createConfig({
+  chains: [mainnet, sepolia],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+  },
+})
+```
+</CodeGroup>
+
+Next you'll need to define the action that qualifies a user to claim the reward.
+
+For Zora, we want to reward users that mint a specific NFT on Zora. To do this, we'll key off of the `Purchased` event, 
+which has the event signature `Purchased(address,address,uint256,uint256,uint256)`.
+
+<Frame caption="'Purchased' Event Structure. Take note of the tokenId field which is at index 3.">
+  <img src="/assets/event-purchased.png" alt="Purchased Event" />
+</Frame>
+
+Here is how you can structure the EventActionPayload to target the `Purchased` event.
+The important parameters to target in the event data are the tokenId and the NFT contract address.
+
+<Tip>
+  If you're using a known event, you can use the selectors package to get the signature.
+    ```ts
+    import { selectors } from '@boostxyz/signatures/events'
+    const selector = selectors[
+      'Purchased(address,address,uint256,uint256,uint256)'
+    ] as Hex;
+    ```
+</Tip>
+
+[Here is an example of the Purchased event](https://basescan.org/tx/0x17a4d7e08acec16f385d2a038b948359919e3675eca22a09789b462a9178a769#eventlog#187)
+
+```ts
+import { 
+  EventActionPayload, 
+  ActionStep, 
+  ActionClaimant, 
+  SignatureType, 
+  FilterType, 
+  PrimitiveType 
+} from '@boostxyz/sdk/Actions/EventAction'
+import { selectors } from '@boostxyz/signatures/events'
+
+// If one exists, use the signature from the selectors package
+const selectedSignature = selectors[
+  'Purchased(address,address,uint256,uint256,uint256)'
+] as Hex;
+
+// The EventAction step outlines the criteria that the validator uses to determine eligibility for reward redemption.
+const eventActionStep: ActionStep = {
+  signature: selectedSignature,
+  signatureType: SignatureType.EVENT,
+  targetContract: '0x9D2FC5fFE5939Efd1d573f975BC5EEFd364779ae', // The address of the Zora NFT contract
+  // We want to target the `tokenId` property on the Purchase event
+  actionParameter: {
+    filterType: FilterType.EQUAL, // Filter to check for equality
+    fieldType: PrimitiveType.UINT, // The field we're filtering is the tokenId
+    fieldIndex: 3, // The index of the tokenId in the event data
+    filterData: 3, // Targetting tokenId 3 on the collection
+  },
+};
+
+```
+
+
+Next, we need to define the action claimant and create the payload for the new event action.
+
+The `eventAction` payload consists of the `actionClaimant` and the `actionSteps` we defined previously. 
+The purpose of the `eventAction` is to track and reward users based on their interactions with the specified event.
+
+1. **actionClaimant**: This object defines the conditions under which a user is eligible to claim rewards. It includes:
+   - `signatureType`: Specifies that the signature type is an event.
+   - `signature`: The event signature we are targeting, in this case, the `Purchased` event.
+   - `fieldIndex`: Indicates which field in the event data we are interested in; We can target any field that contains the claimants address.
+   - `targetContract`: The address of the contract we are monitoring for the event.
+
+2. **actionSteps**: This array can contain up to four action steps that outline the specific actions or conditions that must be met for the event action to be valid. In this example, we include the previously defined `eventActionStep`.
+
+Next, we create an `EventAction`, passing in the constructed `eventActionPayload`.
+
+```ts
+const eventActionPayload = {
+  actionClaimant: {
+    signatureType: SignatureType.EVENT,
+    signature: selectedSignature, // Purchased event signature
+    fieldIndex: 0, // Targeting the 'sender' field which is the address that initiated the purchase
+    targetContract: '0x9D2FC5fFE5939Efd1d573f975BC5EEFd364779ae', // The address of the Zora NFT contract
+  },
+  actionSteps: [eventActionStep] // use can place up to 4 action steps
+};
+
+// create the EventAction with the custom payload
+const eventAction = core.EventAction(eventActionPayload);
+```
+
+Once the event action is created, we can set up the incentives.
+
+```ts
+import { StrategyType } from '@boostxyz/sdk/Incentives'
+
+// This allows for 10 participants to be rewarded with 1 WETH each
+const incentives = [
+    core.ERC20Incentive({
+      asset: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
+      reward: parseEther('1'),
+      limit: 10n,
+      strategy: StrategyType.POOL,
+    }),
+  ],
+```
+
+Last step is to create the boost.
+
+```ts
+// Deploy the boost
+const boost = await core.createBoost({
+  maxParticipants: 10n, // Set a max number of participants
+  budget: budget, // Use the ManagedBudget we set up earlier
+  action: eventAction, // Pass the manually created EventAction
+  incentives: incentives,
+  validator: core.SignerValidator(defaultOptions, {
+    signers: [owner, trustedSigner.account],
+    validatorCaller: core.assertValidAddress(), 
+  }),
+  // The boost is available to all addresses. If you want to limit it to specific addresses, you can use a SimpleAllowList
+  allowList: core.OpenAllowList(),
+});
+```

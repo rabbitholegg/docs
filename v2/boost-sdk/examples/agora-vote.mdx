@@ -1,0 +1,192 @@
+---
+title: "Boost a Vote on Agora"
+description: Learn how to reward users with ERC20 rewards when they vote for/against a specific proposal
+---
+
+In this example, you want a certain proposal to pass/fail, and want to incentivize users to swing votes in your favor by offering additional rewards.
+
+<Warning>
+Make sure you've completed the [quick start](/v2/boost-sdk/quick-start) guide before proceeding with this example.
+</Warning>
+
+First you'll need to either initialize a new budget, or use an existing one, and allow the budget to spend a certain amount of your selected ERC20.
+
+```ts
+import { BoostCore } from '@boostxyz/sdk/BoostCore'
+import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
+import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
+import { parseUnits } from 'viem'
+
+// Initialize the BoostCore and BoostRegistry modules
+const registry = new BoostRegistry({ config: wagmiConfig }),
+const core = new BoostCore({ config: wagmiConfig })
+
+// Get the address of the BoostCore module
+const coreAddress = core.assertValidAddress()
+
+// Create a new budget and grant the correct permissions to the protocol
+const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
+  owner: '0xME',
+  authorized: ['0xME', coreAddress],
+  roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER]
+}))
+
+// Allow the budget to spend your ERC20 token
+await writeContract(wagmiConfig, {
+  abi,
+  address: '0xERC20', // The address of the ERC20 token you want to approve
+  functionName: 'approve',
+  args: [
+    budget.assertValidAddress(),
+    parseUnits('100', 18) // The amount of ERC20 token you want to approve
+  ]
+})
+
+// Allocate assets to the budget
+await budget.allocate({
+  amount: parseUnits('100', 18),
+  asset: '0xERC20',
+  target: '0xME',
+})
+```
+
+Next you'll need to define the action that qualifies a user to claim the reward.
+
+For Agora, we want to reward users that vote for a specific proposal on Agora. To do this, we'll key off of the `VoteCast` event, 
+which has the event signature `VoteCast(address,uint256,uint8,uint256,string)`.
+
+<Warning>
+There is also a `VoteCastWithParams` event. The SDK can only validate one at a time (for now), so this tutorial will just check for the `VoteCast` event.
+
+A workaround for this is to create one boost for `VoteCast` and another boost for `VoteCastWithParams`.
+</Warning>
+
+<Frame caption="'VoteCast' Event Structure. Take note of the proposalId and support fields which are at index 1 and 2.">
+  <img src="/assets/event-vote-cast.png" alt="VoteCast Event" />
+</Frame>
+
+Here is how you can structure the EventActionPayload to target the `VoteCast` event.
+
+<Tip>
+  If you're using a known event, you can use the selectors package to get the signature.
+    ```ts
+    import { selectors } from '@boostxyz/signatures/events'
+    const selector = selectors[
+      'VoteCast(address,uint256,uint8,uint256,string)'
+    ] as Hex;
+    ```
+</Tip>
+
+```ts
+import { 
+  EventActionPayload, 
+  ActionStep, 
+  ActionClaimant, 
+  SignatureType, 
+  FilterType, 
+  PrimitiveType 
+} from '@boostxyz/sdk/Actions/EventAction'
+import { selectors } from '@boostxyz/signatures/events'
+import { toHex } from 'viem'
+
+// If one exists, use the signature from the selectors package
+const selectedSignature = selectors[
+  'VoteCast(address,uint256,uint8,uint256,string)'
+] as Hex;
+
+// These EventAction steps outlines the criteria that the validator uses to determine eligibility for reward redemption.
+const eventActionStepOne: ActionStep = {
+  chainid: 10, // Chain id of the action. In this case, it is Optimism
+  signature: selectedSignature,
+  signatureType: SignatureType.EVENT,
+  targetContract: '0xcdf27f107725988f2261ce2256bdfcde8b382b10', // Address of the contract to observe for the event
+  // We want to target the `proposalId` property on the VoteCast event
+  actionParameter: {
+    filterType: FilterType.EQUAL, // Filter to check for equality
+    fieldType: PrimitiveType.UINT, // The field we're filtering is the proposalId
+    fieldIndex: 1,
+    filterData: toHex(BigInt('54194543592303757979358957212312678549449891089859364558242427871997305750980')), // We'll validate by comparing VoteCast events with a proposalId that equals the this field
+  },
+};
+
+const eventActionStepTwo: ActionStep = {
+  chainid: 10, // Chain id of the action. In this case, it is Optimism
+  signature: selectedSignature,
+  signatureType: SignatureType.EVENT,
+  targetContract: '0xcdf27f107725988f2261ce2256bdfcde8b382b10', // Address of the contract to observe for the event
+  // We want to target the `support` property on the VoteCast event
+  actionParameter: {
+    filterType: FilterType.EQUAL, // Filter to check for equality
+    fieldType: PrimitiveType.UINT, // The field we're filtering is support
+    fieldIndex: 2,
+    filterData: toHex(BigInt('1')), // We'll validate by comparing VoteCast events with a support value that equals the this field
+  },
+};
+
+```
+
+
+Next, we need to define the action claimant and create the payload for the new event action.
+
+The `eventAction` payload consists of the `actionClaimant` and the `actionSteps` we defined previously. 
+The purpose of the `eventAction` is to track and reward users based on their interactions with the specified event.
+
+1. **actionClaimant**: This object defines the conditions under which a user is eligible to claim rewards. It includes:
+   - `signatureType`: Specifies that the signature type is an event.
+   - `signature`: The event signature we are targeting, in this case, the `VoteCast` event.
+   - `fieldIndex`: Indicates which field in the event data we are interested in; here, it targets the 'voter' address (the address that initiated the vote).
+   - `targetContract`: The address of the contract we are monitoring for the event.
+
+2. **actionSteps**: This array can contain up to four action steps that outline the specific actions or conditions that must be met for the event action to be valid. In this example, we include the previously defined `eventActionStepOne` and `eventActionStepTwo`.
+
+Next, we initialize the `EventAction` class from the `bases` module, passing in the default options and the constructed `eventActionPayload`. This creates a new event action.
+
+```ts
+const eventActionPayload = {
+  actionClaimant: {
+    signatureType: SignatureType.EVENT,
+    signature: selectedSignature, // VoteCast event signature
+    fieldIndex: 0, // Targeting the 'voter' address
+    targetContract: targetContract, // The contract we're monitoring
+  },
+  actionSteps: [eventActionStepOne, eventActionStepTwo] // use can place up to 4 action steps
+};
+
+// Initialize EventAction with the custom payload
+const eventAction = new bases.EventAction(
+  defaultOptions,
+  eventActionPayload,
+);
+```
+
+Once the event action is created, we can set up the incentives and deploy our boost.
+
+```ts
+// This allows for participants to be rewarded with up to 10 wei of the reward asset. The maximum amount of the rewards distributed by this incentive in this boost would be 100 wei
+const incentives = [
+    new bases.ERC20VariableIncentive(defaultOptions, {
+      asset: erc20.assertValidAddress(),
+      reward: 10n,
+      limit: 100n,
+    }),
+  ],
+```
+
+```ts
+// Deploy the boost
+await core.createBoost({
+  maxParticipants: 100n, // Set a max number of participants
+  budget: budget, // Use the ManagedBudget we set up earlier
+  action: eventAction, // Pass the manually created EventAction
+  incentives: incentives,
+  validator: new bases.SignerValidator(defaultOptions, {
+    signers: [owner, trustedSigner.account],
+    validatorCaller: core.assertValidAddress(), 
+  }),
+  // This allowlist makes this boost available to all addresses. If you want to limit it to a specific address, you can use a SimpleAllowList
+  allowList: new bases.SimpleDenyList(defaultOptions, {
+    owner: owner,
+    denied: [],
+  }),
+});
+```

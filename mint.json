@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "Boost Docs",
-  "versions": ["v1"],
+  "versions": ["v1", "v2"],
   "logo": {
     "dark": "/assets/boost-icon-white.svg",
     "light": "/assets/boost-icon-black.svg"
@@ -194,6 +194,26 @@
         "v1/api-reference/inboxes/create-inbox",
         "v1/api-reference/inboxes/delete-inbox",
         "v1/api-reference/inboxes/update-inbox"
+      ]
+    },
+    {
+      "group": "Boost SDK",
+      "version": "v2",
+      "pages": [
+        "v2/boost-sdk/overview",
+        "v2/boost-sdk/installation",
+        "v2/boost-sdk/quick-start",
+        "v2/boost-sdk/usage-with-react",
+        "v2/boost-sdk/working-with-events",
+        "v2/boost-sdk/registry"
+      ]
+    },
+    {
+      "group": "SDK Examples",
+      "version": "v2",
+      "pages": [
+        "v2/boost-sdk/examples/zora-mint",
+        "v2/boost-sdk/examples/agora-vote"
       ]
     }
   ],
