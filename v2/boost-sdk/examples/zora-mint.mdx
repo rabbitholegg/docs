@@ -116,7 +116,7 @@ const eventActionStep: ActionStep = {
     filterType: FilterType.EQUAL, // Filter to check for equality
     fieldType: PrimitiveType.UINT, // The field we're filtering is the tokenId
     fieldIndex: 2, // The index of the tokenId in the event data
-    filterData: pad(toHex(3n)), // Targetting tokenId 3 on the collection (filter data must be in hex)
+    filterData: toHex(3n, { size: 1 }), // Targetting tokenId 3 on the collection (filter data must be in hex)
   },
 };
 
