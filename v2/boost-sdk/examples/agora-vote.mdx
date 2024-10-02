@@ -105,7 +105,7 @@ const eventActionStepOne: ActionStep = {
     filterType: FilterType.EQUAL, // Filter to check for equality
     fieldType: PrimitiveType.UINT, // The field we're filtering is the proposalId
     fieldIndex: 1,
-    filterData: toHex(BigInt('54194543592303757979358957212312678549449891089859364558242427871997305750980')), // We'll validate by comparing VoteCast events with a proposalId that equals the this field
+    filterData: pad(toHex(BigInt('54194543592303757979358957212312678549449891089859364558242427871997305750980'))), // We'll validate by comparing VoteCast events with a proposalId that equals the this field
   },
 };
 
@@ -119,7 +119,7 @@ const eventActionStepTwo: ActionStep = {
     filterType: FilterType.EQUAL, // Filter to check for equality
     fieldType: PrimitiveType.UINT, // The field we're filtering is support
     fieldIndex: 2,
-    filterData: toHex(BigInt('1')), // We'll validate by comparing VoteCast events with a support value that equals the this field
+    filterData: pad(toHex(1n)), // We'll validate by comparing VoteCast events with a support value that equals the this field
   },
 };
 
