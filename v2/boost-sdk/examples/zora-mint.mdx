@@ -69,9 +69,9 @@ export const wagmiConfig = createConfig({
 Next you'll need to define the action that qualifies a user to claim the reward.
 
 For Zora, we want to reward users that mint a specific NFT on Zora. To do this, we'll key off of the `Purchased` event, 
-which has the event signature `Purchased(address,address,uint256,uint256,uint256)`.
+which has the event signature `Purchased(address indexed,address indexed,uint256 indexed,uint256,uint256)`.
 
-<Frame caption="'Purchased' Event Structure. Take note of the tokenId field which is at index 3.">
+<Frame caption="'Purchased' Event Structure. We reference the event arguments using zero-based indexing. The third argument represents the tokenId, which corresponds to index 2.">
   <img src="/assets/event-purchased.png" alt="Purchased Event" />
 </Frame>
 
@@ -83,7 +83,7 @@ The important parameters to target in the event data are the tokenId and the NFT
     ```ts
     import { selectors } from '@boostxyz/signatures/events'
     const selector = selectors[
-      'Purchased(address,address,uint256,uint256,uint256)'
+      'Purchased(address indexed,address indexed,uint256 indexed,uint256,uint256)'
     ] as Hex;
     ```
 </Tip>
@@ -103,7 +103,7 @@ import { selectors } from '@boostxyz/signatures/events'
 
 // If one exists, use the signature from the selectors package
 const selectedSignature = selectors[
-  'Purchased(address,address,uint256,uint256,uint256)'
+  'Purchased(address indexed,address indexed,uint256 indexed,uint256,uint256)'
 ] as Hex;
 
 // The EventAction step outlines the criteria that the validator uses to determine eligibility for reward redemption.
@@ -115,8 +115,8 @@ const eventActionStep: ActionStep = {
   actionParameter: {
     filterType: FilterType.EQUAL, // Filter to check for equality
     fieldType: PrimitiveType.UINT, // The field we're filtering is the tokenId
-    fieldIndex: 3, // The index of the tokenId in the event data
-    filterData: 3, // Targetting tokenId 3 on the collection
+    fieldIndex: 2, // The index of the tokenId in the event data
+    filterData: toHex(3n, { size: 1 }), // Targetting tokenId 3 on the collection (filter data must be in hex)
   },
 };
 
@@ -143,7 +143,7 @@ const eventActionPayload = {
   actionClaimant: {
     signatureType: SignatureType.EVENT,
     signature: selectedSignature, // Purchased event signature
-    fieldIndex: 0, // Targeting the 'sender' field which is the address that initiated the purchase
+    fieldIndex: 0, // Targeting the 'sender' argument which is the address that initiated the purchase
     targetContract: '0x9D2FC5fFE5939Efd1d573f975BC5EEFd364779ae', // The address of the Zora NFT contract
   },
   actionSteps: [eventActionStep] // use can place up to 4 action steps
