@@ -117,6 +117,4 @@ The SDK uses the following process to determine which chain to interact with:
 2. If no address is found for the given chainId, it falls back to using the address for the connected account's chain.
 3. If that also fails, it uses the address for the default chain set in the SDK config. 
 
-This flexible approach ensures that your operations target the intended network while providing fallback options for broader compatibility.
-
 > Note: Always ensure that the protocol is deployed on the chain you're targeting. Specifying a chainId for a network where the protocol isn't deployed will result in a ChainNotConfigured error.
