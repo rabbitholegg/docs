@@ -115,7 +115,7 @@ The SDK uses the following process to determine which chain to interact with:
 
 1. It first attempts to use the contract address associated with the specified chainId passed in the params.
 2. If no address is found for the given chainId, it falls back to using the address for the connected account's chain.
-3. If that also fails, it uses the default chain set in the SDK config. 
+3. If that also fails, it uses the address for the default chain set in the SDK config. 
 
 This flexible approach ensures that your operations target the intended network while providing fallback options for broader compatibility.
 
