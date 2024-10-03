@@ -106,8 +106,8 @@ import { simpleAllowListAbi } from '@boostxyz/sdk/AllowLists/SimpleAllowList'
 The Boost SDK allows you to interact with Boost protocol across different chains. You can specify which chain you want to target by including a `chainId` in the params object of your method calls.
 
 ```ts
-// Target a boost on Base mainnet (chainId: 8453)
-const boost = await core.getBoost({ chainId: 8453 })
+// Target a boost with id of 3 on Base mainnet (chainId: 8453)
+const boost = await core.getBoost(3n, { chainId: 8453 })
 ```
 By specifying the chainId in the params, you ensure that the SDK targets the correct contracts for the specific network you are targetting.
 
