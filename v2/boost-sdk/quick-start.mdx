@@ -109,6 +109,10 @@ The Boost SDK allows you to interact with Boost protocol across different chains
 // Target a boost with id of 3 on Base mainnet (chainId: 8453)
 const boost = await core.getBoost(3n, { chainId: 8453 })
 ```
+<Note>
+  Always ensure that the protocol is deployed on the chain you're targeting. Specifying a chainId for a network where the protocol isn't deployed will result in a `ChainNotConfigured` error.
+</Note>
+
 By specifying the chainId in the params, you ensure that the SDK targets the correct contracts for the specific network you are targetting.
 
 The SDK uses the following process to determine which chain to interact with:
@@ -116,5 +120,3 @@ The SDK uses the following process to determine which chain to interact with:
 1. It first attempts to use the contract address associated with the specified chainId passed in the params.
 2. If no address is found for the given chainId, it falls back to using the address for the connected account's chain.
 3. If that also fails, it uses the address for the default chain set in the SDK config. 
-
-> Note: Always ensure that the protocol is deployed on the chain you're targeting. Specifying a chainId for a network where the protocol isn't deployed will result in a ChainNotConfigured error.
