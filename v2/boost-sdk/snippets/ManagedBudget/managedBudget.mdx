@@ -1,0 +1,64 @@
+---
+title: "ManagedBudget"
+---
+import Config from '/snippets/config.mdx';
+
+The ManagedBudget is a flexible budget implementation that allows for the distribution of tokens (ERC-20 and native) with role-based access control. A Managed Budget is required to deploy boosts.
+
+## Overview
+
+ManagedBudget is designed to hold and distribute assets while providing fine-grained control over who can perform various operations. It supports ETH, ERC-20 based assets.
+
+## Key Features
+
+- Role-based access control for management and administration
+- Support for multiple asset types (ETH, ERC-20)
+- Flexible allocation and distribution of assets
+- Clawback functionality for asset recovery
+
+## Usage
+
+To initialize a new ManagedBudget contract:
+
+<CodeGroup>
+  ```ts index.ts
+  import { BoostCore } from '@boostxyz/sdk/BoostCore'
+  import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
+  import { ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
+  import { config } from "./config";
+
+  const core = new BoostCore({ config });
+  const registry = new BoostRegistry({ config });
+
+  // initialize a new budget contract
+  const budget = await registry.initialize(
+    "MyBoostBudget",
+    core.ManagedBudget({
+      owner: account.address,
+      authorized: [account.address, core.assertValidAddress()],
+      roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER],
+    })
+  );
+
+  const budgetAddress = budget.assertValidAddress();
+  ```
+  <Config />
+</CodeGroup>
+
+To get an existing ManagedBudget contract:
+
+<CodeGroup>
+```ts index.ts
+import { BoostCore } from "@boostxyz/sdk/BoostCore";
+import { ManagedBudget } from "@boostxyz/sdk/Budgets/ManagedBudget";
+import { config } from "./config";
+
+const budget = new ManagedBudget(
+  { config }, 
+  "0x57189e5258F39b6571f8ac14feF64D108c347f2a" // the address of a budget that has been deployed
+)
+```
+<Config />
+</CodeGroup>
+
+
