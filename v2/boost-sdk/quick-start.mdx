@@ -111,7 +111,7 @@ const boost = await core.getBoost(3n, { chainId: 8453 })
 ```
 
 <Warning>
-  Always ensure that the protocol is deployed on the chain you're targeting. Specifying a chainId for a network where the protocol isn't deployed will result in a `ChainNotConfigured` error.
+  Always ensure that the protocol is deployed on the chain you're targeting. Specifying a `chainId` for a network where the protocol isn't deployed could result in degraded UX if, in the browser, the SDK attempts to switch chains to its default network and there's no supporting chain configuration in your `Wagmi/Viem` client.
 </Warning>
 
 By specifying the `chainId` in the params, you ensure that the SDK targets the correct contracts for the specific network you are targetting.
