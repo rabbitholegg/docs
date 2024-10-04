@@ -217,10 +217,10 @@
       ]
     },
     {
-      "group": "Snippets",
+      "group": "Components",
       "version": "v2",
       "pages": [
-        "v2/boost-sdk/snippets/ManagedBudget/managedBudget"
+        "v2/boost-sdk/components/ManagedBudget/managedBudget"
       ]
     }
   ],
