@@ -5,6 +5,8 @@ description: Learn how to reward users with ERC20 rewards when they vote for/aga
 
 In this example, you want a certain proposal to pass/fail, and want to incentivize users to swing votes in your favor by offering additional rewards.
 
+<Card title="See the code" icon="file-lines" href="https://boost-protocol.vercel.app/classes/Contract.html#getLogs">See technical documentation for `Contract.getLogs`</Card>
+
 <Warning>
 Make sure you've completed the [quick start](/v2/boost-sdk/quick-start) guide before proceeding with this example.
 </Warning>
@@ -52,7 +54,7 @@ await budget.allocate({
 
 Next you'll need to define the action that qualifies a user to claim the reward.
 
-For Agora, we want to reward users that vote for a specific proposal on Agora. To do this, we'll key off of the `VoteCast` event, 
+For Agora, we want to reward users that vote for a specific proposal on Agora. To do this, we'll key off of the `VoteCast` event,
 which has the event signature `VoteCast(address indexed,uint256,uint8,uint256,string)`.
 
 <Warning>
@@ -78,13 +80,13 @@ Here is how you can structure the EventActionPayload to target the `VoteCast` ev
 </Tip>
 
 ```ts
-import { 
-  EventActionPayload, 
-  ActionStep, 
-  ActionClaimant, 
-  SignatureType, 
-  FilterType, 
-  PrimitiveType 
+import {
+  EventActionPayload,
+  ActionStep,
+  ActionClaimant,
+  SignatureType,
+  FilterType,
+  PrimitiveType
 } from '@boostxyz/sdk/Actions/EventAction'
 import { selectors } from '@boostxyz/signatures/events'
 import { toHex } from 'viem'
@@ -128,7 +130,7 @@ const eventActionStepTwo: ActionStep = {
 
 Next, we need to define the action claimant and create the payload for the new event action.
 
-The `eventAction` payload consists of the `actionClaimant` and the `actionSteps` we defined previously. 
+The `eventAction` payload consists of the `actionClaimant` and the `actionSteps` we defined previously.
 The purpose of the `eventAction` is to track and reward users based on their interactions with the specified event.
 
 1. **actionClaimant**: This object defines the conditions under which a user is eligible to claim rewards. It includes:
@@ -178,7 +180,7 @@ await core.createBoost({
   incentives: incentives,
   validator: core.SignerValidator({
     signers: [owner, trustedSigner.account],
-    validatorCaller: core.assertValidAddress(), 
+    validatorCaller: core.assertValidAddress(),
   }),
   // This allowlist makes this boost available to all addresses. If you want to limit it to a specific address, you can use a SimpleAllowList
   allowList: core.OpenAllowList(),

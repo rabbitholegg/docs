@@ -8,11 +8,11 @@ import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
 <SDKDisclaimer />
 
 <CardGroup cols={3}>
-  <Card title="Smart Contract" icon="file-contract" href="https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/BoostRegistry.sol">
+  <Card title="Smart Contract" icon="file-contract" href="https://github.com/boostxyz/boost-protocol/blob/main/packages/evm/contracts/BoostRegistry.sol">
     Read the smart contracts
   </Card>
   <Card title="Typedoc" icon="file-lines" href="https://boost-protocol.vercel.app/classes/BoostRegistry.html">See technical documentation</Card>
-  <Card title="SDK Implementation" icon="file-code" href="https://github.com/rabbitholegg/boost-protocol/blob/main/packages/sdk/src/BoostCore.ts">
+  <Card title="SDK Implementation" icon="file-code" href="https://github.com/boostxyz/boost-protocol/blob/main/packages/sdk/src/BoostCore.ts">
     See the source
   </Card>
 </CardGroup>
@@ -83,4 +83,4 @@ const allCloneAddresses = await Promise.all(identifiers.map(identifier => regist
 
 Boost components aren't instantiated traditionally, with parameters supplied to the contract's constructor on deployment. Instead, to ensure each Boost component is compliant with a registered base implementation, and save on gas, components are either cloned from a deployed base contract and initialized ahead of time through registry before being referenced in Boost creation, or, for some components, initialized at time of Boost creation, like `Incentives`.
 
-A base implementation is any deployed contract registered with the registry, thus valid for use with Boost creation, that satisfies the interfaces for either `Action`, `AllowList`, `Budget`, `Incentive` or `Validator`. For example, [ManagedBudget](https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/budgets/ManagedBudget.sol) is a base implementation that satisfies the [Budget](https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/budgets/ABudget.sol) interface.
+A base implementation is any deployed contract registered with the registry, thus valid for use with Boost creation, that satisfies the interfaces for either `Action`, `AllowList`, `Budget`, `Incentive` or `Validator`. For example, [ManagedBudget](https://github.com/boostxyz/boost-protocol/blob/main/packages/evm/contracts/budgets/ManagedBudget.sol) is a base implementation that satisfies the [Budget](https://github.com/boostxyz/boost-protocol/blob/main/packages/evm/contracts/budgets/ABudget.sol) interface.
