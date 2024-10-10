@@ -2,6 +2,10 @@
 title: "ManagedBudget"
 ---
 import Config from '/snippets/config.mdx';
+import ReturnValue from '/snippets/ReturnValue.mdx'
+import { style } from '@styles/custom-styles.css'
+
+<style>{style}</style>
 
 The ManagedBudget is a flexible budget implementation that allows for the distribution of tokens (ERC-20 and native) with role-based access control. A Managed Budget is required to deploy boosts.
 
@@ -18,7 +22,9 @@ ManagedBudget is designed to hold and distribute assets while providing fine-gra
 
 ## Usage
 
-To initialize a new ManagedBudget contract:
+#### Create a new ManagedBudget
+
+**To initialize a new ManagedBudget contract:**
 
 <CodeGroup>
   ```ts index.ts
@@ -45,20 +51,133 @@ To initialize a new ManagedBudget contract:
   <Config />
 </CodeGroup>
 
-To get an existing ManagedBudget contract:
+#### Get an existing ManagedBudget
+
+**To get an existing ManagedBudget contract:**
 
 <CodeGroup>
 ```ts index.ts
-import { BoostCore } from "@boostxyz/sdk/BoostCore";
-import { ManagedBudget } from "@boostxyz/sdk/Budgets/ManagedBudget";
-import { config } from "./config";
+const budget = core.ManagedBudget("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
 
-const budget = new ManagedBudget(
-  { config }, 
-  "0x57189e5258F39b6571f8ac14feF64D108c347f2a" // the address of a budget that has been deployed
+// or if you want a budget from a specific chain
+const budgetOnBase = core.ManagedBudget(
+  "0xc55F719709bDad022B320E76f9DfF7e6F5680767", 
+  { chainId: 8453 }
 )
 ```
-<Config />
 </CodeGroup>
 
+<Tip>
+  [Learn more about targeting specific chains](/v2/boost-sdk/quick-start#targeting-specific-chains)
+</Tip>
 
+### Write Methods
+
+#### Allocate
+
+**To allocate funds to the ManagedBudget:**
+
+The allocate function transfers assets into the budget.
+
+<Warning>
+  Before using `allocate`, you must approve the ManagedBudget to spend the asset.
+</Warning>
+
+<CodeGroup>
+```ts index.ts
+import { parseUnits } from "viem";
+
+const budget = core.ManagedBudget("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
+
+// Allocate assets to the budget
+await budget.allocate({
+  amount: parseUnits('1', 18),
+  asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D',
+  target: account.address,
+});
+```
+</CodeGroup>
+
+<ReturnValue value="boolean" description="true if the request was successful" />
+
+<Note>
+  You can also directly transfer tokens to the ManagedBudget contract address instead of using the `allocate` function. This allows you to bypass the approval process for ERC20 tokens.
+</Note>
+
+#### Clawback
+
+**To reclaim funds from the ManagedBudget:**
+
+The clawback function is used to reclaim funds from the budget. Only the owner can call this function.
+<CodeGroup>
+```ts index.ts
+const budget = core.ManagedBudget("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
+
+// Perform clawback
+await budget.clawback({
+  amount: 0n,
+  asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D',
+  target: account.address, // Address to receive the funds
+});
+```
+</CodeGroup>
+
+<ReturnValue value="boolean" description="true if the request was successful" />
+
+<Tip>
+  - Using `clawback` with `0n` will reclaim all available funds for the given asset.
+  - Use the zero address (`0x0000000000000000000000000000000000000000`) to clawback native assets (ie. ETH).
+</Tip>
+
+#### Disburse
+
+**To disburse funds from the ManagedBudget:**
+
+<CodeGroup>
+```ts index.ts
+import { parseUnits } from "viem";
+
+const budget = core.ManagedBudget("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
+
+// Disburse funds
+await budget.disburse({
+  amount: parseUnits('1', 18), // Amount to disburse
+  asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D', // ERC20 token address
+  target: '0x865C301c46d64DE5c9B124Ec1a97eF1EFC1bcbd1', // Recipient address
+});
+```
+</CodeGroup>
+
+<ReturnValue value="boolean" description="true if the request was successful" />
+
+#### DisburseBatch
+
+**To disburse funds to multiple recipients in a single transaction:**
+
+<CodeGroup>
+```ts index.ts
+import { parseUnits } from "viem";
+
+const budget = core.ManagedBudget("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
+
+// Disburse funds in batch
+await budget.disburseBatch([
+  {
+    amount: parseUnits('1', 18),
+    asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D',
+    target: '0x865C301c46d64DE5c9B124Ec1a97eF1EFC1bcbd1',
+  },
+  {
+    amount: parseUnits('1', 18),
+    asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D',
+    target: '0xC8a29641644d27f28e21d8A2112a3B79fFDc39eC',
+  },
+]);
+```
+</CodeGroup>
+
+<ReturnValue value="boolean" description="true if the request was successful" />
+
+<Note>
+  The `disburseBatch` function allows you to disburse funds to multiple recipients in a single transaction, which can be more gas-efficient when dealing with multiple disbursements.
+</Note>
