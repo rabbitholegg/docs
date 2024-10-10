@@ -3,11 +3,12 @@ title: "ManagedBudget"
 ---
 import Config from '/snippets/config.mdx';
 import ReturnValue from '/snippets/ReturnValue.mdx'
-import { style } from '@styles/custom-styles.css'
-
-<style>{style}</style>
 
 The ManagedBudget is a flexible budget implementation that allows for the distribution of tokens (ERC-20 and native) with role-based access control. A Managed Budget is required to deploy boosts.
+
+<Note>
+  For a detailed technical overview of the ManagedBudget class, please refer to the [ManagedBudget TypeDoc](https://boost-protocol.vercel.app/classes/ManagedBudget.html).
+</Note>
 
 ## Overview
 
@@ -98,7 +99,9 @@ await budget.allocate({
 ```
 </CodeGroup>
 
-<ReturnValue value="boolean" description="true if the request was successful" />
+> [Types](https://boost-protocol.vercel.app/classes/ManagedBudget.html#allocate)
+
+<ReturnValue value="Promise<boolean>" description="true if the request was successful" />
 
 <Note>
   You can also directly transfer tokens to the ManagedBudget contract address instead of using the `allocate` function. This allows you to bypass the approval process for ERC20 tokens.
@@ -108,7 +111,8 @@ await budget.allocate({
 
 **To reclaim funds from the ManagedBudget:**
 
-The clawback function is used to reclaim funds from the budget. Only the owner can call this function.
+The clawback function is used to reclaim funds from the budget. Can only be called by owner or admin.
+
 <CodeGroup>
 ```ts index.ts
 const budget = core.ManagedBudget("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
@@ -122,6 +126,8 @@ await budget.clawback({
 ```
 </CodeGroup>
 
+> [Types](https://boost-protocol.vercel.app/classes/ManagedBudget.html#clawback)
+
 <ReturnValue value="boolean" description="true if the request was successful" />
 
 <Tip>
@@ -132,6 +138,8 @@ await budget.clawback({
 #### Disburse
 
 **To disburse funds from the ManagedBudget:**
+
+Transfers funds from the budget to a specified recipient. You must have the manager, admin or owner role to call this function.
 
 <CodeGroup>
 ```ts index.ts
@@ -148,11 +156,15 @@ await budget.disburse({
 ```
 </CodeGroup>
 
-<ReturnValue value="boolean" description="true if the request was successful" />
+> [Types](https://boost-protocol.vercel.app/classes/ManagedBudget.html#disburse)
+
+<ReturnValue value="Promise<boolean>" description="true if the request was successful" />
 
 #### DisburseBatch
 
 **To disburse funds to multiple recipients in a single transaction:**
+
+Transfers funds from the budget to a list of specified recipients. You must have the manager, admin or owner role to call this function.
 
 <CodeGroup>
 ```ts index.ts
@@ -176,7 +188,9 @@ await budget.disburseBatch([
 ```
 </CodeGroup>
 
-<ReturnValue value="boolean" description="true if the request was successful" />
+> [Types](https://boost-protocol.vercel.app/classes/ManagedBudget.html#disburseBatch)
+
+<ReturnValue value="Promise<boolean>" description="true if the request was successful" />
 
 <Note>
   The `disburseBatch` function allows you to disburse funds to multiple recipients in a single transaction, which can be more gas-efficient when dealing with multiple disbursements.
