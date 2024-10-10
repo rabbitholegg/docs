@@ -1,0 +1,20 @@
+---
+title: "Allowlists"
+---
+
+Allow Lists and Deny Lists are flexible mechanisms in the Boost protocol for managing access control. They provide simple ways to either allow or deny specific addresses from participating in a Boost.
+
+## Overview
+
+The Boost protocol offers three main types of lists for access control:
+
+- **SimpleAllowList**: Explicitly allows specified addresses.
+- **SimpleDenyList**: Allows all addresses except those explicitly denied.
+- **OpenAllowList**: A special implementation of SimpleDenyList where no addresses are denied, effectively allowing all addresses (public access).
+
+These lists offer straightforward methods to manage access control for Boosts, providing flexibility in how you manage participant access.
+
+## Usage
+To create and use these lists:
+
+If you just want to use an allowlist one time, you can use set it up directly on the createBoost call.

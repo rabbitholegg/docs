@@ -216,6 +216,14 @@
         "v2/boost-sdk/examples/zora-mint",
         "v2/boost-sdk/examples/agora-vote"
       ]
+    },
+    {
+      "group": "Components",
+      "version": "v2",
+      "pages": [
+        "v2/boost-sdk/components/ManagedBudget/ManagedBudget",
+        "v2/boost-sdk/components/Allowlist"
+      ]
     }
   ],
   "footerSocials": {
