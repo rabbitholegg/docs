@@ -128,7 +128,7 @@ await budget.clawback({
 
 > [Types](https://boost-protocol.vercel.app/classes/ManagedBudget.html#clawback)
 
-<ReturnValue value="boolean" description="true if the request was successful" />
+<ReturnValue value="Promise<boolean>" description="true if the request was successful" />
 
 <Tip>
   - Using `clawback` with `0n` will reclaim all available funds for the given asset.
