@@ -1,0 +1,71 @@
+---
+title: "Cloned Components"
+---
+
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import ReadParams from '/snippets/read-params.mdx';
+
+<SDKDisclaimer />
+
+Once you've initialized a component through the Boost Registry, there are several methods to help you keep track of what you've deployed.
+
+## API
+
+### `getCloneIdentifier`
+
+Retrieves the unique identifier for a previously initialized clone.
+
+```ts
+const id = await registry.getCloneIdentifier(
+  RegistryType.BUDGET,
+  ManagedBudget.bases[11155111],
+  '0xME',
+  'MyBudget'
+)
+```
+
+#### Parameters
+
+<ParamField path="registryType" type="RegistryType" required>
+An enum representing the type of previously initialized component.
+
+```ts
+import { RegistryType } from '@boostxyz/sdk'
+RegistryType.ACTION // 0
+RegistryType.ALLOW_LIST // 1
+RegistryType.BUDGET // 2
+RegistryType.INCENTIVE // 3
+RegistryType.VALIDATOR // 4
+```
+</ParamField>
+
+<ParamField path="base" type="Address" required>
+  The address of the base implementation your component was cloned from. You can either use [Component.bases[chainId]](https://boost-protocol.vercel.app/classes/DeployableTarget.html#bases) or [getBaseImplementation](#getbaseimplementation) to retrieve this.
+</ParamField>
+
+<ParamField path="deployer" type="Address" required>
+  The address of the user that initialized the clone.
+</ParamField>
+
+<ParamField path="displayName" type="string" required>
+  The display name used when initializing the clone
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="id" type="Promise<Hex>" required>
+  Returns the clone's unique identifier
+
+```ts
+const id = await registry.getCloneIdentifier(
+  RegistryType.BUDGET,
+  ManagedBudget.bases[11155111],
+  '0xME',
+  'MyBudget'
+)
+const address = await registry.getClone(id) // Address
+const budget = core.ManagedBudget(address)
+```
+</ResponseField>

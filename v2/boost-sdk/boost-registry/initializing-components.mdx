@@ -1,0 +1,67 @@
+---
+title: Initializing Components
+---
+
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import WriteParams from '/snippets/write-params.mdx';
+
+<SDKDisclaimer />
+
+Boost components aren't instantiated traditionally, with parameters supplied to the contract's constructor on deployment. Instead, to ensure each Boost component is compliant with a registered base implementation, and save on gas, components are either cloned from a deployed base contract and initialized ahead of time through registry before being referenced in Boost creation, or, for some components, initialized at time of Boost creation.
+
+<Warning>
+  `Incentives` are not re-usable between multiple Boosts, and cannot be initialized by the registry.
+</Warning>
+
+## What is a base implementation?
+
+A base implementation is any deployed contract registered with the registry, thus valid for use with Boost creation, that satisfies the interfaces for either `Action`, `AllowList`, `Budget`, `Incentive` or `Validator`. For example, [ManagedBudget](https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/budgets/ManagedBudget.sol) is a base implementation that satisfies the [Budget](https://github.com/rabbitholegg/boost-protocol/blob/main/packages/evm/contracts/budgets/ABudget.sol) interface.
+
+## API
+
+### `initialize`
+
+Deploys and initializes a new instance of a registered component's base implementation and returns the component with its address attached.
+
+```ts
+const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
+  owner: '0xME',
+  authorized: ['0xME', core.assertValidAddress()],
+  roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER]
+}))
+```
+
+<Note>
+Clones are uniquely identified by hashing the component's type, base address, your address, and name. For example, you cannot initialize two `ManagedBudget`'s with the same `displayName`
+</Note>
+
+#### Parameters
+
+<ParamField path="displayName" type="string" required>
+  A display name for the new instance. Must be unique per account and base implementation.
+</ParamField>
+
+<ParamField path="target" type="AllowList | Budget | Action" required>
+  An instance of the component you'd like to initialize.
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="target" type="Promise<AllowList | Budget | Action>" required>
+  Returns the target parameter with its deployed address attached.
+
+```ts
+const budget = await registry.initialize('MyNewBudget', ...)
+isAddress(budget.assertValidAddress()) // true
+```
+
+You can then reuse it during Boost creation.
+
+```ts
+await core.createBoost({ budget, ...otherComponents })
+// or you can re-use with its address if you already have it
+await core.createBoost({ budget: core.ManagedBudget(budget.assertValidAddress()), ...otherComponents })
+```
+</ResponseField>
