@@ -69,3 +69,63 @@ const address = await registry.getClone(id) // Address
 const budget = core.ManagedBudget(address)
 ```
 </ResponseField>
+
+### `getClone`
+
+Retrieves the address of an initialized clone given its identifier.
+
+```ts
+const id = await registry.getCloneIdentifier(
+  RegistryType.BUDGET,
+  ManagedBudget.bases[11155111],
+  '0xME',
+  'MyBudget'
+)
+const address = await registry.getClone(id) // Address
+// initialize to interact with deployed budget
+const budget = core.ManagedBudget(address)
+```
+
+#### Parameters
+
+<ParamField path="identifier" type="Hex" required>
+The clone's unique identifier, which can be ascertained with [registry.getCloneIdentifier](#getcloneidentifier)
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="address" type="Promise<Address>" required>
+  Returns the clone's address.
+</ResponseField>
+
+### `getBaseImplementation`
+
+Retrieves the address of an initialized clone's base implementation. This is a low-level API, and base addresses are managed for you under the hood if using Boost components provided through the SDK.
+
+```ts
+const id = await registry.getCloneIdentifier(
+  RegistryType.BUDGET,
+  ManagedBudget.bases[11155111],
+  '0xME',
+  'MyBudget'
+)
+const managedBudgetBase = await registry.getBaseImplementation(id) // Address
+const managedBudget = core.ManagedBudget(managedBudgetBase)
+assert(managedBudget.isBase, true)
+```
+
+#### Parameters
+
+<ParamField path="identifier" type="Hex" required>
+The clone's unique identifier, which can be ascertained with [registry.getCloneIdentifier](#getcloneidentifier)
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="address" type="Promise<Address>" required>
+  Returns the address of the clone's base implementation.
+</ResponseField>

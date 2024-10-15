@@ -12,18 +12,21 @@ import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
     Read the smart contracts
   </Card>
   <Card title="Typedoc" icon="file-lines" href="https://boost-protocol.vercel.app/classes/BoostRegistry.html">See technical documentation</Card>
-  <Card title="SDK Implementation" icon="file-code" href="https://github.com/boostxyz/boost-protocol/blob/main/packages/sdk/src/BoostCore.ts">
+  <Card title="SDK Implementation" icon="file-code" href="https://github.com/boostxyz/boost-protocol/blob/main/packages/sdk/src/BoostRegistry.ts">
     See the source
   </Card>
 </CardGroup>
 
-The Registry and Core contracts are the bread and butter of the Boost V2 Protocol, exposing all the requisite functionality to create Boosts, claim incentives, manage permissions, track campaign progress, and retrieve deployed Boost components.
+[//]: # (TODO: link these somewhere)
+The Boost Registry contract is a key touchpoint within the protocol, allowing users to initialize components they intend to re-use across multiple Boosts, like Budgets or AllowLists.
 
 <Tip>
-  Unless you're an advanced user, you will likely never need to deploy your own `core` and `registry` contracts. The `SDK` comes preconfigured with the correct contract addresses for all deployed core implementations.
+Unless you're an advanced user, you will likely never need to deploy your own and `registry` contract. The `SDK` comes preconfigured with the correct contract addresses for all deployed core implementations.
 </Tip>
 
-The `Boost Registry` is just that, a registry of valid `Action`, `AllowList`, `Budget`, `Incentive` and `Validator` implementations that can be utilized and extended by clients of the protocol.
+The registry aspect to the `Registry` is just that, a registry of valid `Action`, `AllowList`,
+`Budget`, `Incentive` and `Validator` implementations that can be utilized and
+extended by clients of the protocol.
 
 <Tip>
   Going forward, the term `component` in reference to a Boost, refers to any `Action`, `AllowList`, `Budget`, `Incentive` or `Validator`.
@@ -76,12 +79,9 @@ Any component you initialize through the registry can be retrieved this way as w
 const identifiers = await registry.getClones('0xME')
 const allCloneAddresses = await Promise.all(identifiers.map(identifier => registry.getClone(identifier)))
 ```
-<<<<<<< HEAD:v2/boost-sdk/registry.mdx
 
 ### What does it mean to `clone` a `base` implmentation?
 
 Boost components aren't instantiated traditionally, with parameters supplied to the contract's constructor on deployment. Instead, to ensure each Boost component is compliant with a registered base implementation, and save on gas, components are either cloned from a deployed base contract and initialized ahead of time through registry before being referenced in Boost creation, or, for some components, initialized at time of Boost creation, like `Incentives`.
 
 A base implementation is any deployed contract registered with the registry, thus valid for use with Boost creation, that satisfies the interfaces for either `Action`, `AllowList`, `Budget`, `Incentive` or `Validator`. For example, [ManagedBudget](https://github.com/boostxyz/boost-protocol/blob/main/packages/evm/contracts/budgets/ManagedBudget.sol) is a base implementation that satisfies the [Budget](https://github.com/boostxyz/boost-protocol/blob/main/packages/evm/contracts/budgets/ABudget.sol) interface.
-=======
->>>>>>> 0858f23 (chore(v2,sdk): scaffold extensive docs):v2/boost-sdk/boost-registry/overview.mdx
