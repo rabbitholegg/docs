@@ -230,7 +230,6 @@
 			"version": "v2",
 			"pages": [
 				"v2/boost-sdk/boost-core/overview",
-				"v2/boost-sdk/boost-core/create-boost",
 				"v2/boost-sdk/boost-core/get-boosts"
 			]
 		}

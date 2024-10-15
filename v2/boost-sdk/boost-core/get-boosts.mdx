@@ -14,9 +14,7 @@ import ReadParams from '/snippets/read-params.mdx';
 Retrieves a single Boost by ID and instantiate the correct interfaces for all components.
 
 ```ts
-const boost = await core.getBoost(
-  1n
-)
+const boost = await core.getBoost(1n)
 // You can also supply a numerical string, or hexadecimal representation
 const boost = await core.getBoost(
   "1" // or "0x1"
@@ -27,6 +25,36 @@ assert(boost.budget instanceof ManagedBudget)
 ```
 
 This method also executes several read calls to ascertain the correct Boost component interfaces. If you'd like to save on calls, use [core.readBoost](#readboost) instead, which returns the raw on-chain representation with component addresses instead of instantiated classes.
+
+#### Parameters
+
+<ParamField path="id" type="string | bigint" required>
+A `bigint`, or numerical string, or hexadecimal string.
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="boost" type="Promise<Boost>" required>
+  Returns the Boost if found. Otherwise, throws `BoostNotFoundError`
+</ResponseField>
+
+### `readBoost`
+
+Retrieves the raw on-chain representation of a Boost.
+
+```ts
+const boost = await core.readBoost(1n)
+// You can also supply a numerical string, or hexadecimal representation
+const boost = await core.readBoost(
+  "1" // or "0x1"
+)
+// All fields and components are primitives
+assert(isAddress(boost.budget))
+const budget = await budgetFromAddress(boost.budget)
+assert(budget instanceof ManagedBudget)
+```
 
 #### Parameters
 

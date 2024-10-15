@@ -72,7 +72,7 @@ const budget = core.ManagedBudget(address)
 
 ### `getClone`
 
-Retrieves the address of an initialized clone given its identifier.
+Retrieves an initialized clone given its identifier.
 
 ```ts
 const id = await registry.getCloneIdentifier(
@@ -81,9 +81,9 @@ const id = await registry.getCloneIdentifier(
   '0xME',
   'MyBudget'
 )
-const address = await registry.getClone(id) // Address
+const { instance, baseType, deployer, name } = await registry.getClone(id)
 // initialize to interact with deployed budget
-const budget = core.ManagedBudget(address)
+const budget = core.ManagedBudget(instance)
 ```
 
 #### Parameters
@@ -96,9 +96,33 @@ The clone's unique identifier, which can be ascertained with [registry.getCloneI
 
 #### Returns
 
-<ResponseField name="address" type="Promise<Address>" required>
-  Returns the clone's address.
+<ResponseField name="clone" type="Promise<Clone>" required>
+  Returns the clone
 </ResponseField>
+
+### `getClones`
+
+Retrieves the identifiers for all clones initialized by a given address.
+
+```ts
+const identifiers = await registry.getClones('0xME')
+const allClones = await Promise.all(identifiers.map(identifier => registry.getClone(identifier)))
+```
+
+#### Parameters
+
+<ParamField path="deployer" type="Address" required>
+The address of the clones' deployer
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="identifiers" type="Promise<Array<Hex>>" required>
+  Returns a list of hex strings that can be used with [registry.getClone](#getclone)
+</ResponseField>
+
 
 ### `getBaseImplementation`
 
