@@ -1,0 +1,42 @@
+---
+title: "Analyzing the Logs Section"
+description: "Learn how to use transaction logs to create more precise Boost actions"
+---
+
+The Logs section on Etherscan provides valuable information about events that occurred during the transaction. This information can be used to create more precise Boost actions.
+
+## Finding the Logs Section
+
+Scroll down to the "Logs" section on Etherscan. Each log represents an event that happened during the transaction.
+
+## Components of a Log
+
+### Address
+
+- The contract address is shown at the top of each log
+- **Example**: Address: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 (USDC token contract)
+- **How to use it**: Enter this address in the "Address" field of the Log Filter in the Boost Deploy flow
+
+### Signature
+
+- The event name is shown if the contract is verified
+- **Example**: Event: Transfer(address indexed from, address indexed to, uint256 value)
+- **How to use it**: Select this event (e.g., "Transfer") in the "Signature" dropdown of the Log Filter
+
+### Parameter Filters
+
+Below the event name, you'll see a list of parameters and their values.
+
+#### Example for a Transfer event:
+
+```
+from (address): 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
+to (address): 0x6B175474E89094C44Da98b954EedeAC495271d0F
+value (uint256): 1000000000000000000 (1 Token)
+```
+
+#### Example for a Swap event:
+
+```
+sender (address): 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
+recipient (address):

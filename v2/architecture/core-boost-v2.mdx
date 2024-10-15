@@ -1,0 +1,102 @@
+---
+title: "Boost V2 Core Protocol Architecture"
+description: "An overview of the Boost V2 core protocol architecture and its components"
+---
+
+![Boost V2 Core Protocol Architecture Diagram](/assets/boost-architecture.png)
+
+The Boost V2 core protocol architecture is designed to enable flexible, secure, and efficient on-chain incentivization. It consists of several key components that work together to validate actions, generate proofs, and distribute rewards. Here's a breakdown of the architecture:
+
+## Components
+
+- **User**: The end-user interacting with the system.
+- **ExternalContract**: The smart contract with which the user interacts to perform the incentivized action.
+- **BackendValidator**: An off-chain component that validates the user's action.
+- **Core**: The central smart contract of the Boost protocol.
+- **SignerValidator**: An on-chain component that verifies the proof of the user's action.
+
+## Process Flow
+
+1. **Action Execution**:
+   - The User executes an action on the ExternalContract.
+   - This action is the behavior that Boost aims to incentivize.
+
+2. **Off-chain Validation**:
+   - The BackendValidator observes and validates the action off-chain.
+   - This allows for complex validation logic without incurring high gas costs.
+
+3. **Signature Generation**:
+   - Upon successful validation, the BackendValidator generates a cryptographic signature.
+   - This signature serves as a proof that the user performed the specified action.
+
+4. **Signature Submission**:
+   - The User submits the signature to the Core contract.
+   - This step initiates the on-chain portion of the claiming process.
+
+5. **On-chain Verification**:
+   - The Core contract calls the SignerValidator with the provided signature.
+   - The SignerValidator uses EIP-712 signature validation to verify the proof.
+   - EIP-712 provides a secure method for signing and verifying structured data.
+
+6. **Reward Distribution**:
+   - If the signature is valid, the Core contract distributes the incentive to the User.
+
+## Choosing a Reward
+
+When setting up a Boost, it's crucial to choose an appropriate reward structure that aligns with your project's goals and tokenomics. Here are some considerations:
+
+1. **Token Type**: 
+   - Native tokens (e.g., ETH)
+   - Project-specific tokens
+   - Stablecoins (e.g., USDC, DAI)
+
+2. **Reward Amount**:
+   - Fixed amount per action
+   - Percentage-based rewards
+   - Tiered rewards based on action value or user status
+
+3. **Reward Frequency**:
+   - Immediate distribution upon action completion
+   - Periodic distributions (e.g., daily, weekly)
+   - Milestone-based rewards
+
+4. **Reward Caps**:
+   - Per-user caps to prevent exploitation
+   - Total reward caps for budget control
+   - Time-based caps (e.g., daily limits)
+
+5. **Vesting or Lock-up Periods**:
+   - Immediate availability
+   - Gradual vesting to encourage long-term engagement
+   - Lock-up periods for larger rewards
+
+When choosing a reward structure, consider factors such as:
+- The perceived value of the incentivized action
+- Your project's token supply and inflation rate
+- User behavior and motivation
+- Regulatory compliance and tax implications
+
+A well-designed reward structure can effectively drive desired user actions while maintaining the economic balance of your ecosystem.
+
+## Key Improvements in V2
+
+- **Flexibility**: The architecture allows for incentivizing actions on any external contract, greatly expanding the use cases for Boost.
+- **Gas Efficiency**: By moving complex validation off-chain and only verifying a compact signature on-chain, gas costs are significantly reduced.
+- **Security**: The use of EIP-712 for structured data signing ensures that the proofs are secure and tamper-resistant.
+- **Scalability**: The off-chain validation allows for handling complex conditions and high volumes of actions without congesting the blockchain.
+- **Modularity**: The separation of concerns between different components (ExternalContract, BackendValidator, Core, SignerValidator) allows for easier upgrades and maintenance.
+
+## How it works
+
+Boost V2 offers a comprehensive suite of features for deploying, managing, and interacting with on-chain incentives. Here's an overview of key processes:
+
+1. [Deploying Boosts](/v2/how-it-works/deploying-boosts)
+   Learn how to set up and deploy new Boost incentive programs.
+
+2. [Claiming Rewards](/v2/how-it-works/claiming-rewards)
+   Explore the user journey for interacting with a Boost and claiming earned rewards.
+
+3. [Use Cases](/v2/how-it-works/use-cases)
+   Discover various applications and scenarios where Boost V2 can be effectively implemented.
+
+Each of these topics is covered in detail in its respective page, providing step-by-step guidance and best practices for leveraging the full potential of Boost V2.
