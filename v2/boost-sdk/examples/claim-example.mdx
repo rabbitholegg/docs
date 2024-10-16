@@ -1,0 +1,65 @@
+---
+title: "Claiming ERC20 Incentives"
+description: Learn how to claim ERC20 rewards from a Boost
+---
+
+Boost Protocol allows users to claim ERC20 rewards from Boosts. This process involves interacting with the Boost contract to verify eligibility and receive the allocated incentives. 
+
+To claim an ERC20 reward from a Boost, you'll need to follow these general steps:
+
+1. Retrieve the Boost you want to claim from
+2. Get the specific incentive from the Boost
+3. Prepare the incentive payload
+4. Encode the claim data
+5. Execute the claim transaction
+
+```ts
+// get the boost you want to claim from
+const boost = await core.getBoost(1n)
+
+// get the incentive you want to claim off the boost object
+const incentive = boost.incentives[0]
+
+// prepare the incentive payload
+let incentivePayload
+
+if (incentive instanceof ERC20VariableIncentive) {
+  const incentivePayload = await incentive.buildClaimData(1n)
+}
+
+// encode claimData payload
+const claimDataPayload = await boost.validator.encodeClaimData({
+  signer: signer.account,
+  incentiveData: incentivePayload,
+  chainId: 8453,
+  incentiveQuantity: 1,
+  claimant: "0xCLAIMANT", // the address of the account claiming the incentive
+  boostId: boost.id,
+});
+
+// claim the incentive from the boost
+await core.claimIncentive(
+  boost.id,
+  0n, // position in the array of incentives
+  account.address, // the claimant
+  claimDataPayload,
+  { value: parseEther('0.000075') }, // claim fee
+);
+```
+
+<Warning>
+  The claimant must be authorized to claim the incentive. (*ie: on allowlist and passes validation*)
+</Warning>
+
+You can also claim on behalf of another user by using the `claimIncentiveFor` method.
+
+```ts
+await core.claimIncentiveFor(
+  boost.id,
+  0n, // the incentiveId (0n is for the ERC20Incentive strategy)
+  "0xREFERER", // referrer (if any) use zero address if no referrer
+  claimDataPayload,
+  "0xCLAIMANT", // the address of the account the claim is being made for
+  { value: parseEther('0.000075') }, // claim fee
+);
+```
