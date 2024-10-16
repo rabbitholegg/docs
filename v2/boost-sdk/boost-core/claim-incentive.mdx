@@ -6,3 +6,81 @@ import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
 import ReadParams from '/snippets/read-params.mdx';
 
 <SDKDisclaimer />
+
+## API
+
+### `claimIncentive`
+
+Claims one incentive from a given `Boost` by `boostId` and `incentiveId`
+
+```ts
+// get the boost you want to claim from
+const boost = await core.getBoost(1n)
+
+// get the incentive you want to claim off the boost object
+const incentive = boost.incentives[0]
+
+// prepare the incentive payload
+let incentivePayload
+
+if (incentive instanceof ERC20Incentive) {
+  const reward = await incentive.reward()
+  const asset = await incentive.asset()
+  const limit = await incentive.limit()
+  const strategy = await incentive.strategy()
+
+  incentivePayload = prepareERC20IncentivePayload({
+    asset,
+    reward,
+    limit,
+    strategy,
+  })
+}
+
+// encode claimData payload
+const claimDataPayload = await boost.validator.encodeClaimData({
+  signer: accounts[0],
+  incentiveData: incentivePayload,
+  chainId: sepolia.id,
+  incentiveQuantity: 1,
+  claimant: account.address,
+  boostId: boost.id,
+});
+
+// claim the incentive from the boost
+await core.claimIncentive(
+  boost.id,
+  0n,
+  account.address, // the claimant
+  claimDataPayload,
+  { value: parseEther('0.000075') }, // claim fee
+);
+```
+
+#### Parameters
+
+<ParamField path="boostId" type="string | bigint" required>
+A `bigint`, or numerical string, or hexadecimal string.
+</ParamField>
+
+<ParamField path="incentiveId" type="string | bigint" required>
+A `bigint`, or numerical string, or hexadecimal string.
+</ParamField>
+
+<ParamField path="address" type="string" required>
+An address representing the claimant of the incentive.
+</ParamField>
+
+<ParamField path="claimDataPayload" type="string" required>
+A hexadecimal string containing the encoded claim data payload.
+</ParamField>
+
+<ParamField path="claimFee" type="string" required>
+A `string`, or hexadecimal string.
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="void" type="Promise<void>" />
