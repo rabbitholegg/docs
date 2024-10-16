@@ -39,11 +39,11 @@ if (incentive instanceof ERC20Incentive) {
 
 // encode claimData payload
 const claimDataPayload = await boost.validator.encodeClaimData({
-  signer: accounts[0],
+  signer: signer.account,
   incentiveData: incentivePayload,
-  chainId: sepolia.id,
+  chainId: 8453,
   incentiveQuantity: 1,
-  claimant: account.address,
+  claimant: "0xADDRESS", // the address of the account claiming the incentive
   boostId: boost.id,
 });
 
