@@ -1,11 +1,10 @@
 ---
-title: "Claiming ERC20 Incentives"
-description: Learn how to claim ERC20 rewards from a Boost
+title: "Claiming Incentives"
+description: Learn how to claim rewards from a Boost
 ---
+In this example, you'll learn how to claim a reward from a Boost.
 
-Boost Protocol allows users to claim ERC20 rewards from Boosts. This process involves interacting with the Boost contract to verify eligibility and receive the allocated incentives. 
-
-To claim an ERC20 reward from a Boost, you'll need to follow these general steps:
+To claim a reward from a Boost, you'll need to follow these general steps:
 
 1. Retrieve the Boost you want to claim from
 2. Get the specific incentive from the Boost
@@ -21,10 +20,15 @@ const boost = await core.getBoost(1n)
 const incentive = boost.incentives[0]
 
 // prepare the incentive payload
-let incentivePayload
+let incentivePayload: Hex;
 
-if (incentive instanceof ERC20VariableIncentive) {
-  const incentivePayload = await incentive.buildClaimData(1n)
+// variable reward incentives require the reward amount to be provided in buildClaimData
+if (incentive instanceof ERC20VariableIncentive || 
+    incentive instanceof ERC20VariableCriteriaIncentive) {
+  const variableRewardAmount = 1n;
+  incentivePayload = await incentive.buildClaimData(variableRewardAmount);
+} else {
+  incentivePayload = incentive.buildClaimData();
 }
 
 // encode claimData payload
@@ -40,10 +44,9 @@ const claimDataPayload = await boost.validator.encodeClaimData({
 // claim the incentive from the boost
 await core.claimIncentive(
   boost.id,
-  0n, // position in the array of incentives
-  account.address, // the claimant
+  0n, // the incentiveId (position in the array of incentives)
+  "0xCLAIMANT", // the claimant
   claimDataPayload,
-  { value: parseEther('0.000075') }, // claim fee
 );
 ```
 
@@ -56,10 +59,9 @@ You can also claim on behalf of another user by using the `claimIncentiveFor` me
 ```ts
 await core.claimIncentiveFor(
   boost.id,
-  0n, // the incentiveId (0n is for the ERC20Incentive strategy)
-  "0xREFERER", // referrer (if any) use zero address if no referrer
+  0n, // the incentiveId (position in the array of incentives)
+  "0xREFERER", // referrer (if any). use zero address if no referrer
   claimDataPayload,
   "0xCLAIMANT", // the address of the account the claim is being made for
-  { value: parseEther('0.000075') }, // claim fee
 );
 ```
