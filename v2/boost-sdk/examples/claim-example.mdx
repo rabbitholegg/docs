@@ -17,7 +17,7 @@ To claim a reward from a Boost, you'll need to follow these general steps:
 const boost = await core.getBoost(1n)
 
 // get an incentive from the boost
-const incentiveId = 0n;
+const incentiveId = 0n; // the position in the incentives array
 const incentive = boost.incentives[incentiveId]
 
 // prepare the incentive payload
@@ -26,7 +26,7 @@ let incentivePayload: Hex;
 // variable reward incentives require the reward amount to be provided in buildClaimData
 if (incentive instanceof ERC20VariableIncentive || 
     incentive instanceof ERC20VariableCriteriaIncentive) {
-  const variableRewardAmount = 1n;
+  const variableRewardAmount = parseUnits("10", 18);
   incentivePayload = incentive.buildClaimData(variableRewardAmount);
 } else {
   incentivePayload = incentive.buildClaimData();
@@ -61,7 +61,7 @@ You can also claim on behalf of another user by using the `claimIncentiveFor` me
 await core.claimIncentiveFor(
   boost.id,
   0n, // the incentiveId (position in the array of incentives)
-  "0xREFERER", // referrer (if any). use zero address if no referrer
+  "0xREFERRER", // referrer (if any). use zero address if no referrer
   claimDataPayload,
   "0xCLAIMANT", // the address of the account the claim is being made for
 );
