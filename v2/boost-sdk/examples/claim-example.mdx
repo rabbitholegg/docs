@@ -26,8 +26,8 @@ let incentivePayload: Hex;
 // variable reward incentives require the reward amount to be provided in buildClaimData
 if (incentive instanceof ERC20VariableIncentive || 
     incentive instanceof ERC20VariableCriteriaIncentive) {
-  const variableRewardAmount = parseUnits("10", 18);
-  incentivePayload = incentive.buildClaimData(variableRewardAmount);
+  const rewardAmount = parseUnits("10", 18);
+  incentivePayload = incentive.buildClaimData(rewardAmount);
 } else {
   incentivePayload = incentive.buildClaimData();
 }
