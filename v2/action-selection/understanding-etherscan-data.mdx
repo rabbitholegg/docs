@@ -1,0 +1,48 @@
+---
+title: "Understanding Etherscan Data"
+description: "Learn how to interpret transaction data on Etherscan for Boost actions"
+---
+
+This guide will help you find the right information on Etherscan to set up the action for your boost. Understanding Etherscan data is crucial for defining what on-chain behavior you want to incentivize.
+
+## Getting Started
+
+1. Go to [Etherscan.io](https://etherscan.io/)
+2. In the search bar at the top, paste a transaction hash (a long string of letters and numbers)
+3. Press Enter or click the search icon
+
+You'll now see a page full of information about the transaction. Let's go through each part step by step.
+
+## Key Transaction Components
+
+### 1. Action Section
+
+#### From
+- **Where to find it**: Look for "From:" near the top of the Etherscan page
+- **What it is**: The address that sent the transaction
+- **Example**: From: 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
+- **How to use it**: Enter this address in the "From" field of the Boost Deploy flow to target transactions from specific addresses
+
+#### To
+- **Where to find it**: Look for "To:" just below "From:"
+- **What it is**: The address of the contract being interacted with
+- **Example**: To: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48 (USDC token contract)
+- **How to use it**: Enter this address in the "To" field to target interactions with a specific contract
+
+#### Value
+- **Where to find it**: Look for "Value:" in the transaction details
+- **What it is**: The amount of ETH sent with the transaction
+- **Example**: Value: 0.1 Ether ($183.58)
+- **How to use it**: Use this to set a value filter in the Boost Deploy flow
+
+#### Function Signature
+- **Where to find it**: In the "Input Data" section
+- **What it is**: The decoded function name (if contract is verified)
+- **Example**: Function: transfer(address recipient, uint256 amount)
+- **How to use it**: Select this function in the "Signature" dropdown in the Boost Deploy flow
+
+### 2. Input Data
+
+In the "Input Data" section, below the function name, you'll see a list of parameters and their values.
+
+**Example for a token transfer**:

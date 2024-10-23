@@ -1,0 +1,55 @@
+---
+title: "Setting Up Boost Actions"
+description: "How to use Etherscan data to configure your Boost actions"
+---
+
+Now that you understand how to read Etherscan data, let's see how to use this information to set up your Boost actions.
+
+## 1. Contract Address (To)
+
+- **Where to find it**: The "To:" field in the transaction overview
+- **How to use it**: Enter this address in the "To" field of the Boost Deploy flow
+- **Example**: To target USDC transfers, use the USDC contract address
+
+## 2. Function Signature
+
+- **Where to find it**: The function name in the Input Data section
+- **How to use it**: Select this function in the "Signature" dropdown in the Boost Deploy flow
+- **Example**: For token transfers, select "transfer"
+
+## 3. Parameter Filters
+
+- **Where to find it**: The parameter list in the Input Data section
+- **How to use it**: Set up parameter filters based on these values
+- **Example**: To target large transfers, set a filter for "amount" to be greater than a certain value
+
+## 4. Log Filters
+
+- **Where to find it**: The Logs section
+- **How to use it**: Set up log filters based on event data
+- **Example**: To target successful swaps, filter for the "Swap" event
+
+## 5. Claimant Information
+
+- **Where to find it**: Usually the "From" address in the transaction overview
+- **How to use it**: Enter this address in the "Claimant" field of your boost configuration
+- **Example**: To reward the user who initiated the transaction, use the "From" address
+
+## Practical Examples
+
+### Large Token Transfers
+- To: [Token Contract Address]
+- Signature: transfer
+- Parameter Filter: amount >= [Significant Amount]
+
+### DEX Swaps
+- To: [DEX Router Address]
+- Signature: swapExactTokensForTokens
+- Log Filter: Swap event with amount0In or amount1In >= [Significant Amount]
+
+### Liquidity Provision
+- To: [DEX Factory or Router Address]
+- Signature: addLiquidity
+- Log Filter: Mint event
+
+Remember, the key is to start simple and gradually add complexity as you become more comfortable with the process. Always use the "Filter Preview" section in the Boost Deploy flow to ensure your filters are capturing the intended transactions.

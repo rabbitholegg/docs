@@ -1,0 +1,41 @@
+---
+title: "Understanding Etherscan Data"
+description: "Learn how to interpret transaction data on Etherscan for Boost actions"
+---
+
+To create effective Boost actions, you need to understand the key components of a transaction on Etherscan.
+
+## Navigating Etherscan
+
+1. Go to [Etherscan.io](https://etherscan.io/)
+2. Paste a transaction hash in the search bar
+3. Press Enter or click the search icon
+
+## Key Transaction Components
+
+### 1. Action Section
+
+- **From**: The address that sent the transaction
+- **To**: The contract address being interacted with
+- **Value**: The amount of ETH sent (if any)
+- **Function Name**: Found in the "Input Data" section
+
+### 2. Input Data
+
+- Contains function parameters and their values
+- Helps refine your Boost action
+
+### 3. Logs Section
+
+- Shows events emitted during the transaction
+- Includes:
+  - Address: Contract that emitted the event
+  - Event Name: Type of event (e.g., Transfer, Swap)
+  - Event Parameters: Specific details of the event
+
+### 4. Claimant Information
+
+- Usually the "From" address
+- For complex interactions, may be found in specific event logs
+
+Understanding these components will help you accurately define the actions you want to boost.
