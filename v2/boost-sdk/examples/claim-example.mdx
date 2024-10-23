@@ -1,0 +1,68 @@
+---
+title: "Claim Rewards from a Boost"
+description: Learn how to claim rewards from a Boost
+---
+In this example, you'll learn how to claim a reward from a Boost.
+
+To claim a reward from a Boost, you'll need to follow these general steps:
+
+1. Retrieve the Boost you want to claim from
+2. Get the specific incentive from the Boost
+3. Prepare the incentive payload
+4. Encode the claim data
+5. Execute the claim transaction
+
+```ts
+// get the boost you want to claim from
+const boost = await core.getBoost(1n)
+
+// get an incentive from the boost
+const incentiveId = 0n; // the position in the incentives array
+const incentive = boost.incentives[incentiveId]
+
+// prepare the incentive payload
+let incentivePayload: Hex;
+
+// variable reward incentives require the reward amount to be provided in buildClaimData
+if (incentive instanceof ERC20VariableIncentive || 
+    incentive instanceof ERC20VariableCriteriaIncentive) {
+  const rewardAmount = parseUnits("10", 18);
+  incentivePayload = incentive.buildClaimData(rewardAmount);
+} else {
+  incentivePayload = incentive.buildClaimData();
+}
+
+// encode claimData payload
+const claimDataPayload = await boost.validator.encodeClaimData({
+  signer: signer.account,
+  incentiveData: incentivePayload,
+  chainId: 8453,
+  incentiveQuantity: 1,
+  claimant: "0xCLAIMANT", // the address of the account claiming the incentive
+  boostId: boost.id,
+});
+
+// claim the incentive from the boost
+await core.claimIncentive(
+  boost.id,
+  incentiveId, // the incentiveId (position in the array of incentives)
+  "0xCLAIMANT", // the claimant
+  claimDataPayload,
+);
+```
+
+<Warning>
+  The claimant must be authorized to claim the incentive. (*ie: on allowlist and passes validation*)
+</Warning>
+
+You can also claim on behalf of another user by using the `claimIncentiveFor` method.
+
+```ts
+await core.claimIncentiveFor(
+  boost.id,
+  0n, // the incentiveId (position in the array of incentives)
+  "0xREFERRER", // referrer (if any). use zero address if no referrer
+  claimDataPayload,
+  "0xCLAIMANT", // the address of the account the claim is being made for
+);
+```

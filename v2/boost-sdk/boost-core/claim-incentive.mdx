@@ -4,5 +4,95 @@ title: "Claiming Incentives"
 
 import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
 import ReadParams from '/snippets/read-params.mdx';
+import WriteParams from '/snippets/write-params.mdx';
 
 <SDKDisclaimer />
+
+## API
+
+### `claimIncentive`
+
+Claims one incentive from a boost. Must be called by claimant.
+
+<Info>
+  To learn how to encode the `claimDataPayload`, see the full [Claim Example](/v2/boost-sdk/examples/claim-example).
+</Info>
+
+```ts
+await core.claimIncentive(
+  boost.id,
+  0n, // the position of the incentive in the incentive array
+  '0xCLAIMANT', // the claimant
+  claimDataPayload,
+);
+```
+
+#### Parameters
+
+<ParamField path="boostId" type="bigint" required>
+A `bigint` representing the boost ID.
+</ParamField>
+
+<ParamField path="incentiveId" type="bigint" required>
+A `bigint` representing the incentive ID. The incentive ID is the index of the incentive in the `incentives` array.
+</ParamField>
+
+<ParamField path="address" type="string" required>
+An address representing the claimant of the incentive.
+</ParamField>
+
+<ParamField path="data" type="string" required>
+A hexadecimal string containing the encoded claim data payload.
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="void" type="Promise<void>" />
+
+### `claimIncentiveFor`
+
+ Claim an incentive for a Boost on behalf of another user. 
+
+<Info>
+  To learn how to encode the `claimDataPayload`, see the full [Claim Example](/v2/boost-sdk/examples/claim-example).
+</Info>
+
+ ```ts
+await core.claimIncentiveFor(
+  boost.id,
+  0n, // the position of the incentive in the incentive array
+  "0xREFERER", // referrer (if any). use zero address if no referrer
+  claimDataPayload,
+  "0xCLAIMANT", // the address of the account the claim is being made for
+);
+```
+
+#### Parameters
+
+<ParamField path="boostId" type="bigint" required>
+A `bigint` representing the boost ID.
+</ParamField>
+
+<ParamField path="incentiveId" type="bigint" required>
+A `bigint` representing the incentive ID. The incentive ID is the index of the incentive in the `incentives` array.
+</ParamField>
+
+<ParamField path="referrer" type="string" required>
+The address of the referrer (if any). Use zero address if no referrer.
+</ParamField>
+
+<ParamField path="data" type="string" required>
+A hexadecimal string containing the encoded claim data payload.
+</ParamField>
+
+<ParamField path="claimant" type="string" required>
+The address of the user eligible for the incentive payout
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="void" type="Promise<void>" />

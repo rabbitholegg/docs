@@ -213,7 +213,8 @@
 			"version": "v2",
 			"pages": [
 				"v2/boost-sdk/examples/zora-mint",
-				"v2/boost-sdk/examples/agora-vote"
+				"v2/boost-sdk/examples/agora-vote",
+				"v2/boost-sdk/examples/claim-example"
 			]
 		},
 		{
@@ -230,7 +231,8 @@
 			"version": "v2",
 			"pages": [
 				"v2/boost-sdk/boost-core/overview",
-				"v2/boost-sdk/boost-core/get-boosts"
+				"v2/boost-sdk/boost-core/get-boosts",
+				"v2/boost-sdk/boost-core/claim-incentive"
 			]
 		}
   ],
