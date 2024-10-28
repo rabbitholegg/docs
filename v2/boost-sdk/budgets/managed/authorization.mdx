@@ -15,7 +15,7 @@ import { Roles } from "boost-sdk"
 // Roles.ADMIN
 ```
 
-- The `MANAGER` role allows an address to manage funds within the budget and deploy boosts. 
+- The `MANAGER` role allows an address to manage funds within the budget and deploy boosts using available funds. 
 - The `ADMIN` role allows an address to grant and revoke roles on the budget as well as manage available funds.
 
 <Warning>
@@ -173,7 +173,9 @@ The address to check authorization for.
 
 #### Returns
 
-<ResponseField name="boolean" type="Promise<boolean>" />
+<ResponseField name="boolean" type="Promise<boolean>">
+  Returns `true` if the address is authorized, otherwise `false`.
+</ResponseField>
 
 ### `hasAllRoles`
 
@@ -200,7 +202,9 @@ The roles to check for, accessed via the `Roles` enum.
 
 #### Returns
 
-<ResponseField name="boolean" type="Promise<boolean>" />
+<ResponseField name="boolean" type="Promise<boolean>">
+  Returns `true` if the address has all the specified roles, otherwise `false`.
+</ResponseField>
 
 ### `hasAnyRole`
 
@@ -224,7 +228,9 @@ The roles to check for, accessed via the `Roles` enum.
 
 #### Returns
 
-<ResponseField name="boolean" type="Promise<boolean>" />
+<ResponseField name="boolean" type="Promise<boolean>">
+  Returns `true` if the address has at least one of the specified roles, otherwise `false`.
+</ResponseField>
 
 ### `rolesOf`
 
@@ -246,7 +252,9 @@ The address to check roles for.
 
 #### Returns
 
-<ResponseField name="bigint[]" type="Promise<bigint[]>" />
+<ResponseField name="bigint[]" type="Promise<bigint[]>">
+  Returns an array of roles for the address.
+</ResponseField>
 
 ### `owner`
 
