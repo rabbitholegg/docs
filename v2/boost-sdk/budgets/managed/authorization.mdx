@@ -1,0 +1,249 @@
+---
+title: "Authorization"
+---
+
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import ReadParams from '/snippets/read-params.mdx';
+import WriteParams from '/snippets/write-params.mdx';
+
+<SDKDisclaimer />
+
+A budget has two types of roles that can be granted: `ADMIN` and `MANAGER`. These roles can be accessed through the `Roles` enum:
+```ts
+import { Roles } from "boost-sdk"
+// Roles.MANAGER = 1n
+// Roles.ADMIN = 2n
+```
+
+- The `MANAGER` role allows an address to manage funds within the budget and deploy boosts. 
+- The `ADMIN` role allows an address to grant and revoke roles on the budget as well as manage available funds.
+
+<Warning>
+  Accounts authorized with the `MANAGER` roles are allowed to disburse available funds from the budget, so make sure you trust the address before granting these permissions.
+</Warning>
+
+## API
+
+### `grantRoles`
+
+Grants access control roles to an address. 
+
+```ts
+await budget.grantRoles(account.address, Roles.ADMIN);
+```
+You can grant both `ADMIN` and `MANAGER` roles at once:
+
+```ts
+await budget.grantRoles(account.address, Roles.ADMIN | Roles.MANAGER);
+```
+
+#### Parameters
+
+<ParamField path="address" type="string" required>
+The address to grant the roles to.
+</ParamField>
+<ParamField path="role" type="bigint" required>
+The roles to grant, accessed via the `Roles` enum.
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="void" type="Promise<void>" />
+
+### `grantManyRoles`
+
+Grants access control roles to multiple addresses. The roles array must match the addresses array in length and order.
+
+```ts
+await budget.grantManyRoles(
+  [account1.address, account2.address],
+  [Roles.ADMIN, Roles.MANAGER]
+);
+```
+
+#### Parameters
+
+<ParamField path="addresses" type="string[]" required>
+Array of addresses to grant roles to.
+</ParamField>
+<ParamField path="roles" type="bigint[]" required>
+Array of roles to grant, accessed via the `Roles` enum.
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="void" type="Promise<void>" />
+
+### `revokeRoles`
+
+Revokes access control roles from an address.
+
+```ts
+await budget.revokeRoles(account.address, Roles.ADMIN);
+```
+You can revoke both `ADMIN` and `MANAGER` roles at once:
+
+```ts
+await budget.revokeRoles(account.address, Roles.ADMIN | Roles.MANAGER);
+```
+
+#### Parameters
+
+<ParamField path="address" type="string" required>
+The address to revoke roles from.
+</ParamField>
+<ParamField path="role" type="bigint" required>
+The roles to revoke, accessed via the `Roles` enum.
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="void" type="Promise<void>" />
+
+### `revokeManyRoles`
+
+Revokes access control roles from multiple addresses. The roles array must match the addresses array in length and order.
+
+```ts
+await budget.revokeManyRoles(
+  [account1.address, account2.address],
+  [Roles.ADMIN, Roles.MANAGER]
+);
+```
+
+#### Parameters
+
+<ParamField path="addresses" type="string[]" required>
+Array of addresses to revoke roles from.
+</ParamField>
+<ParamField path="roles" type="bigint[]" required>
+Array of roles to revoke, accessed via the `Roles` enum.
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="void" type="Promise<void>" />
+
+### `setAuthorized`
+
+Grants or revokes the `MANAGER` role for multiple addresses. The authorized values array must match the addresses array in length and order.
+
+```ts
+await budget.setAuthorized([account1.address, account2.address], [true, false]);
+```
+
+#### Parameters
+
+<ParamField path="addresses" type="string[]" required>
+Array of addresses to set authorization for.
+</ParamField>
+<ParamField path="allowed" type="boolean[]" required>
+Array of boolean values where `true` grants and `false` revokes the `MANAGER` role.
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="void" type="Promise<void>" />
+
+### `isAuthorized`
+
+Checks if an address is authorized to manage the budget. Returns `true` if the address is authorized, otherwise `false`.
+
+```ts
+await budget.isAuthorized(account.address);
+```
+
+#### Parameters
+
+<ParamField path="account" type="string" required>
+The address to check authorization for.
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="boolean" type="Promise<boolean>" />
+
+### `hasAllRoles`
+
+Checks if an address has all the roles specified. Returns `true` if the address has all the roles, otherwise `false`.
+
+```ts
+// Check if the address has the ADMIN role
+await budget.hasAllRoles(account.address, Roles.ADMIN);
+
+// Check if the address has both the ADMIN and MANAGER roles
+await budget.hasAllRoles(account.address, Roles.ADMIN | Roles.MANAGER);
+```
+
+#### Parameters
+
+<ParamField path="account" type="string" required>
+The address to check roles for.
+</ParamField>
+<ParamField path="roles" type="bigint" required>
+The roles to check for, accessed via the `Roles` enum.
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="boolean" type="Promise<boolean>" />
+
+### `hasAnyRole`
+
+Checks if an address has at least one of the roles specified. Returns `true` if the address has at least one of the roles, otherwise `false`.
+
+```ts
+// Check if the address has either the ADMIN or MANAGER roles
+await budget.hasAnyRole(account.address, Roles.ADMIN | Roles.MANAGER);
+```
+
+#### Parameters
+
+<ParamField path="account" type="string" required>
+The address to check roles for.
+</ParamField>
+<ParamField path="roles" type="bigint" required>
+The roles to check for, accessed via the `Roles` enum.
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="boolean" type="Promise<boolean>" />
+
+### `rolesOf`
+
+Returns the an array of roles for a given address. Returns an empty array if the address has no roles.
+`1n` = `Roles.MANAGER`, `2n` = `Roles.ADMIN`
+
+```ts
+await budget.rolesOf(account.address);
+// [ 1n, 2n ]
+```
+
+#### Parameters
+
+<ParamField path="account" type="string" required>
+The address to check roles for.
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="bigint[]" type="Promise<bigint[]>" />
