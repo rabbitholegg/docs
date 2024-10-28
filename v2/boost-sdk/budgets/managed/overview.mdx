@@ -1,2 +1,93 @@
-budget must have all the funds to fund the incentive
-reward * limit = min amount in budget
+---
+title: "Overview"
+description: Learn about how to interact with the Managed Budget using the SDK
+---
+
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import Config from '/snippets/config.mdx';
+
+The Managed Budget contract is a flexible budget implementation that allows for the distribution of tokens with role-based access control. A Managed Budget is required to deploy boosts.
+In order to deploy boosts from a budget, the budget must be funded with enough ERC-20 tokens to cover the incentivecost of the boost plus any fees.
+
+<SDKDisclaimer />
+
+<CardGroup cols={3}>
+  <Card
+    title="Smart Contract"
+    icon="file-contract"
+    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/evm/contracts/budgets/ManagedBudget.sol"
+  >
+      Read the smart contracts
+  </Card>
+  <Card
+    title="Typedoc"
+    icon="file-lines"
+    href="https://boost-protocol.vercel.app/classes/ManagedBudget.html"
+  >
+    See technical documentation
+  </Card>
+  <Card
+    title="SDK Implementation"
+    icon="file-code"
+    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/sdk/src/Budgets/ManagedBudget.ts"
+  >
+    See the source
+  </Card>
+</CardGroup>
+
+ManagedBudget is designed to hold and distribute assets while providing fine-grained control over who can perform various operations.
+
+## Key Features
+
+- Role-based access control for management and administration
+- Flexible allocation and distribution of assets
+- Clawback functionality for asset recovery
+
+#### Create a new ManagedBudget
+
+**To initialize a new ManagedBudget contract:**
+
+<CodeGroup>
+
+  ```ts index.ts
+  import { BoostCore } from '@boostxyz/sdk/BoostCore'
+  import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
+  import { ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
+  import { config } from "./config";
+
+  const core = new BoostCore({ config });
+  const registry = new BoostRegistry({ config });
+
+  // initialize a new budget contract
+  const budget = await registry.initialize(
+    "MyBoostBudget",
+    core.ManagedBudget({
+      owner: account.address,
+      authorized: [account.address, core.assertValidAddress()],
+      roles: [Roles.ADMIN, Roles.MANAGER],
+    })
+  );
+
+  const budgetAddress = budget.assertValidAddress();
+  ```
+
+  <Config />
+</CodeGroup>
+
+#### Get an existing ManagedBudget
+
+**To get an existing ManagedBudget contract:**
+
+<CodeGroup>
+```ts index.ts
+const budget = core.ManagedBudget("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
+
+// or if you want a budget from a specific chain
+const budgetOnBase = core.ManagedBudget(
+  "0xc55F719709bDad022B320E76f9DfF7e6F5680767", 
+  { chainId: 8453 }
+)
+```
+</CodeGroup>
+
+Once a budget is created, it can be funded and used to deploy boosts. 
