@@ -7,15 +7,15 @@ description: How to create a boost using the Boost API
 
 Creating a boost via the Boost API requires the following:
 
-* An [access token](/boost-api/sign-in-to-boost) from the Boost API for the end user deploying the boost
+* An [access token](/v1/boost-api/sign-in-to-boost) from the Boost API for the end user deploying the boost
 * ActionParam type definitions from the BoostDK, which can be referenced [here](https://github.com/rabbitholegg/questdk/blob/main/src/actions/types.ts) or installed with:
 `npm install @rabbitholegg/questdk`
 * The ABI file for the boost factory contract, which can be found [here](https://github.com/rabbitholegg/questdk/blob/main/src/abi/quest-factory.ts)
-* Project ID and task ID values for the chosen action to boost, [queried from the Boost API](/boost-api/create-a-boost#querying-approved-projects-and-tasks)
-* An [individual reward amount and boost participant limit](/boost-api/create-a-boost#selecting-a-reward-amount-and-participant-limit)
+* Project ID and task ID values for the chosen action to boost, [queried from the Boost API](/v1/boost-api/create-a-boost#querying-approved-projects-and-tasks)
+* An [individual reward amount and boost participant limit](/v1/boost-api/create-a-boost#selecting-a-reward-amount-and-participant-limit)
 * An end time and optional start time
 
-All of the above data is [submitted to the POST /boosts endpoint](/boost-api/create-a-boost#submitting-the-create-boost-request), after which a [transaction must be submitted](/boost-api/create-a-boost#deploying-the-boost-contract) to the blockchain on the reward token blockchain to deploy a new contract specific to the newly created boost.
+All of the above data is [submitted to the POST /boosts endpoint](/v1/boost-api/create-a-boost#submitting-the-create-boost-request), after which a [transaction must be submitted](/v1/boost-api/create-a-boost#deploying-the-boost-contract) to the blockchain on the reward token blockchain to deploy a new contract specific to the newly created boost.
 
 ## Querying approved projects and tasks
 

@@ -1,0 +1,52 @@
+---
+title: "Overview"
+description: Learn about how to use the Boost Core contract with the SDK
+---
+
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+
+<SDKDisclaimer />
+
+<CardGroup cols={3}>
+  <Card
+    title="Smart Contract"
+    icon="file-contract"
+    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/evm/contracts/BoostCore.sol"
+  >
+      Read the smart contracts
+  </Card>
+  <Card
+    title="Typedoc"
+    icon="file-lines"
+    href="https://boost-protocol.vercel.app/classes/BoostCore.html"
+  >
+    See technical documentation
+  </Card>
+  <Card
+    title="SDK Implementation"
+    icon="file-code"
+    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/sdk/src/BoostCore.ts"
+  >
+    See the source
+  </Card>
+</CardGroup>
+
+The Boost Core contract is the protocol's main touchpoint for Boosts, exposing functionality to create and retrieve Boosts, and claim incentives.
+
+<Tip>
+  Unless you're an advanced user, you will likely never need to deploy your own `core` contract. The `SDK` comes preconfigured with the correct contract addresses for all deployed core implementations.
+</Tip>
+
+## Usage
+
+```ts
+import { BoostCore } from '@boostxyz/sdk/BoostCore'
+// you can also access BoostCore from the root export
+import { BoostCore } from '@boostxyz/sdk'
+
+// Basic instantiation
+const core = new BoostCore({ config: wagmiConfig })
+
+// In Node, you'll need to supply a viem local account https://viem.sh/docs/accounts/local.html
+const core = new BoostCore({ config: wagmiConfig, ...(!!account && { account: viemLocalAccount }) })
+```

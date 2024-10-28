@@ -5,6 +5,8 @@ description: Learn how to reward users with ERC20 rewards when they vote for/aga
 
 In this example, you want a certain proposal to pass/fail, and want to incentivize users to swing votes in your favor by offering additional rewards.
 
+<Card title="See the code" icon="file-lines" href="https://boost-protocol.vercel.app/classes/Contract.html#getLogs">See technical documentation for `Contract.getLogs`</Card>
+
 <Warning>
 Make sure you've completed the [quick start](/v2/boost-sdk/quick-start) guide before proceeding with this example.
 </Warning>
@@ -52,7 +54,7 @@ await budget.allocate({
 
 Next you'll need to define the action that qualifies a user to claim the reward.
 
-For Agora, we want to reward users that vote for a specific proposal on Agora. To do this, we'll key off of the `VoteCast` event, 
+For Agora, we want to reward users that vote for a specific proposal on Agora. To do this, we'll key off of the `VoteCast` event,
 which has the event signature `VoteCast(address indexed,uint256,uint8,uint256,string)`.
 
 <Warning>
@@ -78,57 +80,60 @@ Here is how you can structure the EventActionPayload to target the `VoteCast` ev
 </Tip>
 
 ```ts
-import { 
-  EventActionPayload, 
-  ActionStep, 
-  ActionClaimant, 
-  SignatureType, 
-  FilterType, 
-  PrimitiveType 
+import {
+  EventActionPayload,
+  ActionStep,
+  ActionClaimant,
+  SignatureType,
+  FilterType,
+  PrimitiveType
 } from '@boostxyz/sdk/Actions/EventAction'
 import { selectors } from '@boostxyz/signatures/events'
 import { toHex } from 'viem'
 
+const targetContract = '0xcdf27f107725988f2261ce2256bdfcde8b382b10'
 // If one exists, use the signature from the selectors package
-const selectedSignature = selectors[
+const selector = selectors[
   'VoteCast(address indexed,uint256,uint8,uint256,string)'
 ] as Hex;
 
 // These EventAction steps outlines the criteria that the validator uses to determine eligibility for reward redemption.
-const eventActionStepOne: ActionStep = {
-  chainid: 10, // Chain id of the action. In this case, it is Optimism
-  signature: selectedSignature,
-  signatureType: SignatureType.EVENT,
-  targetContract: '0xcdf27f107725988f2261ce2256bdfcde8b382b10', // Address of the contract to observe for the event
-  // We want to target the `proposalId` property on the VoteCast event
+const filterProposalIdStep: ActionStep = {
+  chainid: optimism.id,
+  signature: selector, // VoteCast event signature
+  signatureType: SignatureType.EVENT, // We're working with an event
+  targetContract: targetContract, // Address of the ERC20 contract
+  // We want to target the ProposalId property on the VoteCast event
   actionParameter: {
     filterType: FilterType.EQUAL, // Filter to check for equality
-    fieldType: PrimitiveType.UINT, // The field we're filtering is the proposalId
-    fieldIndex: 1,
-    filterData: toHex(BigInt('54194543592303757979358957212312678549449891089859364558242427871997305750980')), // We'll validate by comparing VoteCast events with a proposalId that equals the this field
+    fieldType: PrimitiveType.UINT, // The field we're filtering is a uint
+    fieldIndex: 1, // Targeting the 'proposalId' uint
+    filterData: toHex(
+      BigInt(
+        '54194543592303757979358957212312678549449891089859364558242427871997305750980',
+      ),
+    ), // Filtering based on the proposal id
   },
 };
-
-const eventActionStepTwo: ActionStep = {
-  chainid: 10, // Chain id of the action. In this case, it is Optimism
-  signature: selectedSignature,
-  signatureType: SignatureType.EVENT,
-  targetContract: '0xcdf27f107725988f2261ce2256bdfcde8b382b10', // Address of the contract to observe for the event
-  // We want to target the `support` property on the VoteCast event
+const filterSupportStep: ActionStep = {
+  chainid: optimism.id,
+  signature: selector, // VoteCast event signature
+  signatureType: SignatureType.EVENT, // We're working with an event
+  targetContract: targetContract, // Address of the ERC20 contract
+  // We want to target the Support property on the VoteCast event
   actionParameter: {
     filterType: FilterType.EQUAL, // Filter to check for equality
-    fieldType: PrimitiveType.UINT, // The field we're filtering is support
-    fieldIndex: 2,
-    filterData: toHex(1n, { size: 1 }), // We'll validate by comparing VoteCast events with a support value that equals the this field
+    fieldType: PrimitiveType.UINT, // The field we're filtering is a uint
+    fieldIndex: 2, // Targeting the 'support' uint
+    filterData: toHex(1n, { size: 1 }), // Filtering based on the support value (uint8 is 1 byte)
   },
 };
-
 ```
 
 
 Next, we need to define the action claimant and create the payload for the new event action.
 
-The `eventAction` payload consists of the `actionClaimant` and the `actionSteps` we defined previously. 
+The `eventAction` payload consists of the `actionClaimant` and the `actionSteps` we defined previously.
 The purpose of the `eventAction` is to track and reward users based on their interactions with the specified event.
 
 1. **actionClaimant**: This object defines the conditions under which a user is eligible to claim rewards. It includes:
@@ -144,12 +149,13 @@ Next, we initialize the `EventAction` class from the `bases` module, passing in 
 ```ts
 const eventActionPayload = {
   actionClaimant: {
+    chainid: optimism.id,
     signatureType: SignatureType.EVENT,
-    signature: selectedSignature, // VoteCast event signature
+    signature: selector, // VoteCast(address,uint256,uint8,uint256,string) event signature
     fieldIndex: 0, // Targeting the 'voter' address
-    targetContract: targetContract, // The contract we're monitoring
+    targetContract: targetContract, // The Agora vote contract we're monitoring
   },
-  actionSteps: [eventActionStepOne, eventActionStepTwo] // use can place up to 4 action steps
+  actionSteps: [filterProposalIdStep, filterSupportStep] // use can place up to 4 action steps
 };
 
 // Initialize EventAction with the custom payload
@@ -163,8 +169,8 @@ Once the event action is created, we can set up the incentives and deploy our bo
 const incentives = [
     core.ERC20VariableIncentive({
       asset: erc20.assertValidAddress(),
-      reward: 10n,
-      limit: 100n,
+      reward: parseEther('0.1'),
+      limit: parseEther('1'),
     }),
   ],
 ```
@@ -178,9 +184,55 @@ await core.createBoost({
   incentives: incentives,
   validator: core.SignerValidator({
     signers: [owner, trustedSigner.account],
-    validatorCaller: core.assertValidAddress(), 
+    validatorCaller: core.assertValidAddress(),
   }),
   // This allowlist makes this boost available to all addresses. If you want to limit it to a specific address, you can use a SimpleAllowList
   allowList: core.OpenAllowList(),
 });
+```
+
+After the boost is created, we can then implement logic to determine dynamic rewards.
+
+```ts
+// Check the amount of votes the boostImpostor has at the time they made the tx to vote
+const getVotesAbi = functions.abi[functions.selectors['getVotes(address account, uint256 blockNumber) view returns (uint256)'] as '0x00000000000000000000000000000000000000000000000000000000eb9019d4']
+const amountOfVotes = (await walletClient.readContract({
+  address: '0xcdf27f107725988f2261ce2256bdfcde8b382b10',
+  abi: [getVotesAbi],
+  functionName: 'getVotes',
+  args: ['0xME', 'blockNumber'],
+})) as bigint;
+
+// If the amountOfVotes is greater than 100, then the reward should be 0.1 ETH, otherwise it will be 0.01 ETH
+const rewardAmount =
+  amountOfVotes >= parseEther('100')
+    ? parseEther('0.1')
+    : parseEther('0.01');
+```
+
+Having the `rewardAmount` will allow us to use it as a param when generating the signature payload to allow the user to claim the reward.
+
+```ts
+// Generate the signature using the trusted signer
+const claimDataPayload = await boost.validator.encodeClaimData({
+  signer: trustedSigner,
+  incentiveData: encodeAbiParameters(
+    [{ name: '', type: 'uint256' }],
+    [rewardAmount],
+  ),
+  chainId: optimism.id,
+  incentiveQuantity: 1,
+  claimant: boostImpostor,
+  boostId: boost.id,
+});
+
+// Claim the incentive for the imposter
+await core.claimIncentiveFor(
+  boost.id,
+  0n,
+  referrer,
+  claimDataPayload,
+  boostImpostor,
+  { value: parseEther('0.000075') },
+);
 ```

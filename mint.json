@@ -197,24 +197,43 @@
       ]
     },
     {
-      "group": "Boost SDK",
-      "version": "v2",
-      "pages": [
-        "v2/boost-sdk/overview",
-        "v2/boost-sdk/installation",
-        "v2/boost-sdk/quick-start",
-        "v2/boost-sdk/usage-with-react",
-        "v2/boost-sdk/working-with-events",
-        "v2/boost-sdk/registry"
-      ]
-    },
-    {
-      "group": "SDK Examples",
-      "version": "v2",
-      "pages": [
-        "v2/boost-sdk/examples/zora-mint",
-        "v2/boost-sdk/examples/agora-vote"
-      ]
+			"group": "Boost SDK",
+			"version": "v2",
+			"pages": [
+				"v2/boost-sdk/overview",
+				"v2/boost-sdk/installation",
+				"v2/boost-sdk/quick-start",
+				"v2/boost-sdk/usage-with-react",
+				"v2/boost-sdk/working-with-events",
+				"v2/boost-sdk/integrating-your-contracts"
+			]
+		},
+		{
+			"group": "Examples",
+			"version": "v2",
+			"pages": [
+				"v2/boost-sdk/examples/zora-mint",
+				"v2/boost-sdk/examples/agora-vote",
+				"v2/boost-sdk/examples/claim-example"
+			]
+		},
+		{
+			"group": "Boost Registry",
+			"version": "v2",
+			"pages": [
+				"v2/boost-sdk/boost-registry/overview",
+				"v2/boost-sdk/boost-registry/initializing-components",
+				"v2/boost-sdk/boost-registry/clones"
+			]
+		},
+		{
+			"group": "Boost Core",
+			"version": "v2",
+			"pages": [
+				"v2/boost-sdk/boost-core/overview",
+				"v2/boost-sdk/boost-core/get-boosts",
+				"v2/boost-sdk/boost-core/claim-incentive"
+			]
     },
     {
       "group": "Components",
@@ -223,7 +242,7 @@
         "v2/boost-sdk/components/ManagedBudget/ManagedBudget",
         "v2/boost-sdk/components/Allowlist"
       ]
-    }
+		}
   ],
   "footerSocials": {
     "x": "https://x.com/boost_xyz",

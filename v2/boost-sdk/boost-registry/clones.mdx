@@ -1,0 +1,155 @@
+---
+title: "Cloned Components"
+---
+
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import ReadParams from '/snippets/read-params.mdx';
+
+<SDKDisclaimer />
+
+Once you've initialized a component through the Boost Registry, there are several methods to help you keep track of what you've deployed.
+
+## API
+
+### `getCloneIdentifier`
+
+Retrieves the unique identifier for a previously initialized clone.
+
+```ts
+const id = await registry.getCloneIdentifier(
+  RegistryType.BUDGET,
+  ManagedBudget.bases[11155111],
+  '0xME',
+  'MyBudget'
+)
+```
+
+#### Parameters
+
+<ParamField path="registryType" type="RegistryType" required>
+An enum representing the type of previously initialized component.
+
+```ts
+import { RegistryType } from '@boostxyz/sdk'
+RegistryType.ACTION // 0
+RegistryType.ALLOW_LIST // 1
+RegistryType.BUDGET // 2
+RegistryType.INCENTIVE // 3
+RegistryType.VALIDATOR // 4
+```
+</ParamField>
+
+<ParamField path="base" type="Address" required>
+  The address of the base implementation your component was cloned from. You can either use [Component.bases[chainId]](https://boost-protocol.vercel.app/classes/DeployableTarget.html#bases) or [getBaseImplementation](#getbaseimplementation) to retrieve this.
+</ParamField>
+
+<ParamField path="deployer" type="Address" required>
+  The address of the user that initialized the clone.
+</ParamField>
+
+<ParamField path="displayName" type="string" required>
+  The display name used when initializing the clone
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="id" type="Promise<Hex>" required>
+  Returns the clone's unique identifier
+
+```ts
+const id = await registry.getCloneIdentifier(
+  RegistryType.BUDGET,
+  ManagedBudget.bases[11155111],
+  '0xME',
+  'MyBudget'
+)
+const address = await registry.getClone(id) // Address
+const budget = core.ManagedBudget(address)
+```
+</ResponseField>
+
+### `getClone`
+
+Retrieves an initialized clone given its identifier.
+
+```ts
+const id = await registry.getCloneIdentifier(
+  RegistryType.BUDGET,
+  ManagedBudget.bases[11155111],
+  '0xME',
+  'MyBudget'
+)
+const { instance, baseType, deployer, name } = await registry.getClone(id)
+// initialize to interact with deployed budget
+const budget = core.ManagedBudget(instance)
+```
+
+#### Parameters
+
+<ParamField path="identifier" type="Hex" required>
+The clone's unique identifier, which can be ascertained with [registry.getCloneIdentifier](#getcloneidentifier)
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="clone" type="Promise<Clone>" required>
+  Returns the clone
+</ResponseField>
+
+### `getClones`
+
+Retrieves the identifiers for all clones initialized by a given address.
+
+```ts
+const identifiers = await registry.getClones('0xME')
+const allClones = await Promise.all(identifiers.map(identifier => registry.getClone(identifier)))
+```
+
+#### Parameters
+
+<ParamField path="deployer" type="Address" required>
+The address of the clones' deployer
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="identifiers" type="Promise<Array<Hex>>" required>
+  Returns a list of hex strings that can be used with [registry.getClone](#getclone)
+</ResponseField>
+
+
+### `getBaseImplementation`
+
+Retrieves the address of an initialized clone's base implementation. This is a low-level API, and base addresses are managed for you under the hood if using Boost components provided through the SDK.
+
+```ts
+const id = await registry.getCloneIdentifier(
+  RegistryType.BUDGET,
+  ManagedBudget.bases[11155111],
+  '0xME',
+  'MyBudget'
+)
+const managedBudgetBase = await registry.getBaseImplementation(id) // Address
+const managedBudget = core.ManagedBudget(managedBudgetBase)
+assert(managedBudget.isBase, true)
+```
+
+#### Parameters
+
+<ParamField path="identifier" type="Hex" required>
+The clone's unique identifier, which can be ascertained with [registry.getCloneIdentifier](#getcloneidentifier)
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="address" type="Promise<Address>" required>
+  Returns the address of the clone's base implementation.
+</ResponseField>
