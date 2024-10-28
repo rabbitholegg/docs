@@ -244,14 +244,6 @@
         "v2/boost-sdk/budgets/managed/funding",
         "v2/boost-sdk/budgets/managed/retrieval"
       ]
-		},
-    {
-      "group": "Components",
-      "version": "v2",
-      "pages": [
-        "v2/boost-sdk/components/ManagedBudget/ManagedBudget",
-        "v2/boost-sdk/components/Allowlist"
-      ]
 		}
   ],
   "footerSocials": {
