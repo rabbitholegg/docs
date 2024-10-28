@@ -11,15 +11,15 @@ import WriteParams from '/snippets/write-params.mdx';
 A budget has two types of roles that can be granted: `ADMIN` and `MANAGER`. These roles can be accessed through the `Roles` enum:
 ```ts
 import { Roles } from "boost-sdk"
-// Roles.MANAGER = 1n
-// Roles.ADMIN = 2n
+// Roles.MANAGER
+// Roles.ADMIN
 ```
 
 - The `MANAGER` role allows an address to manage funds within the budget and deploy boosts. 
 - The `ADMIN` role allows an address to grant and revoke roles on the budget as well as manage available funds.
 
 <Warning>
-  Accounts authorized with the `MANAGER` roles are allowed to disburse available funds from the budget, so make sure you trust the address before granting these permissions.
+  Accounts authorized with the `MANAGER` role are allowed to disburse available funds from the budget, so make sure you trust the address before granting permissions.
 </Warning>
 
 ## API
