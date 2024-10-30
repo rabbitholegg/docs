@@ -30,7 +30,7 @@ Creates a new Boost.
 <CodeGroup>
 ```ts index.ts
 import { core } from './config'
-import { action } from './action'
+import { eventActionPayload } from './action'
 import { incentives } from './incentives'
 
 const budget = core.ManagedBudget(
@@ -40,8 +40,8 @@ const budget = core.ManagedBudget(
 const boosts = await core.createBoost({
   maxParticipants: 100n,
   budget,
-  action,
-  allowList: core.OpenAllowList(),
+  action: core.EventAction(eventActionPayload),
+  allowList: core.OpenAllowList(), // public allowlist
   incentives,
 });
 ```
@@ -99,16 +99,13 @@ const actionClaimant: ActionClaimant = {
   fieldIndex: 0, // mintTo
 }
 
-const eventActionPayload = {
+export const eventActionPayload = {
   actionClaimant,
   actionSteps: [mintActionStep1, mintActionStep2],
 };
-
-export const action = core.EventAction(eventActionPayload)
 ```
 
 ```ts incentives.ts
-import { core } from './config'
 import { StrategyType } from '@boostxyz/sdk'
 import { parseEther } from 'viem'
 
