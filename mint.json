@@ -234,6 +234,16 @@
 				"v2/boost-sdk/boost-core/get-boosts",
 				"v2/boost-sdk/boost-core/claim-incentive"
 			]
+    },
+    {
+      "group": "Managed Budget",
+      "version": "v2",
+      "pages": [
+        "v2/boost-sdk/budgets/managed/overview",
+        "v2/boost-sdk/budgets/managed/authorization",
+        "v2/boost-sdk/budgets/managed/funding",
+        "v2/boost-sdk/budgets/managed/retrieval"
+      ]
 		}
   ],
   "footerSocials": {

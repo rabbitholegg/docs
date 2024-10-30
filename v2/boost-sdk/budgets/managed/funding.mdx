@@ -1,0 +1,145 @@
+---
+title: "Funding"
+---
+
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import ReadParams from '/snippets/read-params.mdx';
+import WriteParams from '/snippets/write-params.mdx';
+
+<SDKDisclaimer />
+
+The Managed Budget contract is designed to hold and distribute assets that can be used to deploy boosts. The Boost SDK provides several methods to manage and view the available funds in a budget.
+
+## API
+
+### `allocate`
+
+Allocates assets to the budget. The caller must have already approved the contract to transfer the asset. If the asset transfer fails, the allocation will revert.
+
+<Tip>
+  Before using `allocate`, you must approve the ManagedBudget to spend the asset you want to allocate.
+</Tip>
+
+<CodeGroup>
+```ts index.ts
+import { parseUnits } from "viem";
+
+// Allocate assets to the budget
+await budget.allocate({
+  amount: parseUnits('1', 18), // the amount of tokens to allocate
+  asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D', // token address
+  target: account.address, // the address allocating the funds
+});
+```
+</CodeGroup>
+
+<Note>
+  You can also directly transfer tokens to the ManagedBudget contract address instead of using the `allocate` function. This allows you to bypass the approval process for ERC20 tokens.
+</Note>
+
+#### Parameters
+
+<ParamField path="transfer" type={<a href="https://boost-protocol.vercel.app/interfaces/FungibleTransferPayload.html">FungibleTransferPayload</a>} required>
+  <Expandable title="properties">
+    <ParamField path="amount" type="bigint" required>
+      The amount of tokens to transfer.
+    </ParamField>
+    <ParamField path="asset" type="string" required>
+      The address of the asset. Use zero address (0x0) for ETH transfers.
+    </ParamField>
+    <ParamField path="target" type="string" required>
+      The account to transfer from.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="Promise<boolean>" type="boolean">
+  Returns true if the allocation was successful.
+</ResponseField>
+
+### `available`
+
+Shows the available balance of an asset in the budget.
+
+<CodeGroup>
+```ts index.ts
+await budget.available({
+  asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D', // token address
+});
+// 1000000000000000000n
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="asset" type="string">
+  The address of the asset. Leave blank to get the balance of the native asset. (ie: ETH)
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<bigint>" type="bigint">
+  The available balance of the asset.
+</ResponseField>
+
+### `distributed`
+
+Get the total amount of an asset distributed from the budget.
+
+<CodeGroup>
+```ts index.ts
+await budget.distributed({
+  asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D', // token address
+});
+// 1000000000000000000n
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="asset" type="string">
+  The address of the asset. Leave blank to get the distributed amount of the native asset. (ie: ETH)
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<bigint>" type="bigint">
+  The total amount of the asset distributed from the budget.
+</ResponseField>
+
+### `total`
+
+Get the total amount of an asset allocated to the budget, including any that have been distributed. 
+
+<Tip> `total` = `available` + `distributed` </Tip>
+
+<CodeGroup>
+```ts index.ts
+await budget.total({
+  asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D', // token address
+});
+// 1000000000000000000n
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="asset" type="string">
+  The address of the asset. Leave blank to get the total amount of the native asset. (ie: ETH)
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<bigint>" type="bigint">
+  The total amount of the asset allocated to the budget, including any that have been distributed.
+</ResponseField>
