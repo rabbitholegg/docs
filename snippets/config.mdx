@@ -1,4 +1,6 @@
 ```ts config.ts
+import { BoostCore } from "@boostxyz/sdk/BoostCore";
+import { BoostRegistry } from "@boostxyz/sdk/BoostRegistry";
 import { http, createConfig } from '@wagmi/core'
 import { mainnet, sepolia } from '@wagmi/core/chains'
 
@@ -9,4 +11,7 @@ export const config = createConfig({
     [sepolia.id]: http(),
   },
 })
+
+export const core = new BoostCore({ config })
+export const registry = new BoostRegistry({ config })
 ```
