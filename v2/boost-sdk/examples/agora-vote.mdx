@@ -3,6 +3,8 @@ title: "Boost a Vote on Agora"
 description: Learn how to reward users with ERC20 rewards when they vote for/against a specific proposal
 ---
 
+import Config from '/snippets/config.mdx'
+
 In this example, you want a certain proposal to pass/fail, and want to incentivize users to swing votes in your favor by offering additional rewards.
 
 <Card title="See the code" icon="file-lines" href="https://boost-protocol.vercel.app/classes/Contract.html#getLogs">See technical documentation for `Contract.getLogs`</Card>
@@ -11,13 +13,20 @@ In this example, you want a certain proposal to pass/fail, and want to incentivi
 Make sure you've completed the [quick start](/v2/boost-sdk/quick-start) guide before proceeding with this example.
 </Warning>
 
+## Set up a Managed Budget
+
 First you'll need to either initialize a new budget, or use an existing one, and allow the budget to spend a certain amount of your selected ERC20.
 
-```ts
-import { BoostCore } from '@boostxyz/sdk/BoostCore'
-import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
-import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
+<CodeGroup>
+```ts index.ts
+import { 
+  BoostCore, 
+  BoostRegistry, 
+  ManagedBudget, 
+  Roles 
+} from '@boostxyz/sdk'
 import { parseUnits } from 'viem'
+import { config as wagmiConfig } from './config'
 
 // Initialize the BoostCore and BoostRegistry modules
 const registry = new BoostRegistry({ config: wagmiConfig }),
@@ -30,7 +39,7 @@ const coreAddress = core.assertValidAddress()
 const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
   owner: '0xME',
   authorized: ['0xME', coreAddress],
-  roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER]
+  roles: [Roles.ADMIN, Roles.MANAGER]
 }))
 
 // Allow the budget to spend your ERC20 token
@@ -51,6 +60,10 @@ await budget.allocate({
   target: '0xME',
 })
 ```
+<Config />
+</CodeGroup>
+
+## Define The Action
 
 Next you'll need to define the action that qualifies a user to claim the reward.
 
@@ -130,7 +143,6 @@ const filterSupportStep: ActionStep = {
 };
 ```
 
-
 Next, we need to define the action claimant and create the payload for the new event action.
 
 The `eventAction` payload consists of the `actionClaimant` and the `actionSteps` we defined previously.
@@ -144,7 +156,7 @@ The purpose of the `eventAction` is to track and reward users based on their int
 
 2. **actionSteps**: This array can contain up to four action steps that outline the specific actions or conditions that must be met for the event action to be valid. In this example, we include the previously defined `eventActionStepOne` and `eventActionStepTwo`.
 
-Next, we initialize the `EventAction` class from the `bases` module, passing in the default options and the constructed `eventActionPayload`. This creates a new event action.
+Next, we use `core.EventAction` to set up the event action with our constructed `eventActionPayload`.
 
 ```ts
 const eventActionPayload = {
@@ -162,10 +174,13 @@ const eventActionPayload = {
 const eventAction = core.EventAction(eventActionPayload);
 ```
 
+## Deploy the Boost
+
 Once the event action is created, we can set up the incentives and deploy our boost.
 
 ```ts
-// This allows for participants to be rewarded with up to 10 wei of the reward asset. The maximum amount of the rewards distributed by this incentive in this boost would be 100 wei
+// This allows for participants to be rewarded with up to 10 wei of the reward asset. 
+//The maximum amount of the rewards distributed by this incentive in this boost would be 100 wei
 const incentives = [
     core.ERC20VariableIncentive({
       asset: erc20.assertValidAddress(),
@@ -177,30 +192,36 @@ const incentives = [
 
 ```ts
 // Deploy the boost
-await core.createBoost({
+const boost = await core.createBoost({
   maxParticipants: 100n, // Set a max number of participants
   budget: budget, // Use the ManagedBudget we set up earlier
   action: eventAction, // Pass the manually created EventAction
   incentives: incentives,
-  validator: core.SignerValidator({
-    signers: [owner, trustedSigner.account],
-    validatorCaller: core.assertValidAddress(),
-  }),
-  // This allowlist makes this boost available to all addresses. If you want to limit it to a specific address, you can use a SimpleAllowList
   allowList: core.OpenAllowList(),
 });
 ```
 
-After the boost is created, we can then implement logic to determine dynamic rewards.
+<Tip>
+  `core.OpenAllowList()` makes this boost available to all addresses. If you want to limit it to a specific address, you can use a `SimpleAllowList`.
+</Tip>
+
+## Claiming Incentives
+
+Once a claimant has successfully voted, you can claim the incentive for that claimant. You will need the address of the user that cast the vote, the hash of the vote cast transaction, and the boost id. 
+But first, you'll need to implement some logic to determine the variable reward amount.
+
+<Tip>
+  `ERC20VariableIncentive` uses off-chain logic to determine the reward amount. If you would like to base your reward on on-chain logic, you can use the `ERC20VariableCriteriaIncentive` type.
+</Tip>
 
 ```ts
-// Check the amount of votes the boostImpostor has at the time they made the tx to vote
+// Check the amount of votes the claimant has at the time they made the tx to vote
 const getVotesAbi = functions.abi[functions.selectors['getVotes(address account, uint256 blockNumber) view returns (uint256)'] as '0x00000000000000000000000000000000000000000000000000000000eb9019d4']
 const amountOfVotes = (await walletClient.readContract({
   address: '0xcdf27f107725988f2261ce2256bdfcde8b382b10',
   abi: [getVotesAbi],
   functionName: 'getVotes',
-  args: ['0xME', 'blockNumber'],
+  args: [claimant, 127417170n], // claimant is the address of the user that cast the vote
 })) as bigint;
 
 // If the amountOfVotes is greater than 100, then the reward should be 0.1 ETH, otherwise it will be 0.01 ETH
@@ -210,29 +231,45 @@ const rewardAmount =
     : parseEther('0.01');
 ```
 
-Having the `rewardAmount` will allow us to use it as a param when generating the signature payload to allow the user to claim the reward.
+Once the reward amount is determined, we can generate the signature payload to allow us to claim the reward for the claimant. 
+To generate the signature payload you will need to call the Boost `/signatures` api endpoint with the following params:
+
+- `boostId`: The id of the boost where the action was completed. The format is `chainId:boostId` (e.g. `8453:69`)
+- `txHash`: The hash of the transaction that completed the action.
+- `claimData`: This is only nessecary for variableIncentives. For this parameter you would pass in the `rewardAmount` which is used to determine the amount of the incentive to claim.
+If you have more than one variable incentive you can pass in a comma-separated list of claimData values.
+
+The signatures api will return an array of signatures, one for each available incentive on the boost.
+
+[//]: # (TODO: link to api reference for /signatures)
+[//]: # (TODO: update link api link)
 
 ```ts
-// Generate the signature using the trusted signer
-const claimDataPayload = await boost.validator.encodeClaimData({
-  signer: trustedSigner,
-  incentiveData: encodeAbiParameters(
-    [{ name: '', type: 'uint256' }],
-    [rewardAmount],
-  ),
-  chainId: optimism.id,
-  incentiveQuantity: 1,
-  claimant: boostImpostor,
-  boostId: boost.id,
-});
+  import axios from 'axios';
 
-// Claim the incentive for the imposter
-await core.claimIncentiveFor(
-  boost.id,
-  0n,
-  referrer,
-  claimDataPayload,
-  boostImpostor,
-  { value: parseEther('0.000075') },
-);
+  const { data } = await axios.get('https://api.boost-v2.xyz/signatures', {
+    params: { 
+      boostId: `${chainId}:${boost.id}`, 
+      txHash,
+      claimData: rewardAmount.toString(),
+    }
+  });
+
+  for (const item of data) {
+    const { signature, incentiveId, claimant } = item;
+
+    // Claim the incentive for the claimant
+    await core.claimIncentiveFor(
+      boost.id,
+      incentiveId,
+      referrer,
+      signature,
+      claimant,
+    );
+  }
 ```
+<Tip>
+  There can be multiple incentives to claim in a single boost. The example shown only has one incentive. 
+</Tip>
+
+The boost will stay active until the `maxParticipants` set for the boost is reached, or the incentive budget is fully spent.
