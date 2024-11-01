@@ -34,8 +34,8 @@
       "version": "v1"
     },
     {
-      "name": "API v2 Reference",
-      "url": "v2-api-reference",
+      "name": "API Reference",
+      "url": "v2/api-reference",
       "openapi": "https://ponder-staging-9166160e1bc0.herokuapp.com/openapi.json",
       "version": "v2"
     }
