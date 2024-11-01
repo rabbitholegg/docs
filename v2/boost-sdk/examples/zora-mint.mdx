@@ -3,11 +3,15 @@ title: "Boost an NFT Mint on Zora"
 description: Learn how to reward users with ERC20 rewards when they mint an NFT on Zora.
 ---
 
+import { Config } from '../config'
+
 In this example, you've created an NFT on Zora, and want to incentivize users to mint it by offering additional rewards.
 
 <Warning>
 Make sure you've completed the [quick start](/v2/boost-sdk/quick-start) guide before proceeding with this example.
 </Warning>
+
+## Set up a Managed Budget
 
 First you'll need to either initialize a new budget, or use an existing one, and allow the budget to spend a certain amount of your selected ERC20.
 
@@ -15,7 +19,7 @@ First you'll need to either initialize a new budget, or use an existing one, and
 ```ts index.ts
 import { BoostCore } from '@boostxyz/sdk/BoostCore'
 import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
-import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
+import { ManagedBudget, Roles } from '@boostxyz/sdk'
 import { parseUnits, erc20Abi } from 'viem'
 import { wagmiConfig } from '../config'
 
@@ -27,10 +31,10 @@ const core = new BoostCore({ config: wagmiConfig })
 const coreAddress = core.assertValidAddress()
 
 // Create a new budget and grant the correct permissions to the protocol
-const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
+const budget = await registry.initialize('MyBudget', core.ManagedBudget({
   owner: "0xME",
   authorized: ["0xME", coreAddress], // authorized addresses
-  roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER] // roles that the budget can assign to the protocol
+  roles: [Roles.ADMIN, Roles.MANAGER] // roles that the budget can assign to the protocol
 }))
 
 // Allow the budget to spend your ERC20 token.
@@ -51,20 +55,10 @@ await budget.allocate({
   target: "0xME",
 })
 ```
-
-```ts config.ts
-import { http, createConfig } from '@wagmi/core'
-import { mainnet, sepolia } from '@wagmi/core/chains'
-
-export const wagmiConfig = createConfig({
-  chains: [mainnet, sepolia],
-  transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-  },
-})
-```
+<Config />
 </CodeGroup>
+
+## Define The Action
 
 Next you'll need to define the action that qualifies a user to claim the reward.
 
@@ -101,7 +95,7 @@ import {
 } from '@boostxyz/sdk/Actions/EventAction'
 import { selectors } from '@boostxyz/signatures/events'
 
-// If one exists, use the signature from the selectors package
+// Use the Purchased signature from the selectors package
 const selectedSignature = selectors[
   'Purchased(address indexed,address indexed,uint256 indexed,uint256,uint256)'
 ] as Hex;
@@ -121,7 +115,6 @@ const eventActionStep: ActionStep = {
 };
 
 ```
-
 
 Next, we need to define the action claimant and create the payload for the new event action.
 
@@ -153,12 +146,14 @@ const eventActionPayload = {
 const eventAction = core.EventAction(eventActionPayload);
 ```
 
-Once the event action is created, we can set up the incentives.
+## Deploy the Boost
+
+Once the event action is created, we can set up the incentives and deploy our boost.
 
 ```ts
-import { StrategyType } from '@boostxyz/sdk/Incentives'
+import { StrategyType } from '@boostxyz/sdk/Incentive'
 
-// This allows for 10 participants to be rewarded with 1 WETH each
+// This allows for 10 participants to be rewarded with 1 token each
 const incentives = [
     core.ERC20Incentive({
       asset: '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2',
@@ -169,8 +164,6 @@ const incentives = [
   ],
 ```
 
-Last step is to create the boost.
-
 ```ts
 // Deploy the boost
 const boost = await core.createBoost({
@@ -178,11 +171,54 @@ const boost = await core.createBoost({
   budget: budget, // Use the ManagedBudget we set up earlier
   action: eventAction, // Pass the manually created EventAction
   incentives: incentives,
-  validator: core.SignerValidator(defaultOptions, {
-    signers: [owner, trustedSigner.account],
-    validatorCaller: core.assertValidAddress(), 
-  }),
-  // The boost is available to all addresses. If you want to limit it to specific addresses, you can use a SimpleAllowList
   allowList: core.OpenAllowList(),
 });
 ```
+
+## Claiming Incentives
+
+Once a claimant has successfully completed the action, you can claim the incentive for that claimant. 
+
+<Tip>
+  `ERC20Incentive` is a fixed reward incentive. If you would like to have a variable reward based on on-chain logic, you can use the `ERC20VariableCriteriaIncentive` type.
+</Tip>
+
+In order to successfully claim the reward for a claimant, you will need to generate the signature payload. 
+To generate the signature payload you will need to call the Boost `/signatures` api endpoint with the following params:
+
+- `boostId`: The id of the boost where the action was completed. The format is `chainId:boostId` (e.g. `8453:69`)
+- `txHash`: The hash of the transaction that completed the action.
+
+The signatures api will return an array of signatures, one for each available incentive on the boost.
+
+[//]: # (TODO: link to api reference for /signatures)
+[//]: # (TODO: update link api link)
+
+```ts
+  import axios from 'axios';
+
+  const { data } = await axios.get('https://api.boost-v2.xyz/signatures', {
+    params: { 
+      boostId: `${chainId}:${boost.id}`, 
+      txHash,
+    }
+  });
+
+  for (const item of data) {
+    const { signature, incentiveId, claimant } = item;
+
+    // Claim the incentive for the claimant
+    await core.claimIncentiveFor(
+      boost.id,
+      incentiveId,
+      referrer,
+      signature,
+      claimant,
+    );
+  }
+```
+<Tip>
+  There can be multiple incentives to claim in a single boost. The example shown only has one incentive. 
+</Tip>
+
+The boost will stay active until the `maxParticipants` set for the boost is reached.
