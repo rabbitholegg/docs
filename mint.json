@@ -32,6 +32,11 @@
       "name": "API Reference",
       "url": "v1/api-reference",
       "version": "v1"
+    },
+    {
+      "name": "API Reference",
+      "url": "api-reference",
+      "openapi": "https://ponder-staging-9166160e1bc0.herokuapp.com/openapi.json"
     }
   ],
   "anchors": [
@@ -40,6 +45,12 @@
       "icon": "asterisk",
       "url": "https://api.boost.xyz/openapi.json",
       "version": "v1"
+    },
+    {
+      "name": "OpenAPI.json",
+      "icon": "asterisk",
+      "url": "https://ponder-staging-9166160e1bc0.herokuapp.com/openapi.json",
+      "version": "v2"
     }
   ],
   "navigation": [
@@ -197,43 +208,43 @@
       ]
     },
     {
-			"group": "Boost SDK",
-			"version": "v2",
-			"pages": [
-				"v2/boost-sdk/overview",
-				"v2/boost-sdk/installation",
-				"v2/boost-sdk/quick-start",
-				"v2/boost-sdk/usage-with-react",
-				"v2/boost-sdk/working-with-events",
-				"v2/boost-sdk/integrating-your-contracts"
-			]
-		},
-		{
-			"group": "Examples",
-			"version": "v2",
-			"pages": [
-				"v2/boost-sdk/examples/zora-mint",
-				"v2/boost-sdk/examples/agora-vote",
-				"v2/boost-sdk/examples/claim-example"
-			]
-		},
-		{
-			"group": "Boost Registry",
-			"version": "v2",
-			"pages": [
-				"v2/boost-sdk/boost-registry/overview",
-				"v2/boost-sdk/boost-registry/initializing-components",
-				"v2/boost-sdk/boost-registry/clones"
-			]
-		},
-		{
-			"group": "Boost Core",
-			"version": "v2",
-			"pages": [
-				"v2/boost-sdk/boost-core/overview",
-				"v2/boost-sdk/boost-core/get-boosts",
-				"v2/boost-sdk/boost-core/claim-incentive"
-			]
+      "group": "Boost SDK",
+      "version": "v2",
+      "pages": [
+        "v2/boost-sdk/overview",
+        "v2/boost-sdk/installation",
+        "v2/boost-sdk/quick-start",
+        "v2/boost-sdk/usage-with-react",
+        "v2/boost-sdk/working-with-events",
+        "v2/boost-sdk/integrating-your-contracts"
+      ]
+    },
+    {
+      "group": "Examples",
+      "version": "v2",
+      "pages": [
+        "v2/boost-sdk/examples/zora-mint",
+        "v2/boost-sdk/examples/agora-vote",
+        "v2/boost-sdk/examples/claim-example"
+      ]
+    },
+    {
+      "group": "Boost Registry",
+      "version": "v2",
+      "pages": [
+        "v2/boost-sdk/boost-registry/overview",
+        "v2/boost-sdk/boost-registry/initializing-components",
+        "v2/boost-sdk/boost-registry/clones"
+      ]
+    },
+    {
+      "group": "Boost Core",
+      "version": "v2",
+      "pages": [
+        "v2/boost-sdk/boost-core/overview",
+        "v2/boost-sdk/boost-core/get-boosts",
+        "v2/boost-sdk/boost-core/claim-incentive"
+      ]
     },
     {
       "group": "Managed Budget",
@@ -244,7 +255,7 @@
         "v2/boost-sdk/budgets/managed/funding",
         "v2/boost-sdk/budgets/managed/retrieval"
       ]
-		}
+    }
   ],
   "footerSocials": {
     "x": "https://x.com/boost_xyz",
