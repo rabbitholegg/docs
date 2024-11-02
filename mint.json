@@ -27,6 +27,9 @@
     "name": "boost.xyz",
     "url": "https://boost.xyz"
   },
+  "primaryTab": {
+    "name": "Documentation"
+  },  
   "tabs": [
     {
       "name": "API Reference",
@@ -34,23 +37,14 @@
       "version": "v1"
     },
     {
-      "name": "API Reference",
-      "url": "v2/api-reference",
-      "openapi": "https://ponder-staging-9166160e1bc0.herokuapp.com/openapi.json",
+      "name": "SDK Docs",
+      "url": "v2/boost-sdk",
       "version": "v2"
-    }
-  ],
-  "anchors": [
-    {
-      "name": "OpenAPI.json",
-      "icon": "asterisk",
-      "url": "https://api.boost.xyz/openapi.json",
-      "version": "v1"
     },
     {
-      "name": "OpenAPI.json",
-      "icon": "asterisk",
-      "url": "https://ponder-staging-9166160e1bc0.herokuapp.com/openapi.json",
+      "name": "API Reference",
+      "url": "/v2/api-reference",
+      "openapi": "https://ponder-staging-9166160e1bc0.herokuapp.com/openapi.json",
       "version": "v2"
     }
   ],
@@ -96,6 +90,13 @@
         "v1/boost-api/create-a-boost",
         "v1/boost-api/fetch-boosts",
         "v1/boost-api/claim-a-boost"
+      ]
+    },
+    {
+      "group": "",
+      "version": "v1",
+      "pages": [
+        "v1/api-reference/openapi/openapi-json"
       ]
     },
     {
@@ -209,6 +210,14 @@
       ]
     },
     {
+      "group": "Overview",
+      "version": "v2",
+      "pages": [
+        "v2/documentation/overview/introduction",
+        "v2/documentation/overview/what-is-a-boost"
+      ]
+    },
+    {
       "group": "Boost SDK",
       "version": "v2",
       "pages": [
@@ -255,6 +264,13 @@
         "v2/boost-sdk/budgets/managed/authorization",
         "v2/boost-sdk/budgets/managed/funding",
         "v2/boost-sdk/budgets/managed/retrieval"
+      ]
+    },
+    {
+      "group": "",
+      "version": "v2",
+      "pages": [
+        "v2/api-reference/openapi-json"
       ]
     }
   ],
