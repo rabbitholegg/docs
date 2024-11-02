@@ -218,6 +218,20 @@
       ]
     },
     {
+      "group": "Protocol Concepts",
+      "version": "v2",
+      "pages": [
+        "v2/documentation/protocol-concepts/protocol-fees"
+      ]
+    },
+    {
+      "group": "User Guides",
+      "version": "v2",
+      "pages": [
+        "v2/documentation/user-guides/how-to-deploy-a-boost"
+      ]
+    },
+    {
       "group": "Boost SDK",
       "version": "v2",
       "pages": [
