@@ -16,7 +16,6 @@
       "to": "#43e661"
     }
   },
-  "openapi": "https://api.boost.xyz/openapi.json",
   "topbarLinks": [
     {
       "name": "Support",
@@ -34,6 +33,7 @@
     {
       "name": "API Reference",
       "url": "v1/api-reference",
+      "openapi": "https://api.boost.xyz/openapi.json",
       "version": "v1"
     },
     {
