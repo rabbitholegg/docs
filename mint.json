@@ -96,10 +96,10 @@
       "group": "For Developers",
       "version": "v2",
       "pages": [
-        "v2/documentation/links/boost-sdk",
-        "v2/documentation/links/boost-api-reference",
         "v2/documentation/architecture/core-boost-v2",
-        "v2/documentation/architecture/boost-v2-vs-v1"
+        "v2/documentation/architecture/boost-v2-vs-v1",
+        "v2/documentation/links/boost-sdk",
+        "v2/documentation/links/boost-api-reference"
       ]
     },
     {
