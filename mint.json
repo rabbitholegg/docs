@@ -53,15 +53,15 @@
       "group": "Introduction",
       "version": "v2",
       "pages": [
-        "v2/introduction/introduction",
-        "v2/introduction/why-we-built-boost",
-        "v2/introduction/vision-of-boost",
-        "v2/introduction/use-cases",
+        "v2/documentation/introduction/introduction",
+        "v2/documentation/introduction/why-we-built-boost",
+        "v2/documentation/introduction/vision-of-boost",
+        "v2/documentation/introduction/use-cases",
         {
           "group": "Case Studies",
           "pages": [
-            "v2/introduction/case-studies/zora",
-            "v2/introduction/case-studies/coop-records"
+            "v2/documentation/introduction/case-studies/zora",
+            "v2/documentation/introduction/case-studies/coop-records"
           ]
         }
       ]
@@ -70,26 +70,26 @@
       "group": "How it works",
       "version": "v2",
       "pages": [
-        "v2/how-it-works/deploying-boosts",
+        "v2/documentation/how-it-works/deploying-boosts",
         {
           "group": "Action Selection",
           "pages": [
-            "v2/action-selection/introduction",
-            "v2/action-selection/understanding-etherscan-data",
-            "v2/action-selection/setting-up-boost-actions",
-            "v2/action-selection/advanced-techniques"
+            "v2/documentation/action-selection/introduction",
+            "v2/documentation/action-selection/understanding-etherscan-data",
+            "v2/documentation/action-selection/setting-up-boost-actions",
+            "v2/documentation/action-selection/advanced-techniques"
           ]
         },
         {
           "group": "Reward Selection",
           "version": "v2",
           "pages": [
-            "v2/reward-selection/tokens-supported",
-            "v2/reward-selection/strategies-for-reward-distribution",
-            "v2/reward-selection/budget-accounts"
+            "v2/documentation/reward-selection/tokens-supported",
+            "v2/documentation/reward-selection/strategies-for-reward-distribution",
+            "v2/documentation/reward-selection/budget-accounts"
           ]
         },
-        "v2/how-it-works/claiming-rewards"
+        "v2/documentation/how-it-works/claiming-rewards"
       ]
     },
     {
@@ -99,24 +99,24 @@
         {
           "group": "Building with BoostSDK",
           "pages": [
-            "v2/building-with-boostsdk/introduction-to-boostsdk",
-            "v2/building-with-boostsdk/setting-up-developer-environment",
-            "v2/building-with-boostsdk/key-features-and-functionality",
-            "v2/building-with-boostsdk/code-examples-and-best-practices"
+            "v2/documentation/building-with-boostsdk/introduction-to-boostsdk",
+            "v2/documentation/building-with-boostsdk/setting-up-developer-environment",
+            "v2/documentation/building-with-boostsdk/key-features-and-functionality",
+            "v2/documentation/building-with-boostsdk/code-examples-and-best-practices"
           ]
         },
-        "v2/architecture/core-boost-v2",
-        "v2/architecture/boost-v2-vs-v1"
+        "v2/documentation/architecture/core-boost-v2",
+        "v2/documentation/architecture/boost-v2-vs-v1"
       ]
     },
     {
       "group": "Support",
       "version": "v2",
       "pages": [
-        "v2/community-and-support/joining-boost-community",
-        "v2/community-and-support/discord-group",
-        "v2/community-and-support/telegram-group",
-        "v2/support/faqs"
+        "v2/documentation/community-and-support/joining-boost-community",
+        "v2/documentation/community-and-support/discord-group",
+        "v2/documentation/community-and-support/telegram-group",
+        "v2/documentation/support/faqs"
       ]
     },
     {
@@ -167,28 +167,6 @@
       "version": "v1",
       "pages": [
         "v1/api-reference/openapi/openapi-json"
-      ]
-    },
-    {
-      "group": "Overview",
-      "version": "v2",
-      "pages": [
-        "v2/documentation/overview/introduction",
-        "v2/documentation/overview/what-is-a-boost"
-      ]
-    },
-    {
-      "group": "Protocol Concepts",
-      "version": "v2",
-      "pages": [
-        "v2/documentation/protocol-concepts/protocol-fees"
-      ]
-    },
-    {
-      "group": "User Guides",
-      "version": "v2",
-      "pages": [
-        "v2/documentation/user-guides/how-to-deploy-a-boost"
       ]
     },
     {
