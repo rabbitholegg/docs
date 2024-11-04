@@ -39,7 +39,7 @@ await budget.allocate({
 
 #### Parameters
 
-<ParamField path="transfer" type={<a href="https://boost-protocol.vercel.app/interfaces/FungibleTransferPayload.html">FungibleTransferPayload</a>} required>
+<ParamField path="transfer" type={<a href="https://sdk.boost.xyz/interfaces/FungibleTransferPayload.html">FungibleTransferPayload</a>} required>
   <Expandable title="properties">
     <ParamField path="amount" type="bigint" required>
       The amount of tokens to transfer.
@@ -117,7 +117,7 @@ await budget.distributed({
 
 ### `total`
 
-Get the total amount of an asset allocated to the budget, including any that have been distributed. 
+Get the total amount of an asset allocated to the budget, including any that have been distributed.
 
 <Tip> `total` = `available` + `distributed` </Tip>
 
