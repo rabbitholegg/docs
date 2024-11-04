@@ -1,0 +1,40 @@
+---
+title: "Setting Up Boost Actions"
+description: "Learn how to create and refine your Boost actions"
+---
+
+Now that you understand the key components of a transaction, let's look at how to set up effective Boost actions.
+
+## Key Fields for Boost Actions
+
+1. **To (Contract Address)**: Defines which contract you're targeting
+2. **Signature (Function Name)**: Specifies the action within the contract
+3. **Log Signature (Event Name)**: Crucial for many DeFi interactions
+4. **Claimant**: Ensures the right users are rewarded
+
+## Creating Effective Boosts
+
+1. Start with the contract address in the "To" field
+2. Use the "Signature" field to specify the function
+3. Set parameter filters to target specific transaction values
+4. Use log filters to capture successful outcomes
+5. Refine with claimant filters to target or exclude specific users
+
+## Example Templates
+
+1. **Large Token Transfers**:
+   - To: [Token Contract Address]
+   - Signature: transfer
+   - Parameter Filter: amount >= [Significant Amount]
+
+2. **DEX Swaps**:
+   - To: [DEX Router Address]
+   - Signature: swapExactTokensForTokens
+   - Log Filter: Swap event with amount0In or amount1In >= [Significant Amount]
+
+3. **NFT Minting**:
+   - To: [NFT Contract Address]
+   - Signature: mint
+   - Log Filter: Transfer event with from address being 0x0
+
+Remember to use the "Filter Preview" in the Boost Deploy flow to ensure your filters are capturing the intended transactions.

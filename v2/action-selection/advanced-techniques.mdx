@@ -1,0 +1,57 @@
+---
+title: "Advanced Action Selection Techniques"
+description: "Advanced strategies for creating more complex and targeted Boost actions"
+---
+
+As you become more comfortable with setting up basic Boost actions, you can explore more advanced techniques to create highly targeted and effective Boosts.
+
+## 1. Combining Filters
+
+Use both function parameters and log events to create very specific targets.
+
+**Example**: Target large swaps that result in a minimum output amount
+- Use function parameters to filter for a minimum input amount
+- Use log events to filter for a minimum output amount
+
+## 2. Time-Based Boosts
+
+Use the transaction timestamp to create time-limited promotions.
+
+**Example**: Reward actions only during a specific timeframe
+- Set up a filter based on the block timestamp
+- This can be useful for short-term promotions or to align with specific events
+
+## 3. Multi-Step Actions
+
+For complex DeFi strategies, consider creating multiple Boosts that reward users for completing a series of actions.
+
+**Example**: Reward users for providing liquidity and then staking their LP tokens
+- Create one Boost for the liquidity provision action
+- Create another Boost for the staking action
+- Users who complete both actions get rewards from both Boosts
+
+## 4. Dynamic Adjustments
+
+Regularly review your Boost performance and be prepared to adjust your filters.
+
+**Example**: If market conditions change, you might need to adjust your "large transfer" threshold
+- Monitor the number of qualifying actions
+- Adjust your filters if you're getting too many or too few qualifying actions
+
+## 5. Exclusion Filters
+
+Use filters to exclude certain addresses or types of transactions.
+
+**Example**: Exclude known contract addresses or team wallets from claiming rewards
+- Set up a filter to exclude specific addresses
+- This can help prevent gaming of the system and ensure rewards go to genuine users
+
+## 6. Composite Actions
+
+Create Boosts that reward users for performing multiple actions in a single transaction.
+
+**Example**: Reward users who swap tokens and then provide liquidity in the same transaction
+- Set up filters to check for both a swap event and a liquidity provision event
+- This can incentivize more complex and valuable user behaviors
+
+Remember, with advanced techniques comes increased complexity. Always thoroughly test your Boost configurations before deploying them, and be prepared to make adjustments based on real-world performance.
