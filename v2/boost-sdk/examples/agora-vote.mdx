@@ -247,7 +247,7 @@ The signatures api will return an array of signatures, one for each available in
 ```ts
   import axios from 'axios';
 
-  const { data } = await axios.get('https://api.boost-v2.xyz/signatures', {
+  const { data } = await axios.get('/signatures', {
     params: { 
       boostId: `${chainId}:${boost.id}`, 
       txHash,

@@ -33,7 +33,7 @@ otherwise you will need to build the payload yourself.
     const chainId = 8453; // base mainnet
     const boost = await core.getBoost(3n, { chainId })
 
-    const { data } = await axios.get('https://api.boost-v2.xyz/signatures', {
+    const { data } = await axios.get('/signatures', {
       params: { 
         boostId: `${chainId}:${boost.id}`, 
         txHash,
@@ -62,7 +62,7 @@ otherwise you will need to build the payload yourself.
     const chainId = 8453; // base mainnet
     const boost = await core.getBoost(3n, { chainId })
 
-    const { data } = await axios.get('https://api.boost-v2.xyz/signatures', {
+    const { data } = await axios.get('/signatures', {
       params: { 
         boostId: `${chainId}:${boost.id}`, 
         txHash,
