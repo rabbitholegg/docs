@@ -9,7 +9,7 @@ import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
 
 The Boost Protocol, fundamentally, needs to be able to validate that certain actions have occured in order to allow users to claim incentives. So in order to make it simple to create Boosts and validate them, we publish [`@boostxyz/signatures`](https://www.npmjs.com/package/@boostxyz/signatures) which is a registry of known function and event signatures, their 32 byte selectors, and [AbiEvents](https://viem.sh/docs/glossary/types#abievent) or [AbiFunctions](https://viem.sh/docs/glossary/types#abifunction) in an easy to consume JSON format.
 
-You can use this library as you're creating a Boost and building out [action steps](https://boost-protocol.vercel.app/interfaces/ActionStep.html) for use with the [Event Actions](https://boost-protocol.vercel.app/classes/EventAction.html). You'll need to specify the function or event's [signature](https://boost-protocol.vercel.app/interfaces/ActionStep.html#signature), which allows Boost's validators to parse the event or function arguments, and compare them against the rest of the actions' parameters.
+You can use this library as you're creating a Boost and building out [action steps](https://sdk.boost.xyz/interfaces/ActionStep.html) for use with the [Event Actions](https://sdk.boost.xyz/classes/EventAction.html). You'll need to specify the function or event's [signature](https://sdk.boost.xyz/interfaces/ActionStep.html#signature), which allows Boost's validators to parse the event or function arguments, and compare them against the rest of the actions' parameters.
 
 So in order to simplify applications that would otherwise need to know the hex encoded 4 byte function selector, or 32 byte event selector, and their associated ABI items, you can instead use this library to save on code and complexity.
 
@@ -47,7 +47,7 @@ const filterOnReceiver: ActionStep = {
 
 If you've used a function or event signature from `@boostxyz/signatures` in the creation of your Boost, then you don't have to do anything else for validation to work.
 
-Otherwise, if you're supplying a custom event signature unknown to `@boostxyz/signatures` and running your own validation using the SDK, you'll need to additionally supply your own `AbiEvent` to validation so event logs can be correctly pulled off transactions.
+Otherwise, if you're supplying a custom event signature unknown to `@boostxyz/signatures` and dealing with a Boost using a custom validator, you'll need to additionally supply your own `AbiEvent` to validation methods so event logs can be correctly pulled off transactions.
 
 ```ts
 await boostCore.validateActionSteps({
@@ -69,6 +69,10 @@ await boostCore.validateActionSteps({
 For more detailed examples, see [sample use cases](https://github.com/boostxyz/boost-protocol/tree/main/examples)
 
 ## Contributing new signatures
+
+<Tip>
+  If using the default Boost validator, you also have the option of submitting your contract events and functions to [openchain.xyz](https://openchain.xyz/signatures/import) or [4byte.directory](https://www.4byte.directory/submit/), but contributing to `@boostxyz/signatures` is preferred due to its approach as a static manifest as opposed to a third party API.
+</Tip>
 
 To integrate your contracts with the Boost V2 Protocol:
 
