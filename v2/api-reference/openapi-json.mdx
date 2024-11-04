@@ -17,16 +17,16 @@ url: "https://ponder-staging-9166160e1bc0.herokuapp.com/openapi.json"
 ## Available Endpoints
 
 <CardGroup cols={2}>
-  <Card title="List Boosts" icon="list" href="v2/api-reference/get-list-of-boosts">
+  <Card title="List Boosts" icon="list" href="/v2/api-reference/boosts/get-boosts">
     `GET /boosts` - Get a paginated list of boosts with optional filters
   </Card>
-  <Card title="Get Boost Details" icon="circle-info" href="v2/api-reference/boosts/get-boost-details">
+  <Card title="Get Boost Details" icon="circle-info" href="/v2/api-reference/boosts/get-boost-details">
     `GET /boosts/{id}` - Get detailed information about a specific boost
   </Card>
-  <Card title="Boost Activity" icon="chart-line" href="v2/api-reference/get-boost-activity">
+  <Card title="Boost Activity" icon="chart-line" href="/v2/api-reference/boosts/get-boost-activity">
     `GET /boosts/{id}/activity` - Get activity history for a boost
   </Card>
-  <Card title="Claim Signatures" icon="signature" href="v2/api-reference/get-signatures-for-boost-claim">
+  <Card title="Claim Signatures" icon="signature" href="/v2/api-reference/boosts/validate-&-sign-data-for-a-claim">
     `GET /signatures` - Get signatures required for boost claims
   </Card>
 </CardGroup>
