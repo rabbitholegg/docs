@@ -1,0 +1,12 @@
+```mermaid
+    sequenceDiagram
+            actor creator as Boost Creator 
+            participant core as BoostCore.sol
+            participant budget as Budget.sol
+            participant incentive as Incentive.sol
+            creator ->> budget: Funds and Creates a Budget
+            creator ->> core: Creates a Boost
+            core ->> incentive: Deploys Incentives
+            core -->> budget: Requests Allocations To Incentive
+            budget ->> incentive: Sends Funds to Incentive on Boost Creation
+```
