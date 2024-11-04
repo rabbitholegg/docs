@@ -7,62 +7,154 @@ In this example, you'll learn how to claim a reward from a Boost.
 To claim a reward from a Boost, you'll need to follow these general steps:
 
 1. Retrieve the Boost you want to claim from
-2. Get the specific incentive from the Boost
-3. Prepare the incentive payload
-4. Encode the claim data
-5. Execute the claim transaction
+2. Prepare the claim data payload
+3. Execute the claim transaction
 
-```ts
-// get the boost you want to claim from
-const boost = await core.getBoost(1n)
+This process will differ depending on if you have set up your own validator or are using the default validator.
+If using the default validator, you will need to call the boost's `/signatures` endpoint to generate the signature payload, 
+otherwise you will need to build the payload yourself.
 
-// get an incentive from the boost
-const incentiveId = 0n; // the position in the incentives array
-const incentive = boost.incentives[incentiveId]
+<Tip>
+  The default validator will be always be used by default unless you specify your own validator on boost creation.
+</Tip>
 
-// prepare the incentive payload
-let incentivePayload: Hex;
+<Tabs>
+  <Tab title="Using the Default Validator">
 
-// variable reward incentives require the reward amount to be provided in buildClaimData
-if (incentive instanceof ERC20VariableIncentive || 
-    incentive instanceof ERC20VariableCriteriaIncentive) {
-  const rewardAmount = parseUnits("10", 18);
-  incentivePayload = incentive.buildClaimData(rewardAmount);
-} else {
-  incentivePayload = incentive.buildClaimData();
-}
+    In order to claim an incentive from a boost using the default validator, you will need to generate a valid signature payload.
+    You can do this by calling the boost api `/signatures` endpoint and passing in the boostID and txHash.
 
-// encode claimData payload
-const claimDataPayload = await boost.validator.encodeClaimData({
-  signer: signer.account,
-  incentiveData: incentivePayload,
-  chainId: 8453,
-  incentiveQuantity: 1,
-  claimant: "0xCLAIMANT", // the address of the account claiming the incentive
-  boostId: boost.id,
-});
+    This example assumes you have already instantiated a `BoostCore` client and have a valid transaction hash for the action that the claimant completed.
 
-// claim the incentive from the boost
-await core.claimIncentive(
-  boost.id,
-  incentiveId, // the incentiveId (position in the array of incentives)
-  "0xCLAIMANT", // the claimant
-  claimDataPayload,
-);
-```
+    ### Generate the Signature Payload
+    ```ts
+    import axios from 'axios';
 
-<Warning>
-  The claimant must be authorized to claim the incentive. (*ie: on allowlist and passes validation*)
-</Warning>
+    const chainId = 8453; // base mainnet
+    const boost = await core.getBoost(3n, { chainId })
 
-You can also claim on behalf of another user by using the `claimIncentiveFor` method.
+    const { data } = await axios.get('/signatures', {
+      params: { 
+        boostId: `${chainId}:${boost.id}`, 
+        txHash,
+      }
+    });
+    ```
+    [//]: # (TODO: add link to api reference)
 
-```ts
-await core.claimIncentiveFor(
-  boost.id,
-  0n, // the incentiveId (position in the array of incentives)
-  "0xREFERRER", // referrer (if any). use zero address if no referrer
-  claimDataPayload,
-  "0xCLAIMANT", // the address of the account the claim is being made for
-);
-```
+    <Tip>
+      If using `ERC20VariableIncentive` or `ERC20VariableCriteriaIncentive`, you will need to pass in the `rewardAmount` as `claimData` to the `/signatures` endpoint.
+    </Tip>
+
+    The `/signatures` endpoint will return an array of signatures, one for each available incentive on the boost.
+    Each item in the array will contain the following fields:
+    - `signature`: The signature to be used in the claim transaction
+    - `incentiveId`: The id of the incentive being claimed
+    - `claimant`: The address of the claimant
+
+    ### Claiming the incentives
+
+    Once you have a valid response from the `/signatures` endpoint, you can loop through the response and claim the incentives.
+
+    ```ts index.ts {13-22}
+    import axios from 'axios';
+
+    const chainId = 8453; // base mainnet
+    const boost = await core.getBoost(3n, { chainId })
+
+    const { data } = await axios.get('/signatures', {
+      params: { 
+        boostId: `${chainId}:${boost.id}`, 
+        txHash,
+      }
+    });
+
+    for (const item of data) {
+      const { signature, incentiveId, claimant } = item;
+
+      // Allow the claimant to claim the incentive
+      await core.claimIncentive(
+        boost.id,
+        incentiveId,
+        claimant,
+        signature,
+      );
+    } 
+    ```
+    <Warning>
+      `claimIncentive` must be called by the claimant. This is useful if you have access to the claimants wallet, like in the case of a dapp.
+      If you are claiming on behalf of another user, you must use `claimIncentiveFor`.
+    </Warning>
+
+    You can also claim on behalf of another user by using the `claimIncentiveFor` method.
+
+    ```ts
+    // Claim on behalf of another user
+    await core.claimIncentiveFor(
+      boost.id,
+      incentiveId, // the incentiveId (position in the array of incentives)
+      "0xREFERRER", // referrer (if any). use zero address if no referrer
+      signature,
+      claimant, // the address of the account the claim is being made for
+    );
+    ```
+  </Tab>
+  <Tab title="Using Your Own Validator" >
+    [//]: # (TODO: link to validator page when it's published to provde more context)
+    [//]: # (TODO: show how to validate actions without using the api)
+    ```ts
+    // get the boost you want to claim from
+    const boost = await core.getBoost(1n)
+
+    // get an incentive from the boost
+    const incentiveId = 0n; // the position in the incentives array
+    const incentive = boost.incentives[incentiveId]
+
+    // prepare the incentive payload
+    let incentivePayload: Hex;
+
+    // variable reward incentives require the reward amount to be provided in buildClaimData
+    if (incentive instanceof ERC20VariableIncentive || 
+        incentive instanceof ERC20VariableCriteriaIncentive) {
+      const rewardAmount = parseUnits("10", 18);
+      incentivePayload = incentive.buildClaimData(rewardAmount);
+    } else {
+      incentivePayload = incentive.buildClaimData();
+    }
+
+    // encode claimData payload
+    const claimDataPayload = await boost.validator.encodeClaimData({
+      signer: signer.account,
+      incentiveData: incentivePayload,
+      chainId: 8453,
+      incentiveQuantity: 1,
+      claimant: "0xCLAIMANT", // the address of the account claiming the incentive
+      boostId: boost.id,
+    });
+
+    // claim the incentive from the boost
+    await core.claimIncentive(
+      boost.id,
+      incentiveId, // the incentiveId (position in the array of incentives)
+      "0xCLAIMANT", // the claimant
+      claimDataPayload,
+    );
+    ```
+
+    <Warning>
+      The claimant must be authorized to claim the incentive (e.g., on allowlist)
+    </Warning>
+
+    You can also claim on behalf of another user by using the `claimIncentiveFor` method.
+
+    ```ts
+    await core.claimIncentiveFor(
+      boost.id,
+      0n, // the incentiveId (position in the array of incentives)
+      "0xREFERRER", // referrer (if any). use zero address if no referrer
+      claimDataPayload,
+      "0xCLAIMANT", // the address of the account the claim is being made for
+    );
+    ```
+  </Tab>
+</Tabs>
