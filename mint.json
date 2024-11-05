@@ -16,7 +16,6 @@
       "to": "#43e661"
     }
   },
-  "openapi": "https://api.boost.xyz/openapi.json",
   "topbarLinks": [
     {
       "name": "Support",
@@ -27,6 +26,10 @@
     "name": "boost.xyz",
     "url": "https://boost.xyz"
   },
+  "openapi": "https://api.boost.xyz/openapi.json",
+  "primaryTab": {
+    "name": "Documentation"
+  },  
   "tabs": [
     {
       "name": "API Reference",
@@ -34,27 +37,79 @@
       "version": "v1"
     },
     {
+      "name": "SDK Docs",
+      "url": "v2/boost-sdk",
+      "version": "v2"
+    },
+    {
       "name": "API Reference",
-      "url": "v2/api-reference",
+      "url": "/v2/api-reference",
       "openapi": "https://ponder-staging-9166160e1bc0.herokuapp.com/openapi.json",
       "version": "v2"
     }
   ],
-  "anchors": [
+  "navigation": [
     {
-      "name": "OpenAPI.json",
-      "icon": "asterisk",
-      "url": "https://api.boost.xyz/openapi.json",
-      "version": "v1"
+      "group": "Overview",
+      "version": "v2",
+      "pages": [
+        "v2/documentation/overview/introduction",
+        "v2/documentation/overview/why-we-built-boost",
+        "v2/documentation/overview/vision-of-boost",
+        "v2/documentation/overview/use-cases",
+        {
+          "group": "Case Studies",
+          "pages": [
+            "v2/documentation/overview/case-studies/zora",
+            "v2/documentation/overview/case-studies/coop-records"
+          ]
+        }
+      ]
     },
     {
-      "name": "OpenAPI.json",
-      "icon": "asterisk",
-      "url": "https://ponder-staging-9166160e1bc0.herokuapp.com/openapi.json",
-      "version": "v2"
-    }
-  ],
-  "navigation": [
+      "group": "How it works",
+      "version": "v2",
+      "pages": [
+        "v2/documentation/how-it-works/deploying-boosts",
+        {
+          "group": "Action Selection",
+          "pages": [
+            "v2/documentation/action-selection/introduction",
+            "v2/documentation/action-selection/understanding-etherscan-data",
+            "v2/documentation/action-selection/setting-up-boost-actions",
+            "v2/documentation/action-selection/advanced-techniques"
+          ]
+        },
+        {
+          "group": "Reward Selection",
+          "version": "v2",
+          "pages": [
+            "v2/documentation/reward-selection/tokens-supported",
+            "v2/documentation/reward-selection/strategies-for-reward-distribution",
+            "v2/documentation/reward-selection/budget-accounts"
+          ]
+        },
+        "v2/documentation/how-it-works/claiming-rewards"
+      ]
+    },
+    {
+      "group": "For Developers",
+      "version": "v2",
+      "pages": [
+        "v2/documentation/architecture/core-boost-v2",
+        "v2/documentation/architecture/boost-v2-vs-v1",
+        "v2/documentation/links/boost-sdk",
+        "v2/documentation/links/boost-api-reference"
+      ]
+    },
+    {
+      "group": "Support",
+      "version": "v2",
+      "pages": [
+        "v2/documentation/support/joining-boost-community",
+        "v2/documentation/support/faqs"
+      ]
+    },
     {
       "group": "Overview",
       "version": "v1",
@@ -96,6 +151,13 @@
         "v1/boost-api/create-a-boost",
         "v1/boost-api/fetch-boosts",
         "v1/boost-api/claim-a-boost"
+      ]
+    },
+    {
+      "group": "",
+      "version": "v1",
+      "pages": [
+        "v1/api-reference/openapi/openapi-json"
       ]
     },
     {
@@ -255,6 +317,13 @@
         "v2/boost-sdk/budgets/managed/authorization",
         "v2/boost-sdk/budgets/managed/funding",
         "v2/boost-sdk/budgets/managed/retrieval"
+      ]
+    },
+    {
+      "group": "",
+      "version": "v2",
+      "pages": [
+        "v2/api-reference/openapi-json"
       ]
     }
   ],

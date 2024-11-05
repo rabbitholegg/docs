@@ -1,0 +1,37 @@
+---
+title: "Understanding the Action Section"
+description: "Learn how to interpret the main transaction details on Etherscan"
+---
+
+The Action section on Etherscan provides key information about the transaction. Let's break down the main components:
+
+## From
+
+- **Where to find it**: Look for "From:" near the top of the Etherscan page
+- **What it is**: The address that sent the transaction
+- **Example**: From: 0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D
+- **How to use it**: Enter this address in the "From" field of the Boost Deploy flow if you want to target transactions from a specific address or type of address (like a specific DEX router)
+
+## To
+
+- **Where to find it**: Look for "To:" just below "From:"
+- **What it is**: The address of the contract being interacted with
+- **Example**: To: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB480xfc1f3296458f9b2a27a0b91dd7681c4020e09d05 (USDCWETH:OP UniswapV3Pool token contract)
+- **How to use it**: Enter this address in the "To" field to target interactions with a specific contract (like swaps involving USDCWETH/OP)
+
+## Value
+
+- **Where to find it**: Look for "Value:" in the transaction details
+- **What it is**: The amount of ETH sent with the transaction
+- **Example**: Value: 0.1 Ether ($183.58)
+- **How to use it**: You can use this to set a value filter in the Boost Deploy flow, e.g., to target only transactions above 0.1 ETH
+
+## Signature
+
+1. Scroll down to the "Input Data" section on Etherscan
+2. If the contract is verified, you'll see a decoded function name
+3. If not verified, you'll see a long string of numbers and letters
+- **Example**: Function: transfer(address recipient, uint256 amount)
+- **How to use it**: Select this function (e.g., "transfer") in the "Signature" dropdown in the Boost Deploy flow
+
+Understanding these components will help you accurately define the action you want to boost.
