@@ -70,6 +70,7 @@
       "group": "How it works",
       "version": "v2",
       "pages": [
+        "v2/documentation/how-it-works/budget-accounts",
         "v2/documentation/how-it-works/deploying-boosts",
         {
           "group": "Action Selection",
