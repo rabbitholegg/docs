@@ -11,7 +11,7 @@ To claim a reward from a Boost, you'll need to follow these general steps:
 3. Execute the claim transaction
 
 This process will differ depending on if you have set up your own validator or are using the default validator.
-If using the default validator, you will need to call the boost's `/signatures` endpoint to generate the signature payload, 
+If using the default validator, you will need to call the boost's `/signatures` endpoint to generate the signature payload,
 otherwise you will need to build the payload yourself.
 
 <Tip>
@@ -34,23 +34,42 @@ otherwise you will need to build the payload yourself.
     const boost = await core.getBoost(3n, { chainId })
 
     const { data } = await axios.get('/signatures', {
-      params: { 
-        boostId: `${chainId}:${boost.id}`, 
+      params: {
+        boostId: `${chainId}:${boost.id}`,
         txHash,
       }
     });
     ```
     [//]: # (TODO: add link to api reference)
 
-    <Tip>
-      If using `ERC20VariableIncentive` or `ERC20VariableCriteriaIncentive`, you will need to pass in the `rewardAmount` as `claimData` to the `/signatures` endpoint.
-    </Tip>
-
     The `/signatures` endpoint will return an array of signatures, one for each available incentive on the boost.
     Each item in the array will contain the following fields:
     - `signature`: The signature to be used in the claim transaction
     - `incentiveId`: The id of the incentive being claimed
     - `claimant`: The address of the claimant
+
+    If using `ERC20VariableIncentive` or `ERC20VariableCriteriaIncentive`, you will need to pass in the `rewardAmount` as `claimData` to the `/signatures` endpoint.
+
+    Here's an example of how you would accomplish that with multiple incentives.
+
+    ```ts
+    const allClaimData = boost.incentives.map(incentive => {
+      if (incentive instanceof ERC20VariableIncentive || incentive instanceof ERC20VariableCriteriaIncentive) {
+        const rewardAmount = parseUnits("10", 18);
+        return incentive.buildClaimData(rewardAmount);
+      } else {
+        return ''
+      }
+    })
+
+    const { data } = await axios.get('/signatures', {
+      params: {
+        boostId: `${chainId}:${boost.id}`,
+        txHash,
+        claimData: allClaimData.join(',')
+      }
+    });
+    ```
 
     ### Claiming the incentives
 
@@ -63,8 +82,8 @@ otherwise you will need to build the payload yourself.
     const boost = await core.getBoost(3n, { chainId })
 
     const { data } = await axios.get('/signatures', {
-      params: { 
-        boostId: `${chainId}:${boost.id}`, 
+      params: {
+        boostId: `${chainId}:${boost.id}`,
         txHash,
       }
     });
@@ -79,7 +98,7 @@ otherwise you will need to build the payload yourself.
         claimant,
         signature,
       );
-    } 
+    }
     ```
     <Warning>
       `claimIncentive` must be called by the claimant. This is useful if you have access to the claimants wallet, like in the case of a dapp.
@@ -114,7 +133,7 @@ otherwise you will need to build the payload yourself.
     let incentivePayload: Hex;
 
     // variable reward incentives require the reward amount to be provided in buildClaimData
-    if (incentive instanceof ERC20VariableIncentive || 
+    if (incentive instanceof ERC20VariableIncentive ||
         incentive instanceof ERC20VariableCriteriaIncentive) {
       const rewardAmount = parseUnits("10", 18);
       incentivePayload = incentive.buildClaimData(rewardAmount);
