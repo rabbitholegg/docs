@@ -1,0 +1,111 @@
+---
+title: "Budget Accounts"
+description: "Guide on how budget accounts work in Boost V2"
+---
+
+import BudgetFlow from "/snippets/budget-flow.mdx";
+
+Budget accounts are a fundamental component of Boost V2 that enable secure and controlled distribution of reward tokens. 
+They act as smart-contract powered treasuries that hold and manage the funds used for your boost campaigns.
+
+<Note>
+  Budget accounts are required to deploy boosts. Make sure to fund your budget account with enough tokens to cover your reward strategy.
+</Note>
+
+## Overview
+
+Budget accounts use a role-based access control system to manage permissions and fund distribution. 
+Here are the key features of budget accounts:
+
+<Card title="Fund Management" icon="wallet" horizontal>
+  Deposit and manage tokens that will be used for funding boosts
+</Card>
+<CardGroup cols={2}>
+  <Card title="Access Control" icon="user-lock">
+    Assign different roles to team members
+  </Card>
+  <Card title="Analytics" icon="chart-line">
+    Monitor and track fund usage
+  </Card>
+</CardGroup>
+
+### Role-Based Access Control
+
+Budget accounts implement a robust role-based access control system that allows for secure and organized team management of funds.
+
+<Tabs>
+  <Tab title="Managers">
+    The Manager role is designed for team members who need to create and manage boost campaigns. Managers can:
+    
+    - Deploy new boost campaigns using budget funds
+    - Monitor and track fund usage
+    - Manage and disburse funds
+    
+    <Warning>
+      Managers have significant control over fund distribution, so this role should only be granted to trusted team members.
+    </Warning>
+  </Tab>
+  <Tab title="Admins">
+    The Admin role is designed for team members who need complete control over the budget. 
+    Admins have the ability to manage funds and deploy boosts, plus additional control over:
+
+    - Granting and revoking team member roles
+    - Managing account permissions
+    - Recovering funds using clawback functionality
+    
+  </Tab>
+</Tabs>
+
+### Analytics
+Budget accounts provide real-time insights into your fund usage and distribution:
+
+<Frame>
+  <img src="/assets/budget-analytics.png" alt="Budget Analytics Dashboard" />
+</Frame>
+
+The analytics dashboard shows key metrics including total rewards distributed, available balance, and total funds allocated across all boosts, 
+with more detailed analytics coming soon.
+
+## Deploy and Configure Your Budget Account
+
+To deploy a budget account, navigate to the [Boost V2 interface](https://beta.boost.xyz) and connect your wallet. 
+
+After connecting your wallet, you'll be taken to your dashboard where you can create a new budget account.
+
+<Frame>
+  <img src="/assets/budget-create.png" alt="Create Budget Button" />
+</Frame>
+
+Click the "Create Budget" button and fill in the budget details including Display Name and Deployment Network.
+
+<Note>
+  You will need to make a budget account for each chain you wish to deploy funds from.
+</Note>
+
+After filling in the details, click the "Deploy Budget" button.
+
+<Frame caption="Fill in the Display Name and Network details for your budget">
+  <img src="/assets/budget-deploy.png" alt="Deploy Budget Button" />
+</Frame>
+
+### Adding Funds
+
+After deploying your budget account, add funds by navigating to the tokens tab and clicking "Deposit".
+This opens a modal where you can select the token and amount to deposit.
+
+<Frame caption="Select the token and amount you want to deposit">
+  <img src="/assets/budget-deposit.png" alt="Add Funds Button" />
+</Frame>
+
+After depositing tokens, the amount will be reflected in your available funds and appear in the tokens list.
+
+### Adding Team Members
+
+Add team members by navigating to the members tab and clicking "Add Members".
+From here, you can add wallet addresses and assign them either Manager or Admin roles.
+
+<Frame caption="Members can be assigned either the Manager or Admin role">
+  <img src="/assets/budget-roles.png" alt="Add Team Members" />
+</Frame>
+
+Authorized addresses will appear in the members list with their assigned role. Admin role holders can manage and revoke roles from this view.
