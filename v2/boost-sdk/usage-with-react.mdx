@@ -165,7 +165,7 @@ import { useQuery } from '@tanstack/react-query';
 export function useBoostById({ boostId }: { boostId: number }) {
   const { core } = useBoost();
   const res = useQuery({
-    queryKey: ['getBoostCount', core, boostId],
+    queryKey: ['getBoostById', core, boostId],
     queryFn: async () => {
       return await core.getBoost(boostId);
     }
