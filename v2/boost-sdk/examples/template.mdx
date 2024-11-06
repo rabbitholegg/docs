@@ -58,7 +58,7 @@ const selectedSignature = selectors[
   'Purchased(address,address,uint256,uint256,uint256)'
 ] as Hex;
 
-// This EventAction step will define how the validator will understand who is elligible to redeem the reward.
+// This EventAction step will define how the validator will understand who is eligible to redeem the reward.
 const eventActionStep: ActionStep = {
   signature: selectedSignature,
   signatureType: SignatureType.EVENT, // We're working with an event
@@ -72,7 +72,7 @@ const eventActionStep: ActionStep = {
   },
 };
 
-// Similar to the step above, this configuration will identify the user elligible to claim based on them having taken the action triggering the `Purchased` event.
+// Similar to the step above, this configuration will identify the user eligible to claim based on them having taken the action triggering the `Purchased` event.
 const eventActionClaimant: ActionClaimant = {
   signatureType: SignatureType.EVENT,
   signature: selector, // Transfer(address,address,uint256) event signature
