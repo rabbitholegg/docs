@@ -9,26 +9,71 @@ Deploying a boost on Boost V2 is a straightforward process that allows you to in
 
 ## Prerequisites
 
-- A Web3 wallet (e.g., MetaMask)
-- Sufficient tokens for rewards and gas fees
+<Note>
+  You will need to create or be authorized to use a [budget account](/v2/documentation/how-it-works/budget-accounts) before you can deploy boosts.
+</Note>
+
+- A Web3 wallet (e.g., MetaMask, Rainbow, Coinbase Wallet)
+- A [budget account](/v2/documentation/how-it-works/budget-accounts) with sufficient tokens for rewards and gas fees
 - A clear understanding of the action you want to incentivize
 
-## Steps to Deploy a Boost
+## How to Deploy a Boost
 
-1. **Connect Your Wallet**
-   - Visit the Boost V2 platform (https://boost.xyz)
-   - Click on "Connect Wallet" and choose your preferred wallet provider
-   - Ensure you're connected to the correct network (e.g., Ethereum Mainnet, Polygon)
+<Tip>
+  You can use the [Boost SDK](/v2/boost-sdk/boost-core/create-boost) to deploy boosts programmatically.
+</Tip>
 
-2. **Navigate to the Deploy Flow**
-   - Once connected, click on "Create Boost" or "Deploy" in the main navigation
+<Steps titleSize='h3'>
+   <Step title="Connect Your Wallet" stepNumber={1}>
+      - Visit the Boost V2 platform (https://beta.boost.xyz)
+      - Click on "Connect Wallet" and choose your preferred wallet provider
+      - Ensure you're connected to the correct network (e.g., Optimism, Base)
+   </Step>
 
-3. **Select or Create a Budget Account**
-   - Choose an existing budget account or create a new one
-   - If creating a new account, you'll be prompted to deposit tokens
-   - This step ensures you have funds allocated for your boost rewards
+   <Step title="Navigate to the Deploy Flow" stepNumber={2}>
+      Once connected, you will be directed to your dashboard. From here, look for the deploy button in the top right. This will open the deploy flow page.
 
-4. **Select or Input Contract Details**
+      <Frame caption="Overview of the Deploy Flow page">
+         <img src="/assets/deploy/deploy-overview.png" alt="Deploy Boost Overview" />
+      </Frame>
+   </Step>
+
+   <Step title="Configure the Boost Action" stepNumber={3}>
+      Boost V2 is very flexible in that you can target any action that has a valid event or function signature. In the example 
+      below, we will target the `mint` function on the `ZoraTimedSaleStrategy` contract.
+
+      Once you have selected the contract and signature, you can further refine the action by setting parameters based on the function or events arguments.
+      In our example we are targeting a specific collection and tokenId for a NFT mint on [Zora](https://zora.co/trending).
+
+      This means that anyone who mints an NFT from this collection with the specified tokenId will be eligible for a reward.
+
+      <Frame caption="Configuring the Boost Action">
+         <img src="/assets/deploy/deploy-action.png" alt="Deploy Boost Action" />
+      </Frame>
+   </Step>
+
+   <Step title="Configure the Action Claimant" stepNumber={4}>
+      In Boost V1, the action claimant was always the address who submitted the action (msg.sender). In Boost V2, we have added more flexibility to allow the claimant to be an address that is available in a function or event argument.
+      This allows for compatibility with account-abstraction wallets and other scenarios where the transaction does not originate from the claimant's wallet.
+
+      In our example, we will set the claimant to be the `mintTo` address from the mint function signature. This means that the account that receives the minted NFT also receives the reward.
+
+      <Frame caption="Configuring the Action Claimant">
+         <img src="/assets/deploy/deploy-claimant.png" alt="Deploy Boost Claimant" />
+      </Frame>
+   </Step>
+</Steps>
+
+<Tip>
+   You will see a preview of the parameters you set for your action where you can verify that the action and claimant are set correctly. Any recent actitivy that matches the configured action will appear here. 
+   You can check the actiivty on a block explorer to make sure it matches what you want to incentivize.
+
+   <Frame caption="Preview Section">
+      <img src="/assets/deploy/deploy-activity.png" alt="Deploy Boost Preview" />
+   </Frame>
+</Tip>
+
+{/* 4. **Select or Input Contract Details**
    - Choose a pre-existing contract from popular protocols, or
    - Input a custom contract address
    - Select the specific function you want to incentivize
@@ -56,7 +101,7 @@ Deploying a boost on Boost V2 is a straightforward process that allows you to in
 
 10. **Monitor and Manage**
     - Once deployed, you can monitor your boost's performance
-    - Adjust parameters or top up the budget account as needed
+    - Adjust parameters or top up the budget account as needed */}
 
 ## Key Considerations
 
