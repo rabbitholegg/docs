@@ -122,18 +122,15 @@ export function useBoostCoreInfo() {
     initialData: {
       protocolFee: 0n,
       protocolFeeReceiver: zeroAddress,
-      claimFee: 0n,
     },
     queryFn: async () => {
-      const [protocolFee, protocolFeeReceiver, claimFee] = await Promise.all([
+      const [protocolFee, protocolFeeReceiver] = await Promise.all([
         core.protocolFee(),
         core.protocolFeeReceiver(),
-        core.claimFee(),
       ]);
       return {
         protocolFee,
         protocolFeeReceiver,
-        claimFee,
       };
     },
   });

@@ -84,12 +84,11 @@ if(boost.allowList instanceof SimpleDenyList) {
       blockNumber: 1337n,
       blockTag: 'latest',
       dataSuffix: '0x',
-      account: privateKeyToAccount('DIFFERENT_KEY')\
+      account: privateKeyToAccount('DIFFERENT_KEY'),
       gas: 0n,
       nonce: 1,
       value: parseEther('0.01'),
       gasPrice: parseGwei('20'),
-      maxFeePerGas: parseGwei('20'),
       maxFeePerGas: parseGwei('20'),
       maxPriorityFeePerGas: parseGwei('2'),
     }
