@@ -56,14 +56,7 @@
         "v2/documentation/overview/introduction",
         "v2/documentation/overview/why-we-built-boost",
         "v2/documentation/overview/vision-of-boost",
-        "v2/documentation/overview/use-cases",
-        {
-          "group": "Case Studies",
-          "pages": [
-            "v2/documentation/overview/case-studies/zora",
-            "v2/documentation/overview/case-studies/coop-records"
-          ]
-        }
+        "v2/documentation/overview/use-cases"
       ]
     },
     {
