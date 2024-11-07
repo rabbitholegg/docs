@@ -3,78 +3,133 @@ title: "Deploying Boosts"
 description: "Step-by-step guide on how to deploy new Boost incentive programs"
 ---
 
-# How to Deploy a Boost on Boost V2: A High-Level Guide
+# How to Deploy a Boost: A High-Level Guide
 
-Deploying a boost on Boost V2 is a straightforward process that allows you to incentivize specific on-chain actions. Follow these steps to create your boost:
+Boost V2 provides a straightforward process for incentivizing specific on-chain actions. This guide will walk you through creating your first boost.
 
 ## Prerequisites
 
-- A Web3 wallet (e.g., MetaMask)
-- Sufficient tokens for rewards and gas fees
+Before you begin, ensure you have:
+- A Web3 wallet (MetaMask, Rainbow, or Coinbase Wallet)
+- Access to a [budget account](/v2/documentation/how-it-works/budget-accounts) with sufficient tokens
 - A clear understanding of the action you want to incentivize
 
-## Steps to Deploy a Boost
+<Note>
+  You will need to create or be authorized to use a [budget account](/v2/documentation/how-it-works/budget-accounts) before you can deploy boosts.
+</Note>
 
-1. **Connect Your Wallet**
-   - Visit the Boost V2 platform (https://boost.xyz)
-   - Click on "Connect Wallet" and choose your preferred wallet provider
-   - Ensure you're connected to the correct network (e.g., Ethereum Mainnet, Polygon)
+## How to Deploy a Boost
 
-2. **Navigate to the Deploy Flow**
-   - Once connected, click on "Create Boost" or "Deploy" in the main navigation
+<Tip>
+  You can use the [Boost SDK](/v2/boost-sdk/boost-core/create-boost) to deploy boosts programmatically.
+</Tip>
 
-3. **Select or Create a Budget Account**
-   - Choose an existing budget account or create a new one
-   - If creating a new account, you'll be prompted to deposit tokens
-   - This step ensures you have funds allocated for your boost rewards
+<Steps titleSize='h3'>
+   <Step title="Connect Your Wallet" stepNumber={1}>
+      - Visit the Boost V2 platform (https://beta.boost.xyz)
+      - Click on "Connect Wallet" and choose your preferred wallet provider
+      - Ensure you're connected to the correct network (e.g., Optimism, Base)
+   </Step>
 
-4. **Select or Input Contract Details**
-   - Choose a pre-existing contract from popular protocols, or
-   - Input a custom contract address
-   - Select the specific function you want to incentivize
+   <Step title="Navigate to the Deploy Flow" stepNumber={2}>
+      Once connected, you will be directed to your dashboard. From here, look for the deploy button in the top right. This will open the deploy flow page.
 
-5. **Define the Action**
-   - Specify the exact on-chain action you want to boost
-   - Set any parameter conditions (e.g., minimum transaction amount)
+      <Frame caption="Overview of the Deploy Flow page">
+         <img src="/assets/deploy/deploy-overview.png" alt="Deploy Boost Overview" />
+      </Frame>
+   </Step>
 
-6. **Configure Reward Structure**
-   - Choose the reward token (e.g., USDC, ETH, or your own token)
-   - Set the reward amount per action
-   - Define the total budget for the boost from your selected budget account
+   <Step title="Configure the Boost Action" stepNumber={3}>
+      Boost V2 is very flexible in that you can target any action that has a valid event or function signature. In the example 
+      below, we will target the `mint` function on the `ZoraTimedSaleStrategy` contract.
 
-7. **Set Boost Duration**
-   - Choose a start date and time
-   - Set an end date or total action limit
+      After selecting the contract and signature, refine the action by setting specific parameters from the function or event arguments.
+      Our example targets a specific NFT collection and tokenId on [Zora](https://zora.co/trending).
 
-8. **Review and Confirm**
-   - Double-check all details of your boost
-   - Ensure your budget account has sufficient funds for the total boost budget
+      This means that anyone who mints an NFT from this collection with the specified tokenId will be eligible for a reward.
 
-9. **Deploy the Boost**
-   - Click "Deploy Boost"
-   - Confirm the transaction in your wallet
+      <Frame caption="Configuring the Boost Action">
+         <img src="/assets/deploy/deploy-action.png" alt="Deploy Boost Action" />
+      </Frame>
+   </Step>
 
-10. **Monitor and Manage**
-    - Once deployed, you can monitor your boost's performance
-    - Adjust parameters or top up the budget account as needed
+   <Step title="Set the Action Claimant" stepNumber={4}>
+      Unlike Boost V1, where the claimant was always the transaction sender (msg.sender), Boost V2 allows flexible claimant selection from function or event arguments.
+      This enhancement supports account-abstraction wallets and complex transaction scenarios.
 
-## Key Considerations
+      In our example, the claimant is set to the `mintTo` address, ensuring the NFT recipient also receives the reward.
 
-- Ensure you have enough gas tokens (e.g., ETH) to cover deployment costs
-- If you don't have a budget account, you can create one during the deployment process
-- Consider starting with a smaller budget for testing before scaling up
-- Be precise in defining the action to avoid unintended reward distributions
-- You can deploy multiple boosts from the same budget account
-- Familiarize yourself with the Boost V2 documentation for advanced features
+      <Frame caption="Configuring the Action Claimant">
+         <img src="/assets/deploy/deploy-claimant.png" alt="Deploy Boost Claimant" />
+      </Frame>
+   </Step>
 
-## Best Practices
+   <Step title="Configure the Reward Structure" stepNumber={5}>
+      Boost V2 allows you to configure static rewards, which you'll be familiar with from Boost V1, as well as dynamic rewards based on on-chain criteria.
+      To begin, select a budget account and reward token from the "Reward Token" dropdown. All budget accounts you are authorized to use will show in the dropdown.
+      If you do not have a budget account setup yet, you can follow our guide [here](/v2/documentation/how-it-works/budget-accounts).
 
-- Clearly define your goals before creating a boost
-- Align your boost strategy with your project's overall tokenomics
-- Monitor your boost's performance and adjust as needed
-- Communicate the boost details clearly to your community
-- Consider the potential impact on your token's economics and user behavior
+      <Tip>
+         Only whitelisted tokens will show in the deploy flow. If you don't see the token you want to use, you can request to add it to our [supported tokens list](/v2/documentation/reward-selection/tokens-supported).
+      </Tip>
+      
+      <Tabs>
+         <Tab title="Fixed Rewards">
+            Configure a standard reward amount per action:
 
-Remember, each boost targets a specific, verifiable on-chain action. Design your boost carefully to align with your project's goals and tokenomics.
+            - **Spend Limit**: Maximum total budget for this boost
+            - **Reward Amount**: Tokens awarded per eligible action
 
-For more detailed instructions or to explore boost templates, visit the [Boost V2 documentation](https://docs.boost.xyz).
+            <Frame caption="Fixed Reward Configuration">
+               <img src="/assets/deploy/deploy-fixedreward.png" alt="Fixed Rewards Setup" />
+            </Frame>
+         </Tab>
+         <Tab title="Dynamic Rewards">
+            Dynamic rewards let you calculate reward amounts based on on-chain criteria.
+
+            - **Spend Limit**: The maximum amount of tokens you are willing to spend on this boost.
+            - **Max Reward**: The maximum amount of tokens that can be earned per claimant.
+            - **Dynamic Reward Filter**: The on-chain criteria that determines how many tokens a claimant will receive. This is set similar to how we configure the action.
+            Choose a contract function or event, and use one of the arguments to determine how many tokens a claimant will receive. In our example we are using the `quantity` argument from the mint function and giving 2 tokens for each NFT minted, up to the max reward.
+            So if a claimant mints 5 or more NFTs, they will receive the max reward of 10 tokens, otherwise they will receive 2 tokens per NFT minted.
+
+            <Frame caption="Configuring Dynamic Rewards">
+               <img src="/assets/deploy/deploy-dynamicreward.png" alt="Deploy Boost Dynamic Rewards" />
+            </Frame>
+         </Tab>
+      </Tabs>
+   </Step>
+
+   <Step title="Review the Activity Preview" stepNumber={6}>
+      Before deploying your boost, review the activity preview to ensure your configuration is correct:
+
+      <Frame caption="Activity Preview">
+      <img src="/assets/deploy/deploy-activity.png" alt="Deploy Boost Preview" />
+      </Frame>
+
+      The preview shows recent on-chain activity that matches your configured action, helping you verify:
+      - Action parameters are correctly set
+      - Claimant addresses are being captured
+      - Reward calculations are as intended
+
+      <Note>
+      Always verify transactions on a block explorer to ensure your boost targets exactly what you want to incentivize.
+      </Note>
+   </Step>
+
+   <Step title="Deploy the Boost" stepNumber={7}>
+      Once you have configured the boost, you can deploy it by clicking the "Deploy Boost" button. Once it is deployed, you can monitor the boost's performance and manage it from your budget account dashboard.
+   </Step>
+</Steps>
+
+## Post-Deployment
+
+After successful deployment:
+1. Share campaign details with your community
+2. Monitor performance metrics
+3. Adjust parameters based on activity
+4. Consider complementary boost campaigns
+
+<Card title="Need Support?" icon="question">
+  Join our [Discord community](https://discord.gg/gdu3EpeqsD) for assistance or explore our [templates](/v2/documentation/overview/use-cases) for inspiration.
+</Card>
