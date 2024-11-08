@@ -27,7 +27,7 @@ Deploys and initializes a new instance of a registered component's base implemen
 const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
   owner: '0xME',
   authorized: ['0xME', core.assertValidAddress()],
-  roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER]
+  roles: [Roles.ADMIN, Roles.MANAGER]
 }))
 ```
 

@@ -39,7 +39,7 @@ In most cases, you'll be interacting with the registry to initialize budgets tha
 ```ts
 import { BoostCore } from '@boostxyz/sdk/BoostCore'
 import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
-import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
+import { ManagedBudget, Roles } from '@boostxyz/sdk'
 
 const registry = new BoostRegistry({ config: wagmiConfig }),
   core = new BoostCore({ config: wagmiConfig })
@@ -49,20 +49,20 @@ const coreAddress = core.assertValidAddress()
 const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
   owner: '0xME',
   authorized: ['0xME', coreAddress],
-  roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER]
+  roles: [Roles.ADMIN, Roles.MANAGER]
 }))
 // or use an existing one, ensuring the protocol has the correct level of access
 budget = core.ManagedBudget('0xEXISTING_BUDGET_ADDRESS')
 // if you've successfully used this budget with the protocol before, you won't need to do this
-if((await budget.isAuthorized(coreAddress)) === false) {
-  await budget.grantRoles([coreAddress])
+if ((await budget.isAuthorized(coreAddress)) === false) {
+  await budget.grantRoles(coreAddress, Roles.MANAGER)
 }
 ```
 
 Ideally, you'll store a record of your budgets in some database, but the registry does contain some helpers to retrieve information about components you've initialized. For example, you can retrieve the address of the budget initialized above with the following flow.
 
 ```ts
-import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
+import { ManagedBudget, Roles } from '@boostxyz/sdk'
 import { RegistryType } from '@boostxyz/sdk/BoostRegistry'
 
 // get the initialized budget's unique identifier

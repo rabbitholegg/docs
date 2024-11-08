@@ -14,7 +14,7 @@ First you'll need to either initialize a new budget, or use an existing one, and
 ```ts
 import { BoostCore } from '@boostxyz/sdk/BoostCore'
 import { BoostRegistry } from '@boostxyz/sdk/BoostRegistry'
-import { ManagedBudget, ManagedBudgetRoles } from '@boostxyz/sdk/Budgets/ManagedBudget'
+import { ManagedBudget, Roles } from '@boostxyz/sdk'
 
 const registry = new BoostRegistry({ config: wagmiConfig }),
   core = new BoostCore({ config: wagmiConfig })
@@ -24,13 +24,13 @@ const coreAddress = core.assertValidAddress()
 const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
   owner: '0xME',
   authorized: ['0xME', coreAddress],
-  roles: [ManagedBudgetRoles.ADMIN, ManagedBudgetRoles.MANAGER]
+  roles: [Roles.ADMIN, Roles.MANAGER]
 }))
 // or use an existing one, ensuring the protocol has the correct level of access
 budget = core.ManagedBudget('0xEXISTING_BUDGET_ADDRESS')
 // if you've successfully used this budget with the protocol before, you won't need to do this
-if((await budget.isAuthorized(coreAddress)) === false) {
-  await budget.grantRoles([coreAddress])
+if ((await budget.isAuthorized(coreAddress)) === false) {
+  await budget.grantRoles(coreAddress, Roles.MANAGER)
 }
 
 // (CUSTOM) then you'll need to allow the (ERC20) to transfer funds from your account into the budget.
