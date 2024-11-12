@@ -271,7 +271,8 @@
 				"v2/boost-sdk/quick-start",
 				"v2/boost-sdk/usage-with-react",
 				"v2/boost-sdk/working-with-events",
-				"v2/boost-sdk/integrating-your-contracts"
+				"v2/boost-sdk/integrating-your-contracts",
+				"v2/boost-sdk/asset-retrieval"
 			]
 		},
 		{
@@ -298,8 +299,7 @@
 			"pages": [
 				"v2/boost-sdk/boost-core/overview",
 				"v2/boost-sdk/boost-core/get-boosts",
-				"v2/boost-sdk/boost-core/claim-incentive",
-				"v2/boost-sdk/boost-core/asset-retrieval"
+				"v2/boost-sdk/boost-core/claim-incentive"
 			]
 		},
 		{
