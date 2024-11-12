@@ -1,0 +1,24 @@
+---
+title: "Asset Retrieval"
+description: "Learn how to retrieve assets from a budget or incentive"
+---
+
+import BudgetRetrieval from '/snippets/budget-retrieval.mdx';
+import IncentiveRetrieval from '/snippets/incentive-retrieval.mdx';
+import ReadParams from '/snippets/read-params.mdx';
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import WriteParams from '/snippets/write-params.mdx';
+
+<SDKDisclaimer />
+
+There are two locations assets are stored within the Boost Protocol, [budgets](/v2/boost-sdk/budgets/managed/retrieval) and [incentives](/v2/boost-sdk/incentives/erc20/overview).
+
+Both budgets and incentives only allow authorized users to retrieve funds, requiring the sender to either be the owner, or have the [Roles.MANAGER](https://sdk.boost.xyz/enums/Roles.html#MANAGER)
+
+## Retrieve from Budget
+
+<BudgetRetrieval />
+
+## Retrieve from Incentive
+
+<IncentiveRetrieval />
