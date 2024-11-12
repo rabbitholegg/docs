@@ -1,4 +1,147 @@
 ---
 title: "Claims"
-description: Learn how to claim incentives from an ERC20 Incentive
+description: Retrieve ERC20 Incentive claim information and draw raffle
 ---
+
+import ReadParams from '/snippets/read-params.mdx';
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import WriteParams from '/snippets/write-params.mdx';
+
+<SDKDisclaimer />
+
+The ERC20 Incentive is designed to store and distribute assets that can be claimed by users. The Boost SDK provides several methods to retrieve information about claim state, as well as drawing raffles.
+
+## API
+
+### `claims`
+
+Retrieves the total number of completed claims.
+
+<CodeGroup>
+```ts index.ts
+await erc20Incentive.claims();
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Total claims" type="Promise<bigint>">
+  Returns the total number of claims.
+</ResponseField>
+
+### `claimed`
+
+Checks if an address has previously claimed this incentive.
+
+<CodeGroup>
+```ts index.ts
+await erc20Incentive.claimed(address);
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="address" type="Address">
+  The address to check claimed status.
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Has claimed" type="Promise<boolean>">
+ Returns true if address has claimed the incentive.
+</ResponseField>
+
+### `drawRaffle`
+
+When using an ERC20 Incentive initialized with a `RAFFLE` strategy. Pick a random entry from a list of all claims and transfer the reward to them. Only callable by incentive. managers.
+
+<CodeGroup>
+```ts index.ts
+await erc20Incentive.drawRaffle();
+```
+</CodeGroup>
+
+#### Parameters
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="Success" type="Promise<void>">
+  Promise that successfully resolves if a winner has been paid out
+</ResponseField>
+
+### `entries`
+
+By index, retrieve the address in the list of all raffle entries.
+
+<CodeGroup>
+```ts index.ts
+await erc20Incentive.entries(0n);
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="index" type="bigint">
+  The raffle entry address to retrieve by index
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Raffle entry" type="Promise<Address>">
+  Returns the entry's address
+</ResponseField>
+
+### `isClaimable`
+
+Check if an incentive is claimable by an address. Will return false if the recipient has already claimed, or total incentive claims has met the configured limit.
+
+<CodeGroup>
+```ts index.ts
+await erc20Incentive.isClaimable(address);
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="address" type="Address">
+  The address to check elligibility for.
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Elligibility" type="Promise<boolean>">
+ Returns true if address can claim incentive.
+</ResponseField>
+
+
+### `limit`
+
+The total number of times this incentive can be claimed, or max number of entries for raffles.
+
+<CodeGroup>
+```ts index.ts
+await erc20Incentive.limt();
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Claim limit" type="Promise<bigint>">
+  Returns the maximum number of claims
+</ResponseField>

@@ -1,0 +1,74 @@
+---
+title: "Rewards"
+description: Retrieve information about ERC20 Incentive rewards
+---
+
+import ReadParams from '/snippets/read-params.mdx';
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import WriteParams from '/snippets/write-params.mdx';
+
+<SDKDisclaimer />
+
+The ERC20 Incentive is designed to store and distribute assets that can be claimed by users. The Boost SDK provides several methods to retrieve information about the current state of its rewards.
+
+## API
+
+### `reward`
+
+Retrieves the amount of the reward configured at time of initialization. When claimed, this is the amount that is transferred to the claimant.
+
+<CodeGroup>
+```ts index.ts
+await erc20Incentive.reward()
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<bigint>" type="bigint">
+  Returns the amount of the asset rewarded per-claim.
+</ResponseField>
+
+### `asset`
+
+Retrieves the address of the ERC20-like asset to be rewarded on claim.
+
+<CodeGroup>
+```ts index.ts
+await erc20Incentive.asset();
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="ERC20-like address" type="Address">
+  The address of the asset transferred on claim
+</ResponseField>
+
+### `strategy`
+
+Retrieve the strategy configured at time of intitialization, either. [Either POOL, or RAFFLE](https://sdk.boost.xyz/enums/StrategyType.html). A typical Boost setup will be using [StrategyType.POOL](https://sdk.boost.xyz/enums/StrategyType.html#POOL)
+
+<CodeGroup>
+```ts index.ts
+await erc20Incentive.strategy();
+```
+</CodeGroup>
+
+#### Parameters The total amount of the asset distributed from the budget.
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<StrategyType>" type={<a href="https://sdk.boost.xyz/enums/StrategyType.html">StrategyType</a>}>
+  The total amount of the asset distributed from the budget.
+</ResponseField>
