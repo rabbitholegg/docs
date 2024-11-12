@@ -1,0 +1,133 @@
+### `clawback`
+
+The clawback function is used to reclaim available funds from the budget. Can only be called by owner or admin.
+
+<CodeGroup>
+```ts index.ts
+await budget.clawback({
+  amount: 0n,
+  asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D',
+  target: account.address, // Address to receive the funds
+});
+```
+</CodeGroup>
+
+<Tip>
+  - Using `clawback` with `0n` will reclaim all available funds for the given asset.
+  - Use the zero address (`0x0000000000000000000000000000000000000000`) to clawback native assets (ie. ETH).
+</Tip>
+
+#### Parameters
+
+<ParamField path="transfer" type={<a href="https://sdk.boost.xyz/interfaces/FungibleTransferPayload.html">FungibleTransferPayload</a>} required>
+  <Expandable title="properties">
+    <ParamField path="amount" type="bigint" required>
+      The amount of tokens to transfer.
+    </ParamField>
+    <ParamField path="asset" type="string" required>
+      The address of the asset. Use zero address (0x0) for ETH transfers.
+    </ParamField>
+    <ParamField path="target" type="string" required>
+      The address to receive the funds.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="Promise<boolean>" type="boolean">
+  Returns true if the clawback was successful.
+</ResponseField>
+
+### `disburse`
+
+Transfers available funds from the budget to a specified recipient. You must have the manager, admin or owner role to call this function.
+
+<Warning>
+  The `disburse` method is authorized for the `MANAGER` role. Be aware that this allows a manager to disburse funds from the budget at will. Make sure you trust the manager before giving them authorization.
+</Warning>
+
+<CodeGroup>
+```ts index.ts
+import { parseUnits } from "viem";
+
+await budget.disburse({
+  amount: parseUnits('1', 18),
+  asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D',
+  target: account.address, // Address to receive the funds
+});
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="transfer" type={<a href="https://sdk.boost.xyz/interfaces/FungibleTransferPayload.html">FungibleTransferPayload</a>} required>
+  <Expandable title="properties">
+    <ParamField path="amount" type="bigint" required>
+      The amount of tokens to transfer.
+    </ParamField>
+    <ParamField path="asset" type="string" required>
+      The address of the asset. Use zero address (0x0) for ETH transfers.
+    </ParamField>
+    <ParamField path="target" type="string" required>
+      The address to receive the funds.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="Promise<boolean>" type="boolean">
+  Returns true if the disbursement was successful.
+</ResponseField>
+
+### `disburseBatch`
+
+Transfers available funds from the budget to a list of specified recipients. You must have the manager, admin or owner role to call this function. This method is more gas-efficient for multiple transfers.
+
+<CodeGroup>
+```ts index.ts
+import { parseUnits } from "viem";
+
+await budget.disburseBatch([
+  {
+    amount: parseUnits('1', 18),
+    asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D',
+    target: recipient1.address, // Address to receive the funds
+  },
+  {
+    amount: parseUnits('1', 18),
+    asset: '0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D',
+    target: recipient2.address, // Address to receive the funds
+  },
+]);
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="transfers" type={<a href="https://sdk.boost.xyz/interfaces/FungibleTransferPayload.html">FungibleTransferPayload[]</a>} required>
+  <Expandable title="properties">
+    <ParamField path="amount" type="bigint" required>
+      The amount of tokens to transfer.
+    </ParamField>
+    <ParamField path="asset" type="string" required>
+      The address of the asset. Use zero address (0x0) for ETH transfers.
+    </ParamField>
+    <ParamField path="target" type="string" required>
+      The address to receive the funds.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="Promise<boolean>" type="boolean">
+  Returns true if the disbursement was successful.
+</ResponseField>

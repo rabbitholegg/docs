@@ -3,8 +3,8 @@ title: "Overview"
 description: Learn about how to interact with an ERC20Incentive using the SDK
 ---
 
-import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
 import Config from '/snippets/config.mdx';
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
 
 The ERC20 Incentive is an essential protocol incentive that allows for the distribution of native and ERC-20 assets, supporting raffle functionality as well as basic fixed rewards. On Boost creation, a predetermined amount of the specified asset is transferred into this incentive from the associated budget.
 
@@ -83,6 +83,7 @@ The ERC20 Incentive is an essential protocol incentive that allows for the distr
 
 <CodeGroup>
 ```ts index.ts
+// if an incentive address is known, directly construct it
 const incentive = core.ERC20Incentive("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
 
 // or if you want a budget from a specific chain
