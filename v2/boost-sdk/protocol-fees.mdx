@@ -1,0 +1,69 @@
+---
+title: "Protocol Fees"
+description: How fees work and how to calculate them
+---
+
+import ClaimFees from '/snippets/claim-fees.mdx';
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+
+The Boost Protocol collects protocol fees from budgets on 3 distinct occasions:
+- At time of Boost creation, transferring assets to incentives from budgets
+- On claim, recouping assets from the incentive's backing asset
+- On retrieving assets from an incentive back to a budget
+
+At time of writing, the base protocol fee in basis points is `10%` and, for any qualifying event, the math can be summarized with the following equation:
+
+```ts
+const protocolFee = 1000n // 10% in basis points
+const protocolFeeDenominator = 10000n // 100% in basis points
+
+const fee = (amountTransferred * protocolFee) / protocolFeeDenominator
+```
+
+## Calculating fees for Boost creation
+
+For ERC20 incentives, you'll want to ensure your budget has enough assets to cover the full amount that can be claimed by users, as well as the protocol fee. The following is a simple code sample that can help ensure your new Boost does not revert with an `Insufficient Funds` error.
+
+```ts
+// Initialize your incentive configuration
+const erc20Incentive = core.ERC20Incentive({
+  asset: '0xERC20',
+  strategy: StrategyType.POOL,
+  reward: 100n,
+  limit: 10n,
+  manager: budget.assertValidAddress(),
+});
+
+// Acquire the total amount that can be distributed from the incentive
+const totalBudget = await erc20Incentive.getTotalBudget()
+
+// Calculate the protocol fee
+const fee = await core.calculateProtocolFee(totalBudget)
+
+// Calculate the total amount required to fund the incentive
+const totalFundingAmount = totalBudget + fee
+
+// Approve your erc20 to send the full funding amount to the budget
+await writeContract(wagmiConfig, {
+  abi: erc20Abi,
+  address: '0xERC20', // The address of the ERC20 token you want to approve
+  functionName: 'approve',
+  args: [
+    budget.assertValidAddress(), // The address of the budget account
+    totalFundingAmount
+  ],
+})
+
+// Allocate assets to the budget from your account
+await budget.allocate({
+  amount: totalFundingAmount,
+  asset: '0xERC20',
+  target: "0xME",
+})
+
+// On create, `totalBudget` will be transferred to incentive, and `fee` will be transferred to the protocol
+const boost = await core.createBoost({
+  ...otherParams,
+  incentives: [erc20Incentive],
+});
+```

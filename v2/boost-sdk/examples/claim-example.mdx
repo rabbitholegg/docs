@@ -26,6 +26,10 @@ otherwise you will need to build the payload yourself.
 
     This example assumes you have already instantiated a `BoostCore` client and have a valid transaction hash for the action that the claimant completed.
 
+    <Card title="Claim Signature API" icon="signature" href="/v2/api-reference/boosts/validate-&-sign-data-for-a-claim">
+      See additional documentation on how to build a claim signature
+    </Card>
+
     ### Generate the Signature Payload
     ```ts
     import axios from 'axios';
@@ -33,14 +37,13 @@ otherwise you will need to build the payload yourself.
     const chainId = 8453; // base mainnet
     const boost = await core.getBoost(3n, { chainId })
 
-    const { data } = await axios.get('/signatures', {
+    const { data } = await axios.get(`${BOOST_API_URL}/signatures`, {
       params: {
         boostId: `${chainId}:${boost.id}`,
         txHash,
       }
     });
     ```
-    [//]: # (TODO: add link to api reference)
 
     The `/signatures` endpoint will return an array of signatures, one for each available incentive on the boost.
     Each item in the array will contain the following fields:
@@ -62,7 +65,7 @@ otherwise you will need to build the payload yourself.
       }
     })
 
-    const { data } = await axios.get('/signatures', {
+    const { data } = await axios.get(`${BOOST_API_URL}/signatures`, {
       params: {
         boostId: `${chainId}:${boost.id}`,
         txHash,
@@ -81,7 +84,7 @@ otherwise you will need to build the payload yourself.
     const chainId = 8453; // base mainnet
     const boost = await core.getBoost(3n, { chainId })
 
-    const { data } = await axios.get('/signatures', {
+    const { data } = await axios.get(`${BOOST_API_URL}/signatures`, {
       params: {
         boostId: `${chainId}:${boost.id}`,
         txHash,

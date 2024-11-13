@@ -272,7 +272,8 @@
 				"v2/boost-sdk/usage-with-react",
 				"v2/boost-sdk/working-with-events",
 				"v2/boost-sdk/integrating-your-contracts",
-				"v2/boost-sdk/asset-retrieval"
+				"v2/boost-sdk/asset-retrieval",
+				"v2/boost-sdk/protocol-fees"
 			]
 		},
 		{
