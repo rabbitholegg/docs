@@ -26,6 +26,10 @@ otherwise you will need to build the payload yourself.
 
     This example assumes you have already instantiated a `BoostCore` client and have a valid transaction hash for the action that the claimant completed.
 
+    <Card title="Claim Signature API" icon="signature" href="/v2/api-reference/boosts/validate-&-sign-data-for-a-claim">
+      See additional documentation on how to build a claim signature
+    </Card>
+
     ### Generate the Signature Payload
     ```ts
     import axios from 'axios';
@@ -33,24 +37,42 @@ otherwise you will need to build the payload yourself.
     const chainId = 8453; // base mainnet
     const boost = await core.getBoost(3n, { chainId })
 
-    const { data } = await axios.get('/signatures', {
-      params: { 
-        boostId: `${chainId}:${boost.id}`, 
+    const { data } = await axios.get(`${BOOST_API_URL}/signatures`, {
+      params: {
+        boostId: `${chainId}:${boost.id}`,
         txHash,
       }
     });
     ```
-    [//]: # (TODO: add link to api reference)
-
-    <Tip>
-      If using `ERC20VariableIncentive` or `ERC20VariableCriteriaIncentive`, you will need to pass in the `rewardAmount` as `claimData` to the `/signatures` endpoint.
-    </Tip>
 
     The `/signatures` endpoint will return an array of signatures, one for each available incentive on the boost.
     Each item in the array will contain the following fields:
     - `signature`: The signature to be used in the claim transaction
     - `incentiveId`: The id of the incentive being claimed
     - `claimant`: The address of the claimant
+
+    If using `ERC20VariableIncentive` or `ERC20VariableCriteriaIncentive`, you will need to pass in the `rewardAmount` as `claimData` to the `/signatures` endpoint.
+
+    Here's an example of how you would accomplish that with multiple incentives.
+
+    ```ts
+    const allClaimData = boost.incentives.map(incentive => {
+      if (incentive instanceof ERC20VariableIncentive || incentive instanceof ERC20VariableCriteriaIncentive) {
+        const rewardAmount = parseUnits("10", 18);
+        return incentive.buildClaimData(rewardAmount);
+      } else {
+        return ''
+      }
+    })
+
+    const { data } = await axios.get(`${BOOST_API_URL}/signatures`, {
+      params: {
+        boostId: `${chainId}:${boost.id}`,
+        txHash,
+        claimData: allClaimData.join(',')
+      }
+    });
+    ```
 
     ### Claiming the incentives
 
@@ -62,9 +84,9 @@ otherwise you will need to build the payload yourself.
     const chainId = 8453; // base mainnet
     const boost = await core.getBoost(3n, { chainId })
 
-    const { data } = await axios.get('/signatures', {
-      params: { 
-        boostId: `${chainId}:${boost.id}`, 
+    const { data } = await axios.get(`${BOOST_API_URL}/signatures`, {
+      params: {
+        boostId: `${chainId}:${boost.id}`,
         txHash,
       }
     });
@@ -79,7 +101,7 @@ otherwise you will need to build the payload yourself.
         claimant,
         signature,
       );
-    } 
+    }
     ```
     <Warning>
       `claimIncentive` must be called by the claimant. This is useful if you have access to the claimants wallet, like in the case of a dapp.
@@ -114,7 +136,7 @@ otherwise you will need to build the payload yourself.
     let incentivePayload: Hex;
 
     // variable reward incentives require the reward amount to be provided in buildClaimData
-    if (incentive instanceof ERC20VariableIncentive || 
+    if (incentive instanceof ERC20VariableIncentive ||
         incentive instanceof ERC20VariableCriteriaIncentive) {
       const rewardAmount = parseUnits("10", 18);
       incentivePayload = incentive.buildClaimData(rewardAmount);

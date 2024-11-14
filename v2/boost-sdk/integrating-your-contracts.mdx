@@ -7,7 +7,7 @@ import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
 
 <SDKDisclaimer />
 
-The Boost Protocol, fundamentally, needs to be able to validate that certain actions have occured in order to allow users to claim incentives. So in order to make it simple to create Boosts and validate them, we publish [`@boostxyz/signatures`](https://www.npmjs.com/package/@boostxyz/signatures) which is a registry of known function and event signatures, their 32 byte selectors, and [AbiEvents](https://viem.sh/docs/glossary/types#abievent) or [AbiFunctions](https://viem.sh/docs/glossary/types#abifunction) in an easy to consume JSON format.
+The Boost Protocol, fundamentally, needs to be able to validate that certain actions have occured in order to allow users to claim incentives. So in order to make it simple to create Boosts and validate them, we publish [@boostxyz/signatures](https://www.npmjs.com/package/@boostxyz/signatures) which is a registry of known function and event signatures, their 32 byte selectors, and [AbiEvents](https://viem.sh/docs/glossary/types#abievent) or [AbiFunctions](https://viem.sh/docs/glossary/types#abifunction) in an easy to consume JSON format.
 
 You can use this library as you're creating a Boost and building out [action steps](https://sdk.boost.xyz/interfaces/ActionStep.html) for use with the [Event Actions](https://sdk.boost.xyz/classes/EventAction.html). You'll need to specify the function or event's [signature](https://sdk.boost.xyz/interfaces/ActionStep.html#signature), which allows Boost's validators to parse the event or function arguments, and compare them against the rest of the actions' parameters.
 

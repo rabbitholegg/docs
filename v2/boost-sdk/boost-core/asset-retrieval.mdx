@@ -1,14 +1,15 @@
 ---
-title: "Funding"
+title: "Asset Retrieval"
+description: "Learn how to retrieve assets from incentives"
 ---
 
-import ReadParams from '/snippets/read-params.mdx';
 import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import ReadParams from '/snippets/read-params.mdx';
 import WriteParams from '/snippets/write-params.mdx';
 
 <SDKDisclaimer />
 
-The Managed Budget contract is designed to hold and distribute assets that can be used to deploy boosts. The Boost SDK provides several methods to manage and view the available funds in a budget.
+Incentives like `ERC20Incentive`, `ERC20VariableIncentive`, and `ERC20VariableCriteriaIncentive` are designed to retain assets that can be claimed by end users. If you'd like to retrieve assets from the incentive, you'll need to use the `clawback`
 
 ## API
 

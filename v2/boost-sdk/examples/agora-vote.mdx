@@ -7,7 +7,7 @@ import Config from '/snippets/config.mdx'
 
 In this example, you want a certain proposal to pass/fail, and want to incentivize users to swing votes in your favor by offering additional rewards.
 
-<Card title="See the code" icon="file-lines" href="https://sdk.boost.xyz/classes/Contract.html#getLogs">See technical documentation for `Contract.getLogs`</Card>
+<Card title="See the code" icon="file-lines" href="https://github.com/boostxyz/boost-protocol/blob/main/examples/agora-vote/src/agora-vote.test.ts#L1">See the full example code</Card>
 
 <Warning>
 Make sure you've completed the [quick start](/v2/boost-sdk/quick-start) guide before proceeding with this example.
@@ -19,11 +19,11 @@ First you'll need to either initialize a new budget, or use an existing one, and
 
 <CodeGroup>
 ```ts index.ts
-import { 
-  BoostCore, 
-  BoostRegistry, 
-  ManagedBudget, 
-  Roles 
+import {
+  BoostCore,
+  BoostRegistry,
+  ManagedBudget,
+  Roles
 } from '@boostxyz/sdk'
 import { parseUnits } from 'viem'
 import { config as wagmiConfig } from './config'
@@ -42,20 +42,31 @@ const budget = await registry.initialize('MyNewBudget', core.ManagedBudget({
   roles: [Roles.ADMIN, Roles.MANAGER]
 }))
 
+// scaffold your desired incentive to help calculate the total amount required to fund your budget
+const erc20Incentive = core.ERC20Incentive({
+  asset: erc20.assertValidAddress(),
+  reward: parseEther('0.1'),
+  limit: parseEther('1'),
+  strategy: StrategyType.POOL,
+})
+
+const budgetedAmount = await erc20Incentive.getTotalBudget() // 10 WETH
+const amountIncludingFees = await core.calculateProtocolFee(budgetedAmount)
+
 // Allow the budget to spend your ERC20 token
 await writeContract(wagmiConfig, {
   abi,
-  address: '0xERC20', // The address of the ERC20 token you want to approve
+  address: erc20.assertValidAddress(), // The address of the ERC20 token you want to approve
   functionName: 'approve',
   args: [
     budget.assertValidAddress(),
-    parseUnits('100', 18) // The amount of ERC20 token you want to approve
+    amountIncludingFees // The amount of ERC20 token you want to approve
   ]
 })
 
 // Allocate assets to the budget
 await budget.allocate({
-  amount: parseUnits('100', 18),
+  amount: amountIncludingFees,
   asset: '0xERC20',
   target: '0xME',
 })
@@ -179,7 +190,7 @@ const eventAction = core.EventAction(eventActionPayload);
 Once the event action is created, we can set up the incentives and deploy our boost.
 
 ```ts
-// This allows for participants to be rewarded with up to 10 wei of the reward asset. 
+// This allows for participants to be rewarded with up to 10 wei of the reward asset.
 //The maximum amount of the rewards distributed by this incentive in this boost would be 100 wei
 const incentives = [
     core.ERC20VariableIncentive({
@@ -207,7 +218,7 @@ const boost = await core.createBoost({
 
 ## Claiming Incentives
 
-Once a claimant has successfully voted, you can claim the incentive for that claimant. You will need the address of the user that cast the vote, the hash of the vote cast transaction, and the boost id. 
+Once a claimant has successfully voted, you can claim the incentive for that claimant. You will need the address of the user that cast the vote, the hash of the vote cast transaction, and the boost id.
 But first, you'll need to implement some logic to determine the variable reward amount.
 
 <Tip>
@@ -231,7 +242,7 @@ const rewardAmount =
     : parseEther('0.01');
 ```
 
-Once the reward amount is determined, we can generate the signature payload to allow us to claim the reward for the claimant. 
+Once the reward amount is determined, we can generate the signature payload to allow us to claim the reward for the claimant.
 To generate the signature payload you will need to call the Boost `/signatures` api endpoint with the following params:
 
 - `boostId`: The id of the boost where the action was completed. The format is `chainId:boostId` (e.g. `8453:69`)
@@ -241,15 +252,16 @@ If you have more than one variable incentive you can pass in a comma-separated l
 
 The signatures api will return an array of signatures, one for each available incentive on the boost.
 
-[//]: # (TODO: link to api reference for /signatures)
-[//]: # (TODO: update link api link)
+<Card title="Claim Signature API" icon="signature" href="/v2/api-reference/boosts/validate-&-sign-data-for-a-claim">
+  See additional documentation on how to build a claim signature
+</Card>
 
 ```ts
   import axios from 'axios';
 
-  const { data } = await axios.get('/signatures', {
-    params: { 
-      boostId: `${chainId}:${boost.id}`, 
+  const { data } = await axios.get(`${BOOST_API_URL}/signatures`, {
+    params: {
+      boostId: `${chainId}:${boost.id}`,
       txHash,
       claimData: rewardAmount.toString(),
     }
@@ -269,7 +281,7 @@ The signatures api will return an array of signatures, one for each available in
   }
 ```
 <Tip>
-  There can be multiple incentives to claim in a single boost. The example shown only has one incentive. 
+  There can be multiple incentives to claim in a single boost. The example shown only has one incentive.
 </Tip>
 
 The boost will stay active until the `maxParticipants` set for the boost is reached, or the incentive budget is fully spent.
