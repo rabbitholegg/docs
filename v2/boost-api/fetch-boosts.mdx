@@ -1,0 +1,89 @@
+---
+title: Fetch Boosts
+description: How to query for Boosts using various filters
+---
+
+[//]: #(TODO: Update the API endpoint to prod URL when it's live)
+
+The Boost API allows you to fetch and filter boosts through the [GET /boosts endpoint](/v2/api-reference/boosts/get-boosts).
+
+## Basic Usage
+
+Fetch all boosts with no filters:
+
+```typescript
+const response = await fetch(
+  'https://ponder-staging-9166160e1bc0.herokuapp.com/boosts'
+);
+const { boosts } = await response.json();
+```
+
+<Tip>
+  For complete API details including all available parameters and response fields, see the [API Reference](/v2/api-reference/boosts/get-boosts).
+</Tip>
+
+
+## Filtering Boosts
+
+<Note>
+  The owner represents the address that initiated the boost deployment through a budget account.
+</Note>
+
+You can filter boosts using various parameters:
+- `chainId`: Filter by specific blockchain network
+- `owner`: Filter by the address that deployed the boost
+- `budgetAddress`: Filter by specific budget account
+
+Example using multiple filters:
+
+```typescript
+const params = new URLSearchParams({
+  owner: '0x1234...',
+  chainId: '8453', // Base
+  budgetAddress: '0x5678...'
+});
+
+const response = await fetch(
+  `https://ponder-staging-9166160e1bc0.herokuapp.com/boosts?${params.toString()}`
+);
+const { boosts } = await response.json();
+```
+
+## Pagination
+
+<Note>
+  The maximum page size is 100 items.
+</Note>
+
+The endpoint uses simple pagination through `page` and `pageSize` parameters. Here's how to fetch all boosts:
+
+```typescript
+async function fetchAllBoosts() {
+  const pageSize = 20;  // Adjust based on your needs (max 100)
+  let currentPage = 1;
+  let allBoosts = [];
+  
+  while (true) {
+    const params = new URLSearchParams({
+      page: currentPage.toString(),
+      pageSize: pageSize.toString()
+    });
+
+    const response = await fetch(
+      `https://ponder-staging-9166160e1bc0.herokuapp.com/boosts?${params.toString()}`
+    );
+    
+    const { boosts } = await response.json();
+    
+    // When the API returns an empty boosts array, we've fetched all boosts
+    if (!boosts || boosts.length === 0) {
+      break;
+    }
+    
+    allBoosts = [...allBoosts, ...boosts];
+    currentPage++;
+  }
+
+  return allBoosts;
+}
+```
