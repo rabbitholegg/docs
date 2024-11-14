@@ -1,0 +1,62 @@
+---
+title: Get Claim Signature
+description: How to retrieve a signature required for claiming boost incentives
+---
+
+The Boost API allows you to get the required signature for claiming boost incentives using the [GET /signatures endpoint](/v2/api-reference/signatures/get-signature).
+
+## Basic Usage
+
+Fetch a signature for claiming a boost:
+
+```typescript
+const params = new URLSearchParams({
+  txHash: '0x2dfc8f4f24b1a3a7ee73ea13b8a20a63fe7457d1c96b95178d3ea4126b6bf5ad',
+  boostId: '8453:12'
+});
+
+const response = await fetch(
+  `https://ponder-staging-9166160e1bc0.herokuapp.com/signatures?${params.toString()}`
+);
+const { signature, claimant, incentiveId } = await response.json();
+```
+
+<Tip>
+  For complete API details including all available parameters and response fields, see the [API Reference](/v2/api-reference/boosts/validate-&-sign-data-for-a-claim).
+</Tip>
+
+## Required Parameters
+
+<Note>
+  The signature endpoint validates that the transaction meets the boost's requirements before returning a signature.
+</Note>
+
+- `txHash`: The transaction hash that completed the boost's required action
+- `boostId`: The ID of the boost (format: `chainId:boostNumber`)
+- `claimData`: (Optional) Additional data required for variable incentive types
+
+```typescript
+// Example response structure from the API
+{
+    "signature": "0x...",   // Signature for verification
+    "claimant": "0x...",    // Address eligible to claim
+    "incentiveId": 0        // ID of the claimable incentive
+}
+```
+
+## Using the Signature
+
+Once you have the signature from the API, you can use it with the following SDK methods to claim your boost:
+- [`BoostCore.claimIncentive`](/v2/boost-sdk/boost-core/claim-incentive#claimincentive) - Claim for the transaction sender
+- [`BoostCore.claimIncentiveFor`](/v2/boost-sdk/boost-core/claim-incentive#claimincentivefor) - Claim on behalf of another address
+
+<Frame>
+  <Card
+    title="Complete Claim Example"
+    href="/v2/boost-sdk/examples/claim-example"
+    icon="arrow-right"
+    horizontal
+  >
+    See our SDK documentation for a complete example of claiming a boost with the returned signature.
+  </Card> 
+</Frame>
