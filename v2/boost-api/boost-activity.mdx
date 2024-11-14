@@ -1,0 +1,73 @@
+---
+title: Boost Activity
+description: How to retrieve the claim history for a specific boost
+---
+
+The Boost API allows you to fetch the claim history for a specific boost through the [GET /boosts/:id/activity endpoint](/v2/api-reference/boosts/get-boost-activity).
+
+## Basic Usage
+
+Fetch the activity history for a specific boost:
+
+```typescript
+const boostId = '8453:12';
+const response = await fetch(
+  `https://ponder-staging-9166160e1bc0.herokuapp.com/boosts/${boostId}/activity`
+);
+const { activityEvents } = await response.json();
+```
+
+<Tip>
+  For complete API details including all available parameters and response fields, see the [API Reference](/v2/api-reference/boosts/get-boost-activity).
+</Tip>
+
+## Response Structure
+
+The response includes:
+- `activityEvents`: Array of claim events
+- `totalActivityCount`: Total number of claims made on this boost
+
+```typescript
+// Example response structure
+{
+    "activityEvents": [
+        {
+            "claimant": "0xB0057...", // Address that claimed the incentive
+            "blockTimestamp": "1731373464",
+            "txHash": "0x2dfc8f...", // Transaction hash of the claim
+            "incentives": [
+                {
+                    "type": "ERC20Incentive",
+                    "asset": "0xf3b2d...", // Token address
+                    "limit": "10",
+                    "reward": "500000000000000000",
+                    "strategy": 0,
+                    "totalAmountClaimed": "",
+                    "totalClaims": "1"
+                }
+            ]
+        }
+    ],
+    "totalActivityCount": 1
+}
+```
+
+## Pagination
+
+<Note>
+  The API returns an empty array when there are no more activity events to fetch.
+</Note>
+
+The endpoint supports pagination similar to the boost list endpoint:
+
+```typescript
+const params = new URLSearchParams({
+  page: '1',
+  pageSize: '20'  // Adjust based on your needs (max 100)
+});
+
+const response = await fetch(
+  `https://ponder-staging-9166160e1bc0.herokuapp.com/boosts/${boostId}/activity?${params.toString()}`
+);
+const { activityEvents } = await response.json();
+```
