@@ -42,6 +42,11 @@
       "version": "v2"
     },
     {
+      "name": "Boost API",
+      "url": "v2/boost-api",
+      "version": "v2"
+    },
+    {
       "name": "API Reference",
       "url": "/v2/api-reference",
       "openapi": "https://ponder-staging-9166160e1bc0.herokuapp.com/openapi.json",
@@ -311,6 +316,22 @@
         "v2/boost-sdk/budgets/managed/authorization",
         "v2/boost-sdk/budgets/managed/funding",
         "v2/boost-sdk/budgets/managed/retrieval"
+      ]
+    },
+    {
+      "group": "Boosts",
+      "version": "v2",
+      "pages": [
+        "v2/boost-api/fetch-boosts",
+        "v2/boost-api/boost-details",
+        "v2/boost-api/boost-activity"
+      ]
+    },
+    {
+      "group": "Claiming",
+      "version": "v2",
+      "pages": [
+        "v2/boost-api/get-signature"
       ]
     },
     {
