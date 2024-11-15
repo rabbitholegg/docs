@@ -1,0 +1,95 @@
+---
+title: "Overview"
+description: Learn about how to interact with a Continuous Gradual Dutch Auction Incentive using the SDK
+---
+
+import Config from '/snippets/config.mdx';
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+
+The Continuous Gradual Dutch Auction Incentive is a protocol incentive that allows for rewards that adjust dynamically based on claim volume. [See this document for more information on gradual dutch auctions](https://moallemi.com/ciamac/papers/pricing-dutch-auctions-2024.pdf). On Boost creation, the incentive's total budget of the specified asset is transferred into this incentive from the associated budget.
+
+<SDKDisclaimer />
+
+<CardGroup cols={3}>
+  <Card
+    title="Smart Contract"
+    icon="file-contract"
+    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/evm/contracts/incentives/CGDAIncentive.sol"
+  >
+      Read the smart contracts
+  </Card>
+  <Card
+    title="Typedoc"
+    icon="file-lines"
+    href="https://sdk.boost.xyz/classes/CGDAIncentive.html"
+  >
+    See technical documentation
+  </Card>
+  <Card
+    title="SDK Implementation"
+    icon="file-code"
+    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/sdk/src/Incentives/CGDAIncentive.ts"
+  >
+    See the source
+  </Card>
+</CardGroup>
+
+## Key Features
+
+- Supports native assets as well as any ERC20
+- Rewards programmatically decline after each claim
+- Rewards programmatically increase each hour without a claim
+
+<Info>
+  Unlike budgets, allowlists, and validators, incentives cannot be re-used between multiple Boosts.
+</Info>
+
+### Create a new CGDAIncentive
+
+<CodeGroup>
+
+  ```ts index.ts
+  import { BoostCore } from '@boostxyz/sdk/BoostCore'
+  import { config } from "./config";
+
+  const core = new BoostCore({ config });
+
+  await core.createBoost({
+    maxParticipants: 10n,
+    budget,
+    action,
+    allowList,
+    incentives: [
+      core.CGDAIncentive({
+        asset: '0xERC20', // The address of the underlying asset, or zeroAddress for native token
+        initialReward: 5n, // The initial amount for the first claim
+        totalBudget: 10n, // The total amount distributable by this incentive
+        rewardBoost: 1n, // How much to increase the reward each hour
+        rewardDecay: 1n, // How much to subtract from the reward each hour
+        manager: '0xBUDGET_ADDRESS',
+      }),
+    ],
+  });
+  ```
+
+  <Config />
+</CodeGroup>
+
+### Get an existing CGDAIncentive
+
+<CodeGroup>
+```ts index.ts
+// if an incentive address is known, directly construct it
+const incentive = core.CGDAIncentive("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
+
+// or if you want a budget from a specific chain
+const incentiveOnBase = core.CGDAIncentive(
+  "0xc55F719709bDad022B320E76f9DfF7e6F5680767",
+  { chainId: 8453 }
+)
+
+// or accessible off of a a pre-exiting Boost
+const boost = await core.getBoost(0n)
+const incentive = boost.incentives.find(incentive => incentive instanceof CGDAIncentive)
+```
+</CodeGroup>

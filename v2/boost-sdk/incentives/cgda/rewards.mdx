@@ -1,0 +1,111 @@
+---
+title: "Rewards"
+description: Retrieve information about ERC20 Incentive rewards
+---
+
+import ReadParams from '/snippets/read-params.mdx';
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import WriteParams from '/snippets/write-params.mdx';
+
+<SDKDisclaimer />
+
+The ERC20 Variable Incentive is designed to store and distribute dynamic amounts of assets that can be claimed by users. The Boost SDK provides several methods to retrieve information about the current state of its rewards.
+
+## API
+
+### `asset`
+
+Retrieves the address of the ERC20-like asset to be rewarded on claim.
+
+<CodeGroup>
+```ts index.ts
+await cgdaIncentive.asset();
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="ERC20-like address" type="Address">
+  The address of the asset transferred on claim
+</ResponseField>
+
+### `currentReward`
+
+Calculates the current reward based on the time since the last claim.
+
+The reward is calculated based on the time since the last claim, the available budget, and the reward parameters. It increases linearly over time in the absence of claims, with each hour adding `rewardBoost` to the current reward, up to the available budget.
+
+For example, if there is one claim in the first hour, then no claims for three hours, the claimable reward would be `initialReward - rewardDecay + (rewardBoost * 3)`
+
+<CodeGroup>
+```ts index.ts
+await cgdaIncentive.currentReward()
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<bigint>" type="bigint">
+  Returns reward as of this moment in time
+</ResponseField>
+
+### `totalBudget`
+
+Retrieves the total amount this incentive is allowed to distribute.
+
+<CodeGroup>
+```ts index.ts
+await cgdaIncentive.totalBudget()
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<bigint>" type="bigint">
+  Returns the budget
+</ResponseField>
+
+### `cgdaParams`
+
+Retrieves the total amount this incentive is allowed to distribute.
+
+<CodeGroup>
+```ts index.ts
+const { rewardDecay, rewardBoost, lastClaimTime, currentReward } = await cgdaIncentive.cgdaParams()
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<CGDAParameters>" type={<a href="https://sdk.boost.xyz/interfaces/CGDAParameters.html">CGDAParameters</a>} required>
+  <Expandable title="properties">
+    <ParamField path="rewardDecay" type='bigint' required>
+      The amount to subtract from the current reward after each claim
+    </ParamField>
+    <ParamField path="rewardBoost" type="bigint" required>
+      The amount by which the reward increases for each hour without a claim (continuous linear increase)
+    </ParamField>
+    <ParamField path="lastClaimTime" type="bigint" required>
+      The timestamp of the last claim
+    </ParamField>
+    <ParamField path="currentReward" type="bigint" required>
+      The current reward amount
+    </ParamField>
+  </Expandable>
+</ResponseField>

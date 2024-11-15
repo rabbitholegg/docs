@@ -72,3 +72,23 @@ await erc20Incentive.strategy();
 <ResponseField name="Promise<StrategyType>" type={<a href="https://sdk.boost.xyz/enums/StrategyType.html">StrategyType</a>}>
   The total amount of the asset distributed from the budget.
 </ResponseField>
+
+### `limit`
+
+Retrieves the amount of times this incentive can be claimed.
+
+<CodeGroup>
+```ts index.ts
+await erc20VariableIncentive.limit()
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<bigint>" type="bigint">
+  Returns total number of claims that can be made against this incentive.
+</ResponseField>
