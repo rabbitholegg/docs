@@ -32,7 +32,7 @@ const { boosts } = await response.json();
 You can filter boosts using various parameters:
 - `chainId`: Filter by specific blockchain network
 - `owner`: Filter by the address that deployed the boost
-- `budgetAddress`: Filter by specific budget account
+- `budgetAccount`: Filter by specific budget account
 
 Example using multiple filters:
 
@@ -40,7 +40,7 @@ Example using multiple filters:
 const params = new URLSearchParams({
   owner: '0x1234...',
   chainId: '8453', // Base
-  budgetAddress: '0x5678...'
+  budgetAccount: '0x5678...'
 });
 
 const response = await fetch(
