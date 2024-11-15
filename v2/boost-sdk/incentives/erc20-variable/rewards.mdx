@@ -15,7 +15,7 @@ The ERC20 Variable Incentive is designed to store and distribute dynamic amounts
 
 ### `reward`
 
-Retrieves the ETH decimal format reward multipler. If set to `0n` or `1 ether`, user will be transferred the whole amount asserted at claim time.
+Retrieves the ETH decimal format reward multiplier. If set to `0n` or `1 ether`, user will be transferred the whole amount asserted at claim time.
 
 <CodeGroup>
 ```ts index.ts
@@ -30,7 +30,7 @@ await erc20VariableIncentive.reward()
 #### Returns
 
 <ResponseField name="Promise<bigint>" type="bigint">
-  Returns the amount of the asset rewarded per-claim.
+  Returns the reward multiplier.
 </ResponseField>
 
 ### `asset`

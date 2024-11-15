@@ -33,6 +33,26 @@ await erc20VariableIncentive.claims();
   Returns the total number of claims.
 </ResponseField>
 
+### `totalClaimed`
+
+Returns the total amount distributed by this incentive.
+
+<CodeGroup>
+```ts index.ts
+await erc20VariableIncentive.totalClaimed();
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Amount claimed" type="Promise<bigint>">
+ Returns the total amount claimed
+</ResponseField>
+
 ### `claimed`
 
 Checks if an address has previously claimed this incentive.
@@ -57,30 +77,6 @@ await erc20VariableIncentive.claimed(address);
  Returns true if address has claimed the incentive.
 </ResponseField>
 
-### `entries`
-
-By index, retrieve the address in the list of all raffle entries.
-
-<CodeGroup>
-```ts index.ts
-await erc20VariableIncentive.entries(0n);
-```
-</CodeGroup>
-
-#### Parameters
-
-<ParamField path="index" type="bigint">
-  The raffle entry address to retrieve by index
-</ParamField>
-
-<ReadParams />
-
-#### Returns
-
-<ResponseField name="Raffle entry" type="Promise<Address>">
-  Returns the entry's address
-</ResponseField>
-
 ### `isClaimable`
 
 Check if an incentive is claimable by an address. Will return false if the recipient has already claimed, or total incentive claims has met the configured limit.
@@ -103,25 +99,4 @@ await erc20VariableIncentive.isClaimable(address);
 
 <ResponseField name="Elligibility" type="Promise<boolean>">
  Returns true if address can claim incentive.
-</ResponseField>
-
-
-### `limit`
-
-The total number of times this incentive can be claimed, or max number of entries for raffles.
-
-<CodeGroup>
-```ts index.ts
-await erc20VariableIncentive.limt();
-```
-</CodeGroup>
-
-#### Parameters
-
-<ReadParams />
-
-#### Returns
-
-<ResponseField name="Claim limit" type="Promise<bigint>">
-  Returns the maximum number of claims
 </ResponseField>

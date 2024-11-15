@@ -339,6 +339,14 @@
 						"v2/boost-sdk/incentives/erc20-variable-criteria/rewards",
 						"v2/boost-sdk/incentives/erc20-variable-criteria/claims"
 					]
+				},
+				{
+					"group": "Gradual Dutch Auction",
+					"pages": [
+						"v2/boost-sdk/incentives/cgda/overview",
+						"v2/boost-sdk/incentives/cgda/rewards",
+						"v2/boost-sdk/incentives/cgda/claims"
+					]
 				}
 			]
 		},
