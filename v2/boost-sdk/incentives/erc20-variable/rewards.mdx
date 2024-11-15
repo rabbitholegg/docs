@@ -1,0 +1,74 @@
+---
+title: "Rewards"
+description: Retrieve information about ERC20 Incentive rewards
+---
+
+import ReadParams from '/snippets/read-params.mdx';
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import WriteParams from '/snippets/write-params.mdx';
+
+<SDKDisclaimer />
+
+The ERC20 Variable Incentive is designed to store and distribute dynamic amounts of assets that can be claimed by users. The Boost SDK provides several methods to retrieve information about the current state of its rewards.
+
+## API
+
+### `reward`
+
+Retrieves the ETH decimal format reward multipler. If set to `0n` or `1 ether`, user will be transferred the whole amount asserted at claim time.
+
+<CodeGroup>
+```ts index.ts
+await erc20VariableIncentive.reward()
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<bigint>" type="bigint">
+  Returns the amount of the asset rewarded per-claim.
+</ResponseField>
+
+### `asset`
+
+Retrieves the address of the ERC20-like asset to be rewarded on claim.
+
+<CodeGroup>
+```ts index.ts
+await erc20VariableIncentive.asset();
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="ERC20-like address" type="Address">
+  The address of the asset transferred on claim
+</ResponseField>
+
+### `limit`
+
+Retrieves the spending limit for this incentive. The sum of all claims cannot exceed this amount.
+
+<CodeGroup>
+```ts index.ts
+await erc20VariableIncentive.limit()
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<bigint>" type="bigint">
+  Returns the total budget for this incentive
+</ResponseField>
