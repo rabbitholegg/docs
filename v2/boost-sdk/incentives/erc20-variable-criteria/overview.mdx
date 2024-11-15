@@ -66,7 +66,7 @@ On Boost creation, a predetermined amount of the specified asset is transferred 
       core.ERC20VariableCriteriaIncentive({
         asset: '0xERC20' || zeroAddress, // use zero address for native assets
         reward: parseEther('0.5'), // Amount to multiply a claim amount by, if 0n or 1 ether, user will be transferred the whole amount asserted at claim time.
-        limit: parseEther('1'), // The total budget allocated to this incentive
+        limit: parseEther('10'), // The total budget allocated to this incentive
         maxReward: parseEther('5'), // The maximum amount that can be claimed at a time, if the amount extracted from the transaction given the criteria is more than this value, then the claim value will be this max reward value.
         criteria: {
           criteriaType: SignatureType.EVENT,
@@ -112,7 +112,7 @@ const incentiveIndex = boost.incentives.findIndex(incentive => incentive instanc
 // build claim data, signing a variable amount for the incentive
 const allClaimData = boost.incentives.map(incentive => {
   if (incentive instanceof ERC20VariableCriteriaIncentive || incentive instanceof ERC20VariableCriteriaIncentive) {
-    const rewardAmount = parseUnits("10", 18);
+    const rewardAmount = parseEther("1");
     return incentive.buildClaimData(rewardAmount);
   } else {
     return ''

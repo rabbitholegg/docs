@@ -13,9 +13,63 @@ The ERC20 Variable Incentive is designed to store and distribute dynamic amounts
 
 ## API
 
+### `asset`
+
+Retrieves the address of the ERC20-like asset to be rewarded on claim.
+
+<CodeGroup>
+```ts index.ts
+await erc20VariableCriteriaIncentive.asset();
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="ERC20-like address" type="Address">
+  The address of the asset transferred on claim
+</ResponseField>
+
+
+### `getIncentiveCriteria`
+
+Fetches the [IncentiveCriteria](https://sdk.boost.xyz/interfaces/IncentiveCriteria.html) struct from the contract. The criteria determines how a claim value will be extracted from a transaction.
+
+<CodeGroup>
+```ts index.ts
+await erc20VariableCriteriaIncentive.getIncentiveCriteria()
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Promise<IncentiveCriteria>" type={<a href="https://sdk.boost.xyz/interfaces/IncentiveCriteria.html">IncentiveCriteria</a>} required>
+  <Expandable title="properties">
+    <ParamField path="criteriaType" type={<a href="https://sdk.boost.xyz/enums/SignatureType.html">SignatureType</a>} required>
+      Either `SignatureType.EVENT` or `SignatureType.FUNC`, determines how the validator decodes transaction data.
+    </ParamField>
+    <ParamField path="signature" type="Hex" required>
+      The padded 4byte signature of the contract's event or function that will be examined when extracting the claim amount.
+    </ParamField>
+    <ParamField path="fieldIndex" type="number" required>
+      The index of the function argument or log parameter where the numerical amount will be extracted.
+    </ParamField>
+    <ParamField path="targetContract" type="Address" required>
+      The address of the underlying asset that called the function or emitted the event matching the signature, must have occured within the same transaction submitted for validation.
+    </ParamField>
+  </Expandable>
+</ResponseField>
+
 ### `maxReward`
 
-Retrieves the ETH decimal format reward multipler. If set to `0n` or `1 ether`, user will be transferred the whole amount asserted at claim time.
+Retrieves the maximum amount that can be claimed at a time, if the amount extracted from the claim transaction given the criteria is more than this value, then the claim value will be this max reward value.
 
 <CodeGroup>
 ```ts index.ts
@@ -30,9 +84,8 @@ await erc20VariableCriteriaIncentive.maxReward()
 #### Returns
 
 <ResponseField name="Promise<bigint>" type="bigint">
-  Returns the amount of the asset rewarded per-claim.
+  Returns the maximum reward per claim
 </ResponseField>
-
 
 ### `reward`
 
@@ -52,26 +105,6 @@ await erc20VariableCriteriaIncentive.reward()
 
 <ResponseField name="Promise<bigint>" type="bigint">
   Returns the amount of the asset rewarded per-claim.
-</ResponseField>
-
-### `asset`
-
-Retrieves the address of the ERC20-like asset to be rewarded on claim.
-
-<CodeGroup>
-```ts index.ts
-await erc20VariableCriteriaIncentive.asset();
-```
-</CodeGroup>
-
-#### Parameters
-
-<ReadParams />
-
-#### Returns
-
-<ResponseField name="ERC20-like address" type="Address">
-  The address of the asset transferred on claim
 </ResponseField>
 
 ### `limit`
