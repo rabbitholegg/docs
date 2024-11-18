@@ -1,0 +1,129 @@
+---
+title: "Deploy a Boost"
+description: Learn how to deploy a Boost using the Boost SDK
+---
+
+import Config from '/snippets/config.mdx'
+
+In this example, you'll learn how to deploy a Boost using the Boost SDK.
+
+Before you deploy a boost, you will need to have a budget account deployed and funded with the tokens you want to distribute. 
+If you don't have one, you can deploy one using the [SDK](/v2/boost-sdk/budgets/managed/overview#create-a-new-managedbudget), or by following 
+the [Budget Accounts guide](/v2/documentation/how-it-works/budget-accounts) to deploy one through the Boost V2 interface.
+
+Below is a full example of how to deploy a Boost using the SDK. The action in this example targets 
+the Zora TimedSalesStrategy contract. The main steps to deploying a boost are:
+
+1. Setting up the Action
+2. Setting up the Incentives
+3. Deploying the Boost
+
+You can also optionally set up an AllowList, which is useful if you want to limit the participants of the boost.
+This example uses the `OpenAllowList`, which allows anyone to participate.
+
+<CodeGroup>
+
+    ```typescript index.ts
+    import { BoostCore } from "@boostxyz/sdk";
+    import { config } from "./config";
+    import { eventActionPayload } from "./eventAction";
+
+    const core = new BoostCore(config);
+    const budget = core.ManagedBudget('0x...');
+    const action = core.EventAction(eventActionPayload);
+
+    const incentives: [
+      core.ERC20Incentive({
+        asset: '0x...',
+        reward: parseEther('0.5'),
+        limit: 10n,
+        strategy: StrategyType.POOL,
+        manager: '0x...',
+      }),
+    ]
+
+    (async () => {
+      await core.deployBoost(
+        {
+          maxParticipants: 10n,
+          budget,
+          action,
+          incentives,
+          allowList: core.OpenAllowList(),
+        },
+      )
+    })();
+    ```
+
+    ```typescript eventAction.ts
+    import {
+      ActionStep,
+      SignatureType,
+      FilterType,
+      PrimitiveType,
+      ActionClaimant,
+    } from "@boostxyz/sdk/Actions/EventAction";
+    import { selectors as funcSelectors } from "@boostxyz/signatures/functions";
+    import { Hex, toHex } from "viem";
+    import { zora } from "viem/chains";
+
+    const targetContract = "0x777777722d078c97c6ad07d9f36801e653e356ae"; // Zora TimedSalesStrategy
+    const mintSelector = funcSelectors[
+      "mint(address mintTo,uint256 quantity,address collection,uint256 tokenId,address mintReferral,string comment)"
+    ] as Hex;
+
+    const commonParams = {
+      chainid: zora.id,
+      signature: mintSelector,
+      signatureType: SignatureType.FUNC,
+      targetContract: targetContract,
+    } as const;
+
+    // Any mint on Zora TimedSalesStrategy contract
+    const collectionActionStep: ActionStep = {
+      ...commonParams,
+      actionParameter: {
+        filterType: FilterType.EQUAL,
+        fieldType: PrimitiveType.ADDRESS,
+        fieldIndex: 2, // collection
+        filterData: "0x3263023c87502f1676f00df902b1237f93da26a9",
+      },
+    };
+
+    const tokenIdActionStep: ActionStep = {
+      ...commonParams,
+      actionParameter: {
+        filterType: FilterType.EQUAL,
+        fieldType: PrimitiveType.UINT,
+        fieldIndex: 3, // tokenId
+        filterData: toHex(1),
+      },
+    };
+
+    const quantityActionStep: ActionStep = {
+      ...commonParams,
+      actionParameter: {
+        filterType: FilterType.GREATER_THAN_OR_EQUAL,
+        fieldType: PrimitiveType.UINT,
+        fieldIndex: 1, // quantity
+        filterData: toHex(1),
+      },
+    };
+
+    const actionClaimant: ActionClaimant = {
+      ...commonParams,
+      fieldIndex: 0, // mintTo
+    };
+
+    export const eventActionPayload = {
+      actionClaimant,
+      actionSteps: [collectionActionStep, tokenIdActionStep, quantityActionStep],
+    };
+    ```
+
+    <Config />
+
+
+
+</CodeGroup>
+

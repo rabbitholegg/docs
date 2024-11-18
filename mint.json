@@ -288,7 +288,8 @@
 			"pages": [
 				"v2/boost-sdk/examples/zora-mint",
 				"v2/boost-sdk/examples/agora-vote",
-				"v2/boost-sdk/examples/claim-example"
+				"v2/boost-sdk/examples/claim-example",
+				"v2/boost-sdk/examples/deploy-example"
 			]
 		},
 		{
