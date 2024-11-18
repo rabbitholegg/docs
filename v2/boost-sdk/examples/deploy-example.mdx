@@ -8,8 +8,8 @@ import Config from '/snippets/config.mdx'
 In this example, you'll learn how to deploy a Boost using the Boost SDK.
 
 Before you deploy a boost, you will need to have a budget account deployed and funded with the tokens you want to distribute. 
-If you don't have one, you can deploy one using the [SDK](/v2/boost-sdk/budgets/managed/overview.mdx), or by following 
-the [Budget Accounts guide](/v2/documentation/how-it-works/budget-accounts.mdx) to deploy one through the Boost V2 interface.
+If you don't have one, you can deploy one using the [SDK](/v2/boost-sdk/budgets/managed/overview#create-a-new-managedbudget), or by following 
+the [Budget Accounts guide](/v2/documentation/how-it-works/budget-accounts) to deploy one through the Boost V2 interface.
 
 Once you have a budget account, you can access its methods by calling `core.ManagedBudget(address)`, where `address` 
 is the address of the budget account.
@@ -29,11 +29,11 @@ This example uses the OpenAllowList, which allows anyone to participate.
     ```typescript index.ts
     import { BoostCore } from "@boostxyz/sdk";
     import { config } from "./config";
-    import { EventActionPayload } from "./eventAction";
+    import { eventActionPayload } from "./eventAction";
 
     const core = new BoostCore(config);
     const budget = core.ManagedBudget('0x...');
-    const action = core.EventAction(EventActionPayload);
+    const action = core.EventAction(eventActionPayload);
 
     const incentives: [
       core.ERC20Incentive({
