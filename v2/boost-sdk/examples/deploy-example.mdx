@@ -7,13 +7,57 @@ import Config from '/snippets/config.mdx'
 
 In this example, you'll learn how to deploy a Boost using the Boost SDK.
 
-To deploy a Boost, you'll need to follow these general steps:
+Before you deploy a boost, you will need to have a budget account deployed and funded with the tokens you want to distribute. 
+If you don't have one, you can deploy one using the [SDK](/v2/boost-sdk/budgets/managed/overview.mdx), or by following 
+the [Budget Accounts guide](/v2/documentation/how-it-works/budget-accounts.mdx) to deploy one through the Boost V2 interface.
 
-1. Prepare the deploy data payload
-2. Prepare the deploy data payload
-3. Execute the deploy transaction
+Once you have a budget account, you can access its methods by calling `core.ManagedBudget(address)`, where `address` 
+is the address of the budget account.
+
+Below is a full example of how to deploy a Boost using the SDK. The action in this example targets 
+the Zora TimedSalesStrategy contract. The main steps to deploying a boost are:
+
+1. Setting up the Action
+2. Setting up the Incentives
+3. Deploying the Boost
+
+You can also optionally set up an AllowList, which is useful if you want to limit the participants of the boost.
+This example uses the OpenAllowList, which allows anyone to participate.
 
 <CodeGroup>
+
+    ```typescript index.ts
+    import { BoostCore } from "@boostxyz/sdk";
+    import { config } from "./config";
+    import { EventActionPayload } from "./eventAction";
+
+    const core = new BoostCore(config);
+    const budget = core.ManagedBudget('0x...');
+    const action = core.EventAction(EventActionPayload);
+
+    const incentives: [
+      core.ERC20Incentive({
+        asset: '0x...',
+        reward: parseEther('0.5'),
+        limit: 10n,
+        strategy: StrategyType.POOL,
+        manager: '0x...',
+      }),
+    ]
+
+    (async () => {
+      await core.deployBoost(
+        {
+          maxParticipants: 10n,
+          budget,
+          action,
+          incentives,
+          allowList: core.OpenAllowList(),
+        },
+      )
+    })();
+    ```
+
     ```typescript eventAction.ts
     import {
       ActionStep,
