@@ -67,9 +67,9 @@ Retrieves funds from an incentive contract associated with a Boost in the Budget
 ```ts index.ts
 const [amount, address] = await budget.clawbackFromTarget(
   core.assertValidAddress(),
-  erc20Incentive.buildClawbackData(1000n),
+  incentive.buildClawbackData(1000n),
   boost.id,
-  incentiveId
+  0n, // the position of the incentive in the incentives array
 );
 ```
 </CodeGroup>
@@ -99,7 +99,7 @@ const [amount, address] = await budget.clawbackFromTarget(
 <ResponseField name="Promise<[bigint, string]>" type="tuple">
   Returns a tuple containing:
   - The amount reclaimed `bigint`
-  - The address of the incentive contract the funds were reclaimed from `string`
+  - The address of the token that was clawed back `string`
 </ResponseField>
 
 ### `disburse`
