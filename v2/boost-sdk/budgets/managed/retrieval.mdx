@@ -96,10 +96,10 @@ const [amount, address] = await budget.clawbackFromTarget(
 
 #### Returns
 
-<ResponseField name="Promise<[bigint, string]>" type="tuple">
+<ResponseField name="Promise<[bigint, Address]>" type="tuple">
   Returns a tuple containing:
   - The amount reclaimed `bigint`
-  - The address of the token that was clawed back `string`
+  - The address of the token that was clawed back `Address`
 </ResponseField>
 
 ### `disburse`

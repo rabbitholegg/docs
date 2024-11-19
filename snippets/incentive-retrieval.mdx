@@ -1,10 +1,14 @@
 ### `clawbackFromTarget`
 
-The clawback function is used to reclaim assets from a Boost's incentive back to the associated budget. Can only be called by owner or admin.
+The clawback function is used to reclaim assets from a Boost's incentive back to the associated budget. Can only be called by authorized users (admin or manager).
 
 <Info>
   The amount reclaimed will be subject to protocol fee collection, so attempting to reclaim an amount where `reclaimAmount + calculatedProtocolFee > incentiveBalance` will revert with an `InsufficientFunds` error.
 </Info>
+
+<Warning>
+  The amount specified in buildClawbackData must be an exact multiple of the reward value set in the incentive. Otherwise, the transaction will fail.
+</Warning>
 
 <CodeGroup>
 ```ts index.ts
