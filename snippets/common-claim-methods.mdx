@@ -1,0 +1,38 @@
+### `getRemainingClaimPotential`
+
+Retrieves the number of remaining possible claims for an incentive by comparing total claims against the limit. 
+Note that this does not check if a specific user is eligible to claim.
+
+<CodeGroup>
+```ts index.ts
+await erc20Incentive.getRemainingClaimPotential();
+```
+</CodeGroup>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Remaining claims" type="Promise<bigint>">
+  Returns the number of remaining possible claims (limit minus current claims)
+</ResponseField>
+
+### `canBeClaimed`
+
+Checks if any claims remain for an incentive by comparing total claims against the limit. 
+Returns a boolean indicating if claims are still possible. 
+Note that this does not check if a specific user is eligible to claim.
+
+<CodeGroup>
+```ts index.ts
+await erc20Incentive.canBeClaimed();
+```
+</CodeGroup>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Has remaining claims" type="Promise<boolean>">
+  Returns `true` if there are remaining claims available, `false` otherwise
+</ResponseField>
