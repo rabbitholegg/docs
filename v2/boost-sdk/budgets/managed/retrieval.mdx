@@ -55,6 +55,53 @@ await budget.clawback({
   Returns true if the clawback was successful.
 </ResponseField>
 
+### `clawbackFromTarget`
+
+Retrieves funds from an incentive contract associated with a Boost in the Budget. This function can only be called by authorized users (admin or manager).
+
+<Warning>
+  The amount specified in the clawback data must be an exact multiple of the reward value set in the incentive. Otherwise, the transaction will fail.
+</Warning>
+
+<CodeGroup>
+```ts index.ts
+const [amount, address] = await budget.clawbackFromTarget(
+  core.assertValidAddress(),
+  erc20Incentive.buildClawbackData(1000n),
+  boost.id,
+  incentiveId
+);
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="target" type="string" required>
+  The address of a contract implementing clawback, typically the BoostCore contract address.
+</ParamField>
+
+<ParamField path="data" type="string" required>
+  The encoded data payload for the clawback. Can be generated using `incentive.buildClawbackData()`.
+</ParamField>
+
+<ParamField path="boostId" type="bigint | number" required>
+  The ID of the boost containing the incentive.
+</ParamField>
+
+<ParamField path="incentiveId" type="bigint | number" required>
+  The ID of the incentive to clawback from.
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="Promise<[bigint, string]>" type="tuple">
+  Returns a tuple containing:
+  - The amount reclaimed `bigint`
+  - The address of the incentive contract the funds were reclaimed from `string`
+</ResponseField>
+
 ### `disburse`
 
 Transfers available funds from the budget to a specified recipient. You must have the manager, admin or owner role to call this function.
