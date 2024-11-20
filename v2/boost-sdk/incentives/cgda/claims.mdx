@@ -6,6 +6,7 @@ description: Retrieve ERC20 Incentive claim information and draw raffle
 import ReadParams from '/snippets/read-params.mdx';
 import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
 import WriteParams from '/snippets/write-params.mdx';
+import CommonIncentiveMethods from '/snippets/common-incentive-methods.mdx';
 
 <SDKDisclaimer />
 
@@ -80,3 +81,5 @@ await cgdaIncentive.isClaimable(address);
 <ResponseField name="Eligibility" type="Promise<boolean>">
  Returns true if address can claim incentive.
 </ResponseField>
+
+<CommonIncentiveMethods />
