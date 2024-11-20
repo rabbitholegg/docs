@@ -60,7 +60,7 @@ await budget.clawback({
 Retrieves funds from an incentive contract associated with a Boost in the Budget. This function can only be called by authorized users (admin or manager).
 
 <Warning>
-  The amount specified in the clawback data must be an exact multiple of the reward value set in the incentive. Otherwise, the transaction will fail.
+  For `ERC20Incentive`, the amount specified in the clawback data must be an exact multiple of the reward value set in the incentive. Otherwise, the transaction will fail.
 </Warning>
 
 <CodeGroup>
