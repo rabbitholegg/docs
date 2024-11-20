@@ -1,28 +1,59 @@
 ### `clawbackFromTarget`
 
-The clawback function is used to reclaim assets from a Boost's incentive back to the associated budget. Can only be called by authorized users (admin or manager).
+The clawback function allows authorized users (admin or manager) to reclaim assets from a Boost's incentive back to its associated budget. 
 
 <Info>
   The amount reclaimed will be subject to protocol fee collection, so attempting to reclaim an amount where `reclaimAmount + calculatedProtocolFee > incentiveBalance` will revert with an `InsufficientFunds` error.
 </Info>
 
 <Warning>
-  The amount specified in buildClawbackData must be an exact multiple of the reward value set in the incentive. Otherwise, the transaction will fail.
+  For `ERC20Incentive`, the amount specified in the clawback data must be an exact multiple of the reward value set in the incentive. Otherwise, the transaction will fail.
 </Warning>
 
+Depending on the type of incentive, calculating the clawback amount will be different.
+
 <CodeGroup>
-```ts index.ts
+```ts erc20-incentive.ts
+// Example for fixed-reward ERC20 incentives
 const boost = await core.getBoost(0n)
 const budget = boost.budget
-const erc20IncentiveIndex = 0
-const erc20Incentive = boost.incentives.at(erc20IncentiveIndex)
+const incentiveIndex = 0
+const incentive = boost.incentives.at(incentiveIndex)
 
-await budget.clawbackFromTarget(
-  core.assertValidAddress(), // instruct the budget to retrieve assets from a Boost via the Boost Core contract
-  erc20Incentive.buildClawbackData(1n), // Encodes an amount to retrieve
-  boost.id, // The Boost's ID
-  erc20IncentiveIndex // The index of the desired incentive
-);
+if (incentive instanceof ERC20Incentive) {
+  // Calculate exact amount to clawback based on remaining claims
+  const remainingClaims = await incentive.getRemainingClaimPotential()
+  const rewardValue = await incentive.reward()
+  const clawbackAmount = remainingClaims * rewardValue
+
+  await budget.clawbackFromTarget(
+    core.assertValidAddress(), // instruct the budget to retrieve assets from a Boost via the Boost Core contract
+    incentive.buildClawbackData(clawbackAmount), // Encodes an amount to retrieve
+    boost.id, // The Boost's ID
+    incentiveIndex // The index of the desired incentive
+  );
+}
+```
+
+```ts variable-incentives.ts
+// Example for variable-reward incentives
+const boost = await core.getBoost(0n)
+const budget = boost.budget
+const incentiveIndex = 0
+const incentive = boost.incentives.at(incentiveIndex)
+
+if (incentive instanceof ERC20VariableIncentive ||
+    incentive instanceof ERC20VariableCriteriaIncentive) {
+  // For variable incentives, we can directly get the remaining claimable amount
+  const remainingFunds = await incentive.getRemainingClaimPotential()
+
+  await budget.clawbackFromTarget(
+    core.assertValidAddress(), // instruct the budget to retrieve assets from a Boost via the Boost Core contract
+    incentive.buildClawbackData(remainingFunds), // Encodes an amount to retrieve
+    boost.id, // The Boost's ID
+    incentiveIndex // The index of the desired incentive
+  );
+}
 ```
 </CodeGroup>
 
@@ -33,16 +64,19 @@ await budget.clawbackFromTarget(
 #### Parameters
 
 <ParamField path="target" type="address" required>
-  The address of the contract implementing `clawback`, this should typically be Boost Core's address.
+  The address of the contract implementing `clawback`, typically the Boost Core contract address.
 </ParamField>
+
 <ParamField path="data" type="Hex" required>
-  An ABI encoded payload, typically `uint256`, representing the amount to reclaim. You can acquire this data with `incentive.buildClawbackData(amount)`
+  The encoded clawback data payload. Generate this using `incentive.buildClawbackData(amount)`.
 </ParamField>
-<ParamField path="target" type="bigint | number" required>
-  The id of the Boost containing the incentive from which to retrieve assets.
+
+<ParamField path="boostId" type="bigint | number" required>
+  The ID of the Boost containing the target incentive.
 </ParamField>
+
 <ParamField path="incentiveId" type="bigint | number" required>
-  The index of the incentive from which to retrieve assets.
+  The index of the incentive to clawback from.
 </ParamField>
 
 <WriteParams />
@@ -50,5 +84,7 @@ await budget.clawbackFromTarget(
 #### Returns
 
 <ResponseField name="Promise<[amount, Address]>" type="Promise<[amount, Address]>">
-  Returns the amount retrieved from the incentive, as well as the address of the underlying asset.
+  Returns a tuple containing:
+  - The amount that was successfully clawed back
+  - The address of the token that was retrieved
 </ResponseField>
