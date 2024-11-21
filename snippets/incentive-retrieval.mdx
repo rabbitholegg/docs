@@ -12,50 +12,53 @@ The clawback function allows authorized users (admin or manager) to reclaim asse
 
 Depending on the type of incentive, calculating the clawback amount will be different.
 
-<CodeGroup>
-```ts erc20-incentive.ts
-// Example for fixed-reward ERC20 incentives
-const boost = await core.getBoost(0n)
-const budget = boost.budget
-const incentiveIndex = 0
-const incentive = boost.incentives.at(incentiveIndex)
+<Tabs>
+  <Tab title="ERC20 Incentive">
+    ```ts
+    // Example for fixed-reward ERC20 incentives
+    const boost = await core.getBoost(0n)
+    const budget = boost.budget
+    const incentiveIndex = 0
+    const incentive = boost.incentives.at(incentiveIndex)
 
-if (incentive instanceof ERC20Incentive) {
-  // Calculate exact amount to clawback based on remaining claims
-  const remainingClaims = await incentive.getRemainingClaimPotential()
-  const rewardValue = await incentive.reward()
-  const clawbackAmount = remainingClaims * rewardValue
+    if (incentive instanceof ERC20Incentive) {
+      // Calculate exact amount to clawback based on remaining claims
+      const remainingClaims = await incentive.getRemainingClaimPotential()
+      const rewardValue = await incentive.reward()
+      const clawbackAmount = remainingClaims * rewardValue
 
-  await budget.clawbackFromTarget(
-    core.assertValidAddress(), // instruct the budget to retrieve assets from a Boost via the Boost Core contract
-    incentive.buildClawbackData(clawbackAmount), // Encodes an amount to retrieve
-    boost.id, // The Boost's ID
-    incentiveIndex // The index of the desired incentive
-  );
-}
-```
+      await budget.clawbackFromTarget(
+        core.assertValidAddress(),
+        incentive.buildClawbackData(clawbackAmount),
+        boost.id,
+        incentiveIndex
+      );
+    }
+    ```
+  </Tab>
+  <Tab title="Variable Incentives">
+    ```ts
+    // Example for variable-reward incentives
+    const boost = await core.getBoost(0n)
+    const budget = boost.budget
+    const incentiveIndex = 0
+    const incentive = boost.incentives.at(incentiveIndex)
 
-```ts variable-incentives.ts
-// Example for variable-reward incentives
-const boost = await core.getBoost(0n)
-const budget = boost.budget
-const incentiveIndex = 0
-const incentive = boost.incentives.at(incentiveIndex)
+    if (incentive instanceof ERC20VariableIncentive ||
+        incentive instanceof ERC20VariableCriteriaIncentive) {
+      // For variable incentives, we can directly get the remaining claimable amount
+      const remainingFunds = await incentive.getRemainingClaimPotential()
 
-if (incentive instanceof ERC20VariableIncentive ||
-    incentive instanceof ERC20VariableCriteriaIncentive) {
-  // For variable incentives, we can directly get the remaining claimable amount
-  const remainingFunds = await incentive.getRemainingClaimPotential()
-
-  await budget.clawbackFromTarget(
-    core.assertValidAddress(), // instruct the budget to retrieve assets from a Boost via the Boost Core contract
-    incentive.buildClawbackData(remainingFunds), // Encodes an amount to retrieve
-    boost.id, // The Boost's ID
-    incentiveIndex // The index of the desired incentive
-  );
-}
-```
-</CodeGroup>
+      await budget.clawbackFromTarget(
+        core.assertValidAddress(),
+        incentive.buildClawbackData(remainingFunds),
+        boost.id,
+        incentiveIndex
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
 
 <Tip>
   Using `clawbackFromTarget` will modify the amount of the asset marked as distributed via the budget.
