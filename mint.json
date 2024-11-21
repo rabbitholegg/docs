@@ -97,6 +97,20 @@
 			"pages": [
 				"v2/documentation/architecture/core-boost-v2",
 				"v2/documentation/architecture/boost-v2-vs-v1",
+				{
+					"group": "Migration Guide",
+					"pages": [
+						"v2/documentation/migration/overview",
+						"v2/documentation/migration/budget-accounts",
+						"v2/documentation/migration/deploying",
+						"v2/documentation/migration/fetching",
+						"v2/documentation/migration/action-steps",
+						"v2/documentation/migration/claiming",
+						"v2/documentation/migration/claim-status",
+						"v2/documentation/migration/boost-status",
+						"v2/documentation/migration/withdrawing"
+					]
+				},
 				"v2/documentation/contract-deployments/contracts",
 				"v2/documentation/links/boost-sdk",
 				"v2/documentation/links/boost-api",
