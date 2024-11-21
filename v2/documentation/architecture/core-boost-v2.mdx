@@ -3,12 +3,11 @@ title: "Boost V2 Core Protocol Architecture"
 description: "An overview of the Boost V2 core protocol architecture and its components"
 ---
 
-import BudgetFlow from '/snippets/budget-flow.mdx';
 import ClaimFlow from '/snippets/claim-flow.mdx';
 
-<BudgetFlow />
-<br />
-<ClaimFlow />
+<Frame caption="High Level Overview of Boost V2">
+   <img src="/assets/diagrams/protocol-deploy-claim.png" alt="Boost Overview Diagram" />
+</Frame>
 
 The Boost V2 core protocol architecture is designed to enable flexible, secure, and efficient on-chain incentivization. It consists of several key components that work together to validate actions, generate proofs, and distribute rewards. Here's a breakdown of the architecture:
 
@@ -37,6 +36,10 @@ The Boost V2 core protocol architecture is designed to enable flexible, secure, 
 4. **Signature Submission**:
    - The User submits the signature to the Core contract.
    - This step initiates the on-chain portion of the claiming process.
+
+<Frame>
+   <img src="/assets/diagrams/protocol-signing.png" alt="Boost Signature Flow" />
+</Frame>
 
 5. **On-chain Verification**:
    - The Core contract calls the SignerValidator with the provided signature.
