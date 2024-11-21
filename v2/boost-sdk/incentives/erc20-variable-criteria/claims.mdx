@@ -147,4 +147,39 @@ await erc20VariableCriteriaIncentive.limit();
   Returns the maximum number of claims
 </ResponseField>
 
-<CommonIncentiveMethods />
+### `getRemainingClaimPotential`
+
+Retrieves the remaining amount of tokens (in wei) remaining in the incentive by comparing total claims against the limit.
+
+<CodeGroup>
+```ts index.ts
+await erc20VariableIncentive.getRemainingClaimPotential();
+```
+</CodeGroup>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Remaining claims" type="Promise<bigint>">
+  Returns the remaining amount of tokens (in wei) remaining in the incentive
+</ResponseField>
+
+### `canBeClaimed`
+
+Checks if the balance of the incentive is greater than 0.
+Note that this does not check if a specific user is eligible to claim.
+
+<CodeGroup>
+```ts index.ts
+await erc20VariableIncentive.canBeClaimed();
+```
+</CodeGroup>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Has remaining balance" type="Promise<boolean>">
+  Returns `true` if the incentive has a remaining balance, `false` otherwise
+</ResponseField>
