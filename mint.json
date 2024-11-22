@@ -98,7 +98,7 @@
 				"v2/documentation/architecture/core-boost-v2",
 				"v2/documentation/architecture/boost-v2-vs-v1",
 				{
-					"group": "Migration Guide",
+					"group": "V1 -> V2 Migration Guide",
 					"pages": [
 						"v2/documentation/migration/overview",
 						"v2/documentation/migration/budget-accounts",
