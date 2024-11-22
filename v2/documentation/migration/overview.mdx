@@ -1,0 +1,106 @@
+---
+title: "Boost V2 Migration Overview"
+description: "A comprehensive guide to help developers migrate their applications from Boost V1 to V2, with step-by-step instructions and best practices"
+---
+
+This documentation is designed to help existing Boost V1 integrators transition their applications to Boost V2. 
+Whether you've built applications using our previous version or are familiar with the V1 architecture, 
+this guide will walk you through the significant changes and provide helpful instructions for updating your integration.
+
+## Why Migrate to V2?
+
+<CardGroup cols={2}>
+  <Card title="Smart Budget Accounts" icon="wallet">
+    Manage funds with team-based access controls and automated deployment capabilities. Enhanced security and granular control over your boost funds.
+  </Card>
+  <Card title="Flexible Integration" icon="plug">
+    Direct contract interactions with support for any function or event. Deeper integration possibilities with your existing smart contracts.
+  </Card>
+  <Card title="Variable Rewards" icon="chart-line">
+    Create dynamic reward structures based on user behavior, transaction volume, or custom metrics. Better align incentives with your project goals.
+  </Card>
+  <Card title="Enhanced Control" icon="sliders">
+    More direct control over your integration with improved scalability and reliability through the Boost SDK.
+  </Card>
+</CardGroup>
+
+## Key Changes
+
+The key distinction between Boost V1 and V2 lies in their development approach. While V1 relied heavily on API interactions, V2 shifts towards direct contract interactions using the Boost SDK. 
+This shift requires integrators to provide more of their own data based on the specific action they wish to implement.
+
+- **NFT metadata is no longer included in the V2 data model.** Integrators must now obtain this information independently from other sources.
+- **Reward images are not available in Boost V2.** Integrators will need to source this information themselves from alternative platforms.
+
+## Migration Guides
+
+The following guides will help you migrate different aspects of your integration:
+
+<CardGroup>
+  <Card
+    title="Setting Up a Budget Account"
+    icon="wallet"
+    href="/v2/documentation/migration/budget-accounts"
+  >
+    Learn how to set up and manage your budget account in Boost V2
+  </Card>
+  <Card
+    title="Deploying Boosts"
+    icon="rocket"
+    href="/v2/documentation/migration/deploying"
+  >
+    Step-by-step guide to deploying Boosts in V2
+  </Card>
+  <Card
+    title="Fetching Boosts"
+    icon="magnifying-glass"
+    href="/v2/documentation/migration/fetching"
+  >
+    How to fetch and retrieve Boost information
+  </Card>
+  <Card
+    title="Extracting Data from Action Steps"
+    icon="code"
+    href="/v2/documentation/migration/action-steps"
+  >
+    Understanding how to work with action step data
+  </Card>
+  <Card
+    title="Claiming Boosts"
+    icon="gift"
+    href="/v2/documentation/migration/claiming"
+  >
+    Guide to implementing Boost claiming functionality
+  </Card>
+  <Card
+    title="Checking Claim Status"
+    icon="circle-check"
+    href="/v2/documentation/migration/claim-status"
+  >
+    How to verify if a user has claimed a boost
+  </Card>
+  <Card
+    title="Checking Boost Status"
+    icon="circle-info"
+    href="/v2/documentation/migration/boost-status"
+  >
+    How to determine if a boost is still active
+  </Card>
+  <Card
+    title="Withdrawing Funds"
+    icon="money-bill-transfer"
+    href="/v2/documentation/migration/withdrawing"
+  >
+    Learn how to withdraw funds from a Boost
+  </Card>
+</CardGroup>
+
+## Get in Touch
+
+We're committed to helping partners successfully migrate to Boost V2. Our team provides personalized assistance throughout your migration journey.
+
+- **Email**: [hello@boost.xyz](mailto:hello@boost.xyz)
+- **Direct Support**: We offer direct integration support through dedicated Slack or Telegram channels. Please reach out to the email listed above to get started, 
+or contact [@mattie_eth](https://t.me/mattie_eth) on Telegram to get started.
+
+Don't hesitate to reach out - we're here to ensure your migration to Boost V2 is smooth and successful. Our team can provide technical guidance, answer questions, and help you make the most of V2's new features.

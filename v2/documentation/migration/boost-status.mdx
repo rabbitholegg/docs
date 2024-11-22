@@ -1,0 +1,33 @@
+---
+title: "Checking Boost Status"
+description: "Learn how to check if a boost is still active and can be claimed"
+---
+
+In Boost V2, a Boost remains "Active" until it runs out of rewards—either through claims or after the remaining funds have been withdrawn. To determine a Boost's active status, you can use the `canBeClaimed` method on each of the boost incentives.
+
+```typescript
+const boost = await core.getBoost(17n, { chainId: 8453 });
+
+async function isBoostActive(incentives) {
+  for (const incentive of incentives) {
+    if (await incentive.canBeClaimed()) return true;
+  }
+  return false;
+}
+
+const active = await isBoostActive(boost.incentives);
+```
+
+<Warning>
+  For variable incentive types, `canBeClaimed` only checks if the incentive balance is greater than zero. 
+  This may not accurately reflect claimability if the balance is less than the minimum payout amount required for a reward.
+</Warning>
+
+<Card 
+  title="SDK Reference" 
+  icon="code"
+  href="/v2/boost-sdk/incentives/erc20-variable/claims#canBeClaimed"
+>
+  Learn more about the canBeClaimed method
+</Card>
+
