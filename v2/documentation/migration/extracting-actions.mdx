@@ -1,6 +1,7 @@
 ---
 title: "Extracting Data from Action Steps"
 description: "Learn how to extract and link data from action steps to external sources"
+mode: "wide"
 ---
 
 In Boost V2, action steps contain the core parameters needed to identify and execute your target action, or to fetch additional data from external sources.
@@ -8,8 +9,6 @@ In Boost V2, action steps contain the core parameters needed to identify and exe
 In the example below, we'll show how to extract collection address and tokenId from a Zora NFT mint's action steps. 
 You can use these identifiers to fetch metadata from the NFT contract and enable the mint action in your interface. 
 
-
-<CodeBlock>
 ```typescript
 export function extractZoraNFTInfo(boost: Boost) {
   // ZoraTimedSaleStrategy Contract
@@ -48,6 +47,5 @@ export function extractZoraNFTInfo(boost: Boost) {
   }
 }
 ```
-</CodeBlock>
 
 Once you have the data, you can use an external service such as the Zora SDK to fetch NFT metadata and enable the mint functionality in your interface.
