@@ -1,0 +1,25 @@
+---
+title: "Checking Claim Status"
+description: "Learn how to check if a user has claimed a boost's incentives"
+---
+
+## How to Check if a User Has Claimed a Boost
+
+To check if a user has claimed an incentive on a boost, use the Boost SDK. Since boosts can have multiple incentives, you'll need to check each incentive individually.
+
+```typescript
+const boost = await core.getBoost(17n, { chainId: 8453 });
+
+for (const incentive of boost.incentives) {
+  const claimed = await incentive.claimed('0x...'); // address of claimant
+  console.log(claimed); // true/false
+}
+```
+
+<Card 
+  title="SDK Reference" 
+  icon="code"
+  href="/v2/boost-sdk/incentives/erc20-variable/claims#claimed"
+>
+  Learn more about the claimed method and its parameters
+</Card>
