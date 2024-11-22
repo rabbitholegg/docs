@@ -1,0 +1,82 @@
+---
+title: "Withdrawing from Boosts"
+description: "Learn how to withdraw remaining rewards from a boost using the UI or SDK"
+---
+
+You can withdraw remaining rewards from a boost either through the Boost UI or programmatically using the SDK.
+
+### Using Boost UI
+
+You can withdraw the remaining tokens from your boost by visiting your budget account dashboard on the Boost App. Navigate to the "Boosts" tab to see a list of boosts you have deployed. Once rewards have been withdrawn, the Boost will be considered ended/inactive.
+
+<Frame>
+  <img src="/assets/withdrawui.png" alt="Boost Withdrawal UI" />
+</Frame>
+
+### Using the Boost SDK
+
+To withdraw programmatically, use the [clawbackFromTarget](/v2/boost-sdk/asset-retrieval#clawbackfromtarget) method on the budget. 
+
+<Warning>
+  For `ERC20Incentive`, the amount specified in the clawback data must be an exact multiple of the reward value set in the incentive. Otherwise, the transaction will fail.
+</Warning>
+
+Depending on the type of incentive, calculating the clawback amount will be different.
+
+<Tabs>
+  <Tab title="ERC20Incentive">
+    ```ts
+    // Example for fixed-reward ERC20 incentives
+    const boost = await core.getBoost(0n)
+    const budget = boost.budget
+    const incentiveIndex = 0
+    const incentive = boost.incentives.at(incentiveIndex)
+
+    if (incentive instanceof ERC20Incentive) {
+      // Calculate exact amount to clawback based on remaining claims
+      const remainingClaims = await incentive.getRemainingClaimPotential()
+      const rewardValue = await incentive.reward()
+      const clawbackAmount = remainingClaims * rewardValue
+
+      await budget.clawbackFromTarget(
+        core.assertValidAddress(),
+        incentive.buildClawbackData(clawbackAmount),
+        boost.id,
+        incentiveIndex
+      );
+    }
+    ```
+  </Tab>
+  <Tab title="Variable Incentives">
+    ```ts
+    // Example for variable-reward incentives
+    const boost = await core.getBoost(0n)
+    const budget = boost.budget
+    const incentiveIndex = 0
+    const incentive = boost.incentives.at(incentiveIndex)
+
+    if (incentive instanceof ERC20VariableIncentive ||
+        incentive instanceof ERC20VariableCriteriaIncentive) {
+      // For variable incentives, we can directly get the remaining claimable amount
+      const remainingFunds = await incentive.getRemainingClaimPotential()
+
+      await budget.clawbackFromTarget(
+        core.assertValidAddress(),
+        incentive.buildClawbackData(remainingFunds),
+        boost.id,
+        incentiveIndex
+      );
+    }
+    ```
+  </Tab>
+</Tabs>
+
+<Card 
+  title="SDK Reference" 
+  icon="code"
+  href="/v2/boost-sdk/asset-retrieval#clawbackfromtarget"
+>
+  Learn more about the clawback method and its parameters
+</Card>
+
+
