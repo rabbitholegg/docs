@@ -1,0 +1,75 @@
+---
+title: "Fetching Boosts"
+description: "Learn how to fetch and query boost information in V2"
+---
+
+<Note>
+  V2 focuses on core boost data only. You'll need to source supplementary data like NFT and Token metadata from alternative sources.
+</Note>
+
+## Get Boosts by Owner or Budget Address
+
+Query boosts with various filters including budget account, owner address, and chain ID. The API supports combining multiple filters and includes pagination for handling large result sets.
+
+<CardGroup cols={2}>
+  <Card 
+    title="Implementation Guide" 
+    icon="book"
+    href="/v2/boost-api/fetch-boosts"
+  >
+    Learn how to implement boost filtering with code examples
+  </Card>
+  <Card 
+    title="API Reference" 
+    icon="code"
+    href="/v2/api-reference/boosts/get-boosts"
+  >
+    Complete GET /boosts endpoint documentation
+  </Card>
+</CardGroup>
+
+## Get Details for a Specific Boost
+
+Retrieve detailed information about a specific boost using its unique identifier, which combines the chain ID and boost ID number.
+
+<Note>
+  The boostId is sequential and zero-indexed. For example, the first boost deployed on Zora (chainId: 7777777) would have the ID `7777777:0`
+</Note>
+
+<CardGroup cols={2}>
+  <Card 
+    title="Implementation Guide" 
+    icon="book"
+    href="/v2/boost-api/boost-details"
+  >
+    Learn how to fetch individual boost details
+  </Card>
+  <Card 
+    title="API Reference" 
+    icon="code"
+    href="/v2/api-reference/boosts/get-boost-details"
+  >
+    Complete GET /boosts/:id endpoint documentation
+  </Card>
+</CardGroup>
+
+## Get Boost Activity History
+
+Retrieve the claim history for a specific boost, including details about claim events and total claim counts. The API supports pagination for accessing historical data efficiently.
+
+<CardGroup cols={2}>
+  <Card 
+    title="Implementation Guide" 
+    icon="book"
+    href="/v2/boost-api/boost-activity"
+  >
+    Learn how to fetch and handle boost activity data
+  </Card>
+  <Card 
+    title="API Reference" 
+    icon="code"
+    href="/v2/api-reference/boosts/get-boost-activity"
+  >
+    Complete GET /boosts/:id/activity endpoint documentation
+  </Card>
+</CardGroup>
