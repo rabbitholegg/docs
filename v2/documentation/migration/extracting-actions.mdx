@@ -3,54 +3,51 @@ title: "Extracting Data from Action Steps"
 description: "Learn how to extract and link data from action steps to external sources"
 ---
 
-## Extracting Data from Action Steps
-
 In Boost V2, action steps contain the core parameters needed to identify and execute your target action, or to fetch additional data from external sources.
 
 In the example below, we'll show how to extract collection address and tokenId from a Zora NFT mint's action steps. 
 You can use these identifiers to fetch metadata from the NFT contract and enable the mint action in your interface. 
 
-<CodeGroup>
-  <CodeBlock>
-    ```typescript
-    export function extractZoraNFTInfo(boost: Boost) {
-      // ZoraTimedSaleStrategy Contract
-      const TARGET_CONTRACT = '0x777777722d078c97c6ad07d9f36801e653e356ae'
-        
-      // Find the contract address step (field index 2)
-      const contractStep = boost.actionSteps.find(
-        (step) =>
-          step.parameters.fieldIndex === 2 &&
-          step.targetContract.toLowerCase() === TARGET_CONTRACT &&
-          step.signatureName === 'mint'
-      )
 
-      // Find the token ID step (field index 3)
-      const tokenIdStep = boost.actionSteps.find(
-        (step) =>
-          step.parameters.fieldIndex === 3 &&
-          step.targetContract.toLowerCase() === TARGET_CONTRACT &&
-          step.signatureName === 'mint'
-      )
-      
-      if (!tokenIdStep || !contractStep) {
-        throw new Error('Missing required tokenId or contract step')
-      }
+<CodeBlock>
+```typescript
+export function extractZoraNFTInfo(boost: Boost) {
+  // ZoraTimedSaleStrategy Contract
+  const TARGET_CONTRACT = '0x777777722d078c97c6ad07d9f36801e653e356ae'
+    
+  // Find the contract address step (field index 2)
+  const contractStep = boost.actionSteps.find(
+    (step) =>
+      step.parameters.fieldIndex === 2 &&
+      step.targetContract.toLowerCase() === TARGET_CONTRACT &&
+      step.signatureName === 'mint'
+  )
 
-      // Extract contract address from filterData
-      const contractAddress = contractStep.parameters.filterData
+  // Find the token ID step (field index 3)
+  const tokenIdStep = boost.actionSteps.find(
+    (step) =>
+      step.parameters.fieldIndex === 3 &&
+      step.targetContract.toLowerCase() === TARGET_CONTRACT &&
+      step.signatureName === 'mint'
+  )
+  
+  if (!tokenIdStep || !contractStep) {
+    throw new Error('Missing required tokenId or contract step')
+  }
 
-      // Extract tokenId from filterData (convert hex to bigint)
-      const tokenId = BigInt(tokenIdStep.parameters.filterData)
+  // Extract contract address from filterData
+  const contractAddress = contractStep.parameters.filterData
 
-      return {
-        contractAddress,
-        tokenId,
-        chainId: contractStep.chainId,
-      }
-    }
-    ```
-  </CodeBlock>
-</CodeGroup>
+  // Extract tokenId from filterData (convert hex to bigint)
+  const tokenId = BigInt(tokenIdStep.parameters.filterData)
+
+  return {
+    contractAddress,
+    tokenId,
+    chainId: contractStep.chainId,
+  }
+}
+```
+</CodeBlock>
 
 Once you have the data, you can use an external service such as the Zora SDK to fetch NFT metadata and enable the mint functionality in your interface.
