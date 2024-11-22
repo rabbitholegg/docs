@@ -1,0 +1,81 @@
+---
+title: "Claiming Boosts"
+description: "Learn how to implement boost claiming functionality in V2"
+---
+
+## Claiming Boosts
+
+Claiming boosts in V2 follows a two-step process:
+1. Generate a valid signature using the boost API
+2. Execute an on-chain claim transaction using the Boost SDK
+
+### Getting the Signature
+
+First, get the claim signature by passing the boostId and transaction hash to the [/signatures](/v2/boost-api/get-signature) endpoint:
+
+<CodeBlock>
+  ```typescript
+  const { data } = await axios.get('https://api-v2.boost.xyz/signatures', {
+    params: {
+      boostId: `${chainId}:${boost.id}`,
+      txHash,
+    }
+  });
+  ```
+</CodeBlock>
+
+### Claiming the Boost
+
+The signature endpoint returns an array of signatures, one for each available incentive. You can claim these using either `claimIncentive` (called by claimant) or `claimIncentiveFor` (claim on behalf of claimant):
+
+<CodeGroup>
+```typescript claim-incentive.ts {8-11}
+  const { data } = await axios.get('https://api-v2.boost.xyz/signatures', {
+    params: {
+      boostId: `${chainId}:${boost.id}`,
+      txHash,
+    }
+  });
+
+for (const item of data) {
+  const { signature, incentiveId, claimant } = item;
+  await core.claimIncentive(boost.id, incentiveId, claimant, signature);
+}
+```
+```typescript claim-incentive-for.ts {8-17}
+  const { data } = await axios.get('https://api-v2.boost.xyz/signatures', {
+    params: {
+      boostId: `${chainId}:${boost.id}`,
+      txHash,
+    }
+  });
+
+for (const item of data) {
+  const { signature, incentiveId, claimant } = item;
+  await core.claimIncentiveFor(
+    boost.id,
+    incentiveId,
+    "0xREFERRER",
+    signature,
+    claimant
+  );
+}
+```
+</CodeGroup>
+
+<CardGroup cols={2}>
+  <Card 
+    title="Implementation Guide" 
+    icon="book"
+    href="/v2/boost-sdk/examples/claim-example"
+  >
+    View a complete example of implementing boost claims
+  </Card>
+  <Card 
+    title="SDK Reference" 
+    icon="code"
+    href="/v2/boost-sdk/boost-core/claim-incentive"
+  >
+    Learn more about the claim methods and their parameters
+  </Card>
+</CardGroup>
