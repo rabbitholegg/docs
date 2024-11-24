@@ -16,7 +16,7 @@ const params = new URLSearchParams({
 });
 
 const response = await fetch(
-  `https://ponder-staging-9166160e1bc0.herokuapp.com/signatures?${params.toString()}`
+  `https://api-v2.boost.xyz/signatures?${params.toString()}`
 );
 const { signature, claimant, incentiveId } = await response.json();
 ```

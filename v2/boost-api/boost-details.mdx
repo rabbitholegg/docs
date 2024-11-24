@@ -16,7 +16,7 @@ Fetch a specific boost using its ID:
 ```typescript
 const boostId = '8453:12';
 const response = await fetch(
-  `https://ponder-staging-9166160e1bc0.herokuapp.com/boosts/${boostId}`
+  `https://api-v2.boost.xyz/boosts/${boostId}`
 );
 const { boost } = await response.json();
 ```
