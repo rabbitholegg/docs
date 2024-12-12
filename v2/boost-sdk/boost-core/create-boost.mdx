@@ -3,6 +3,143 @@ title: "Create Boosts"
 ---
 
 import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
-import ReadParams from '/snippets/read-params.mdx';
+import WriteParams from '/snippets/write-params.mdx';
+import Config from '/snippets/config.mdx';
 
 <SDKDisclaimer />
+
+The SDK provides a `createBoost` function that simplifies the process of creating a Boost. 
+To create a Boost, you need to provide a budget with available funds, an action you want to incentivize, 
+and create the incentives you want to offer.
+
+{/* TODO: Link out to the budget, action and incentives docs */}
+
+You can also specify a validator, accesslist, and other parameters to further customize your Boost.
+
+{/* TODO: Link out to the validator, accesslist docs */}
+
+In most cases you will want to use the default parameters for the validator, as this allows Boost to handle validation and signature logic for you. 
+If you do want to use a custom validator, you can learn more how it works [here](/temp-link).
+
+## API
+
+### `createBoost`
+
+Creates a new Boost.
+
+<CodeGroup>
+```ts index.ts
+import { core } from './config'
+import { eventActionPayload } from './action'
+import { incentives } from './incentives'
+
+const budget = core.ManagedBudget(
+  "0xBUDGET_ADDRESS"
+)
+
+const boosts = await core.createBoost({
+  maxParticipants: 100n,
+  budget,
+  action: core.EventAction(eventActionPayload),
+  allowList: core.OpenAllowList(), // public allowlist
+  incentives,
+});
+```
+
+<Config />
+
+```ts action.ts
+import { core } from './config'
+import { 
+  ActionStep, 
+  SignatureType, 
+  FilterType, 
+  PrimitiveType, 
+  ActionClaimant,
+} from '@boostxyz/sdk/Actions/EventAction'
+import { selectors as funcSelectors } from '@boostxyz/signatures/functions'
+import { Hex, toHex } from 'viem';
+import { zora } from 'viem/chains';
+
+const targetContract = '0x777777722d078c97c6ad07d9f36801e653e356ae'
+const mintSelector = funcSelectors['mint(address mintTo,uint256 quantity,address collection,uint256 tokenId,address mintReferral,string comment)'] as Hex;
+
+const commonParams = {
+  chainid: zora.id,
+  signature: mintSelector,
+  signatureType: SignatureType.FUNC,
+  targetContract: targetContract,
+} as const
+
+// Target a specific collection on Zora TimedSalesStrategy contract
+const mintActionStep1: ActionStep = {
+  ...commonParams,
+  actionParameter: {
+    filterType: FilterType.EQUAL,
+    fieldType: PrimitiveType.ADDRESS,
+    fieldIndex: 2, // collection
+    filterData: '0x3263023c87502f1676f00df902b1237f93da26a9',
+  },
+};
+
+// Target a specific tokenId on the collection
+const mintActionStep2: ActionStep = {
+  ...commonParams,
+  actionParameter: {
+    filterType: FilterType.EQUAL,
+    fieldType: PrimitiveType.UINT,
+    fieldIndex: 3, // tokenId
+    filterData: toHex(1),
+  },
+}
+
+// Target the mintTo field for the claimant
+const actionClaimant: ActionClaimant = {
+  ...commonParams,
+  fieldIndex: 0, // mintTo
+}
+
+export const eventActionPayload = {
+  actionClaimant,
+  actionSteps: [mintActionStep1, mintActionStep2],
+};
+```
+
+```ts incentives.ts
+import { StrategyType } from '@boostxyz/sdk'
+import { parseEther } from 'viem'
+
+export const incentives = [
+  core.ERC20Incentive({
+    asset: "0xf3B2d0E4f2d8F453DBCc278b10e88b20d7f19f8D",
+    reward: parseEther("0.5"),
+    limit: 100n,
+    strategy: StrategyType.POOL,
+    manager: "0xMANAGER_ADDRESS"
+  }),
+],
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="_boostPayload" type={<a href="https://boost-protocol.vercel.app/interfaces/CreateBoostPayload.html">CreateBoostPayload</a>} required>
+    <Expandable title="properties">
+      <ParamField path="budget" type={<a href="https://boost-protocol.vercel.app/types/Budget.html">Budget</a>} required />
+      <ParamField path="action" type={<a href="https://boost-protocol.vercel.app/types/Action.html">Action</a>} required />
+      <ParamField path="validator" type={<a href="https://boost-protocol.vercel.app/types/Validator.html">Validator</a>} />
+      <ParamField path="allowList" type={<a href="https://boost-protocol.vercel.app/types/AllowList.html">AllowList</a>} />
+      <ParamField path="incentives" type={<a href="https://boost-protocol.vercel.app/types/Incentive.html">Incentive[]</a>} required />
+      <ParamField path="protocolFee" type="bigint" />
+      <ParamField path="maxParticipants" type="bigint" />
+      <ParamField path="owner" type="string" />
+  </Expandable>
+</ParamField>
+
+<WriteParams />
+
+#### Returns
+
+<ResponseField name="boost" type="Promise<Boost>">
+  Returns the created Boost.
+</ResponseField>
