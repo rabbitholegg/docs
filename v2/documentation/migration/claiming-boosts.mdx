@@ -24,6 +24,10 @@ First, get the claim signature by passing the boostId and transaction hash to th
   ```
 </CodeBlock>
 
+<Note>
+  You can also get signatures by providing a wallet address using the `/transactions` endpoint. This is useful when you want to check if a user has completed the boost requirements without knowing the specific transaction hash. See [Fetching Signature by Address](/v2/boost-api/get-signature#fetching-signature-by-address) for details.
+</Note>
+
 ### Claiming the Boost
 
 The signature endpoint returns an array of signatures, one for each available incentive. You can claim these using either `claimIncentive` (called by claimant) or `claimIncentiveFor` (claim on behalf of claimant):
