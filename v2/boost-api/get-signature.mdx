@@ -7,6 +7,10 @@ The Boost API provides two methods to get the required signature for claiming bo
 1. Using a specific transaction hash via the [GET /signatures endpoint](/v2/api-reference/signatures/get-signature)
 2. Checking recent transactions for an address via the [GET /transactions endpoint](/v2/api-reference/signatures/get-transactions)
 
+<Note>
+  In order to produce a valid signature, the transaction must meet the boost's requirements and the transaction must occur after the boost was created.
+</Note>
+
 ## Fetching Signature by Transaction Hash
 
 If you know the specific transaction that completed the boost's required action, you can fetch the signature directly:
@@ -27,6 +31,19 @@ const { signature, claimant, incentiveId } = await response.json();
 - `txHash`: The transaction hash that completed the boost's required action
 - `boostId`: The ID of the boost (format: `chainId:boostNumber`)
 - `claimData`: (Optional) Additional data required for variable incentive types
+
+### Response
+```typescript
+{
+    "signature": "0x...",   // Signature for verification
+    "claimant": "0x...",    // Address eligible to claim
+    "incentiveId": 0        // ID of the claimable incentive
+}
+```
+
+<Tip>
+  For complete API details including all available parameters and response fields, see the [API Reference](/v2/api-reference/boosts/validate-&-sign-data-for-a-claim).
+</Tip>
 
 ## Fetching Signature by Address
 
@@ -49,22 +66,15 @@ This endpoint will:
 2. Validate if any transaction meets the boost's requirements
 3. Return the signature response if a qualifying transaction is found
 
-<Note>
+<Warning>
   The transactions endpoint is rate-limited to 1 request every 100ms. Please implement appropriate retry logic in your application.
-</Note>
+</Warning>
 
 ### Required Parameters for /transactions
 - `address`: The wallet address to check (format: `0x...`)
 - `boostId`: The ID of the boost (format: `chainId:boostNumber`)
 
-<Note>
-  Both endpoints validate that transactions meet the boost's requirements before returning a signature. The transactions endpoint only considers transactions that occurred after the boost was created.
-</Note>
-
-## Response Structure
-
-Both endpoints return the same response structure when a valid transaction is found:
-
+### Response
 ```typescript
 {
     "signature": "0x...",   // Signature for verification
@@ -72,10 +82,6 @@ Both endpoints return the same response structure when a valid transaction is fo
     "incentiveId": 0        // ID of the claimable incentive
 }
 ```
-
-<Tip>
-  For complete API details including all available parameters and response fields, see the [API Reference](/v2/api-reference/boosts/validate-&-sign-data-for-a-claim).
-</Tip>
 
 ## Using the Signature
 
