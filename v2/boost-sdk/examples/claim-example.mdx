@@ -24,6 +24,11 @@ otherwise you will need to build the payload yourself.
     In order to claim an incentive from a boost using the default validator, you will need to generate a valid signature payload.
     You can do this by calling the boost api `/signatures` endpoint and passing in the boostID and txHash.
 
+    <Note>
+      You can also generate a signature by providing a wallet address instead of a transaction hash using the `/transactions` endpoint. 
+      See [Fetching Signature by Address](/v2/boost-api/get-signature#fetching-signature-by-address) for details.
+    </Note>
+
     This example assumes you have already instantiated a `BoostCore` client and have a valid transaction hash for the action that the claimant completed.
 
     <Card title="Claim Signature API" icon="signature" href="/v2/api-reference/boosts/validate-&-sign-data-for-a-claim">
