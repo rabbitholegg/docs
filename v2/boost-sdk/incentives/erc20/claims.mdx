@@ -125,27 +125,6 @@ await erc20Incentive.isClaimable(address);
  Returns true if address can claim incentive.
 </ResponseField>
 
-
-### `limit`
-
-The total number of times this incentive can be claimed, or max number of entries for raffles.
-
-<CodeGroup>
-```ts index.ts
-await erc20Incentive.limit();
-```
-</CodeGroup>
-
-#### Parameters
-
-<ReadParams />
-
-#### Returns
-
-<ResponseField name="Claim limit" type="Promise<bigint>">
-  Returns the maximum number of claims
-</ResponseField>
-
 ### `getRemainingClaimPotential`
 
 Retrieves the number of remaining possible claims for an incentive by comparing total claims against the limit. 
