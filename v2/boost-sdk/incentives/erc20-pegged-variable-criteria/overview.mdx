@@ -1,12 +1,12 @@
 ---
 title: "Overview"
-description: Learn about how to interact with an ERC20Incentive using the SDK
+description: Learn about how to interact with an ERC20PeggedVariableCriteriaIncentive using the SDK
 ---
 
 import Config from '/snippets/config.mdx';
 import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
 
-The ERC20 Incentive is an essential protocol incentive that allows for the distribution of native and ERC-20 assets, supporting raffle functionality as well as basic fixed rewards. On Boost creation, a predetermined amount of the specified asset is transferred into this incentive from the associated budget.
+The ERC20 Pegged Variable Criteria Incentive is a specialized protocol incentive that allows for the distribution of ERC-20 assets with rewards pegged to the value of another token, where the reward amount is determined by transaction criteria. This enables creating dynamic rewards that maintain a specific value relative to a pegged asset, with the actual reward amount varying based on transaction data.
 
 <SDKDisclaimer />
 
@@ -14,21 +14,21 @@ The ERC20 Incentive is an essential protocol incentive that allows for the distr
   <Card
     title="Smart Contract"
     icon="file-contract"
-    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/evm/contracts/incentives/ERC20Incentive.sol"
+    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/evm/contracts/incentives/ERC20PeggedVariableCriteriaIncentive.sol"
   >
       Read the smart contracts
   </Card>
   <Card
     title="Typedoc"
     icon="file-lines"
-    href="https://sdk.boost.xyz/classes/ERC20Incentive.html"
+    href="https://sdk.boost.xyz/classes/ERC20PeggedVariableCriteriaIncentive.html"
   >
     See technical documentation
   </Card>
   <Card
     title="SDK Implementation"
     icon="file-code"
-    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/sdk/src/Incentives/ERC20Incentive.ts"
+    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/sdk/src/Incentives/ERC20PeggedVariableCriteriaIncentive.ts"
   >
     See the source
   </Card>
@@ -36,22 +36,30 @@ The ERC20 Incentive is an essential protocol incentive that allows for the distr
 
 ## Key Features
 
-- Supports native assets as well as any ERC20
-- Rewards fixed at time of creation
-- Raffle functionality, with full incentive balance going to random claimant
+- Rewards pegged to the value of another token
+- Dynamic reward amounts based on transaction criteria
+- Variable reward calculation using event or function data
+- Maximum reward cap per claim
+- Total distribution limit in reward asset tokens
+- Managed access for incentive control and clawbacks
 
 <Info>
   Unlike budgets, allowlists, and validators, incentives cannot be re-used between multiple Boosts.
 </Info>
 
-### Create a new ERC20Incentive
+<Info>
+  To peg rewards to the chain's native token (e.g., ETH), use `zeroAddress` (0x0000000000000000000000000000000000000000) as the peg parameter. This tells the protocol to use the native token's price for calculations.
+</Info>
+
+### Create a new ERC20PeggedVariableCriteriaIncentive
 
 <CodeGroup>
 
   ```ts index.ts
   import { BoostCore } from '@boostxyz/sdk/BoostCore'
-  import { StrategyType } from '@boostxyz/sdk/claiming'
   import { config } from "./config";
+  import { parseUnits, zeroAddress } from 'viem'
+  import { SignatureType } from '@boostxyz/sdk/claiming'
 
   const core = new BoostCore({ config });
 
@@ -61,12 +69,18 @@ The ERC20 Incentive is an essential protocol incentive that allows for the distr
     action,
     allowList,
     incentives: [
-      core.ERC20Incentive({
-        asset: '0xERC20' || zeroAddress, // use zero address for native assets
-        reward: parseEther("1"), // how much to distribute on each claim, with the RAFFLE stratgy, the total reward is `parseEther("1") * limit`
-        limit: 10n, // how many times can this incentive be claimed
-        strategy: StrategyType.POOL || StrategyType.RAFFLE,
-        manager: budget.assertValidAddress(),
+      core.ERC20PeggedVariableCriteriaIncentive({
+        asset: '0xRewardToken', // token that will be distributed
+        peg: '0xPeggedToken' || zeroAddress, // token to peg the reward value to (e.g., USDC or ETH)
+        maxReward: parseUnits("100", 6), // maximum reward per claim in pegged token value
+        limit: parseUnits("1000", 18), // maximum total amount of asset token (in wei) that can be distributed
+        manager: "0xManager", // address with administrative control over the incentive
+        criteria: {
+          criteriaType: SignatureType.EVENT, // or SignatureType.FUNC
+          signature: "0x...", // event or function signature to extract value from
+          fieldIndex: 2, // which parameter to extract the value from
+          targetContract: "0x..." // contract address to watch for the event/function
+        }
       }),
     ],
   });
@@ -75,21 +89,25 @@ The ERC20 Incentive is an essential protocol incentive that allows for the distr
   <Config />
 </CodeGroup>
 
-### Get an existing ERC20Incentive
+<Info>
+  The manager parameter specifies an address that has administrative control over the incentive. This address can perform management operations like triggering clawbacks of undistributed rewards if needed.
+</Info>
+
+### Get an existing ERC20PeggedVariableCriteriaIncentive
 
 <CodeGroup>
 ```ts index.ts
 // if an incentive address is known, directly construct it
-const incentive = core.ERC20Incentive("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
+const incentive = core.ERC20PeggedVariableCriteriaIncentive("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
 
 // or if you want a budget from a specific chain
-const incentiveOnBase = core.ERC20Incentive(
+const incentiveOnBase = core.ERC20PeggedVariableCriteriaIncentive(
   "0xc55F719709bDad022B320E76f9DfF7e6F5680767",
   { chainId: 8453 }
 )
 
 // or accessible off of a a pre-exiting Boost
 const boost = await core.getBoost(0n)
-const incentive = boost.incentives.find(incentive => incentive instanceof ERC20Incentive)
+const incentive = boost.incentives.find((incentive) => incentive instanceof ERC20PeggedVariableCriteriaIncentive)
 ```
 </CodeGroup>
