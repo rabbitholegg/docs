@@ -1,6 +1,6 @@
 ---
 title: "Claims"
-description: Retrieve ERC20 Incentive claim information and draw raffle
+description: Retrieve ERC20PeggedIncentive claim information
 ---
 
 import ReadParams from '/snippets/read-params.mdx';
@@ -9,7 +9,7 @@ import WriteParams from '/snippets/write-params.mdx';
 
 <SDKDisclaimer />
 
-The ERC20 Incentive is designed to store and distribute assets that can be claimed by users. The Boost SDK provides several methods to retrieve information about claim state, as well as drawing raffles.
+The ERC20PeggedVariableCriteriaIncentive is designed to store and distribute assets that can be claimed by users. The Boost SDK provides several methods to retrieve information about claim state.
 
 ## API
 
@@ -19,7 +19,7 @@ Retrieves the total number of completed claims.
 
 <CodeGroup>
 ```ts index.ts
-await erc20Incentive.claims();
+await erc20PeggedVariableCriteriaIncentive.claims();
 ```
 </CodeGroup>
 
@@ -39,7 +39,7 @@ Checks if an address has previously claimed this incentive.
 
 <CodeGroup>
 ```ts index.ts
-await erc20Incentive.claimed(address);
+await erc20PeggedVariableCriteriaIncentive.claimed(address);
 ```
 </CodeGroup>
 
@@ -57,57 +57,13 @@ await erc20Incentive.claimed(address);
  Returns true if address has claimed the incentive.
 </ResponseField>
 
-### `drawRaffle`
-
-When using an ERC20 Incentive initialized with a `RAFFLE` strategy. Pick a random entry from a list of all claims and transfer the reward to them. Only callable by incentive. managers.
-
-<CodeGroup>
-```ts index.ts
-await erc20Incentive.drawRaffle();
-```
-</CodeGroup>
-
-#### Parameters
-
-<WriteParams />
-
-#### Returns
-
-<ResponseField name="Success" type="Promise<void>">
-  Promise that successfully resolves if a winner has been paid out
-</ResponseField>
-
-### `entries`
-
-By index, retrieve the address in the list of all raffle entries.
-
-<CodeGroup>
-```ts index.ts
-await erc20Incentive.entries(0n);
-```
-</CodeGroup>
-
-#### Parameters
-
-<ParamField path="index" type="bigint">
-  The raffle entry address to retrieve by index
-</ParamField>
-
-<ReadParams />
-
-#### Returns
-
-<ResponseField name="Raffle entry" type="Promise<Address>">
-  Returns the entry's address
-</ResponseField>
-
 ### `isClaimable`
 
 Check if an incentive is claimable by an address. Will return false if the recipient has already claimed, or total incentive claims has met the configured limit.
 
 <CodeGroup>
 ```ts index.ts
-await erc20Incentive.isClaimable(address);
+await erc20PeggedVariableCriteriaIncentive.isClaimable(address);
 ```
 </CodeGroup>
 
@@ -125,6 +81,27 @@ await erc20Incentive.isClaimable(address);
  Returns true if address can claim incentive.
 </ResponseField>
 
+
+### `limit`
+
+The total number of tokens (in wei) that can be claimed from this incentive.
+
+<CodeGroup>
+```ts index.ts
+await erc20PeggedVariableCriteriaIncentive.limit();
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Claim limit" type="Promise<bigint>">
+  Returns the maximum number of tokens that can be claimed from this incentive.
+</ResponseField>
+
 ### `getRemainingClaimPotential`
 
 Retrieves the number of remaining possible claims for an incentive by comparing total claims against the limit. 
@@ -132,7 +109,7 @@ Note that this does not check if a specific user is eligible to claim.
 
 <CodeGroup>
 ```ts index.ts
-await erc20Incentive.getRemainingClaimPotential();
+await erc20PeggedVariableCriteriaIncentive.getRemainingClaimPotential();
 ```
 </CodeGroup>
 
@@ -152,7 +129,7 @@ Note that this does not check if a specific user is eligible to claim.
 
 <CodeGroup>
 ```ts index.ts
-await erc20Incentive.canBeClaimed();
+await erc20PeggedVariableCriteriaIncentive.canBeClaimed();
 ```
 </CodeGroup>
 

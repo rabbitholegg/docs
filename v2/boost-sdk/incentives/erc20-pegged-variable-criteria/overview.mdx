@@ -1,0 +1,165 @@
+---
+title: "Overview"
+description: Learn about how to interact with an ERC20PeggedVariableCriteriaIncentive using the SDK
+---
+
+import Config from '/snippets/config.mdx';
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+
+The ERC20 Pegged Variable Criteria Incentive is a specialized protocol incentive that allows for the distribution of ERC-20 assets with rewards pegged to the value of another token, where the reward amount is determined by transaction criteria. This enables creating dynamic rewards that maintain a specific value relative to a pegged asset, with the actual reward amount varying based on transaction data.
+
+<SDKDisclaimer />
+
+<CardGroup cols={3}>
+  <Card
+    title="Smart Contract"
+    icon="file-contract"
+    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/evm/contracts/incentives/ERC20PeggedVariableCriteriaIncentive.sol"
+  >
+      Read the smart contracts
+  </Card>
+  <Card
+    title="Typedoc"
+    icon="file-lines"
+    href="https://sdk.boost.xyz/classes/ERC20PeggedVariableCriteriaIncentive.html"
+  >
+    See technical documentation
+  </Card>
+  <Card
+    title="SDK Implementation"
+    icon="file-code"
+    href="https://github.com/boostxyz/boost-protocol/blob/main/packages/sdk/src/Incentives/ERC20PeggedVariableCriteriaIncentive.ts"
+  >
+    See the source
+  </Card>
+</CardGroup>
+
+## Key Features
+
+- Rewards pegged to the value of another token
+- Dynamic reward amounts based on transaction criteria
+- Variable reward calculation using event or function data
+- Maximum reward cap per claim
+- Total distribution limit in reward asset tokens
+- Managed access for incentive control and clawbacks
+
+<Info>
+  Unlike budgets, allowlists, and validators, incentives cannot be re-used between multiple Boosts.
+</Info>
+
+<Info>
+  To peg rewards to the chain's native token (e.g., ETH), use `zeroAddress` (0x0000000000000000000000000000000000000000) as the peg parameter. This tells the protocol to use the native token's price for calculations.
+</Info>
+
+## Setting Up Incentive Criteria
+
+The incentive criteria determines how the reward amount is extracted from transaction data. You can configure it to read values from either contract events or function calls.
+
+### Criteria Configuration
+
+The criteria object requires four fields:
+- `criteriaType`: Either `SignatureType.EVENT` for event logs or `SignatureType.FUNC` for function calls
+- `signature`: The event or function signature to match against
+- `fieldIndex`: Which parameter in the event/function to extract the value from (0-based index)
+- `targetContract`: The contract address to watch for the event/function
+
+<Info>
+  You can use the `@boostxyz/signatures` package to get pre-defined event signatures instead of using raw hex values. For example: `import { selectors } from '@boostxyz/signatures/events'`
+</Info>
+
+### Example: Event-based Criteria
+
+Here's an example setting up criteria to extract an amount from a Transfer event:
+
+```ts
+import { selectors } from '@boostxyz/signatures/events'
+import { SignatureType } from '@boostxyz/sdk/claiming'
+
+const criteria = {
+  criteriaType: SignatureType.EVENT,
+  // Use pre-defined signature for Transfer(address,address,uint256)
+  signature: selectors['Transfer(address indexed,address indexed,uint256)'],
+  fieldIndex: 2, // Extract amount from the third parameter
+  targetContract: '0xTokenContract' // Contract to watch for events
+}
+```
+
+### Example: Function-based Criteria
+
+Here's an example setting up criteria to extract an amount from a mint function:
+
+```ts
+import { selectors } from '@boostxyz/signatures/functions'
+import { SignatureType } from '@boostxyz/sdk/claiming'
+
+const criteria = {
+  criteriaType: SignatureType.FUNC,
+  // Use pre-defined signature for mint(uint256)
+  signature: selectors['mint(uint256)'],
+  fieldIndex: 0, // Extract amount from the first parameter
+  targetContract: '0xNFTContract' // Contract to watch for function calls
+}
+```
+
+The extracted value will be used to calculate the reward amount, which is then capped by the `maxReward` parameter if necessary.
+
+### Create a new ERC20PeggedVariableCriteriaIncentive
+
+<CodeGroup>
+
+  ```ts index.ts
+  import { BoostCore } from '@boostxyz/sdk/BoostCore'
+  import { config } from "./config";
+  import { parseUnits, zeroAddress } from 'viem'
+  import { SignatureType } from '@boostxyz/sdk/claiming'
+
+  const core = new BoostCore({ config });
+
+  await core.createBoost({
+    maxParticipants: 10n,
+    budget,
+    action,
+    allowList,
+    incentives: [
+      core.ERC20PeggedVariableCriteriaIncentive({
+        asset: '0xRewardToken', // token that will be distributed
+        peg: '0xPeggedToken' || zeroAddress, // token to peg the reward value to (e.g., USDC or ETH)
+        maxReward: parseUnits("100", 6), // maximum reward per claim in pegged token value
+        limit: parseUnits("1000", 18), // maximum total amount of asset token (in wei) that can be distributed
+        manager: "0xManager", // address with administrative control over the incentive
+        criteria: {
+          criteriaType: SignatureType.EVENT, // or SignatureType.FUNC
+          signature: "0x...", // event or function signature to extract value from
+          fieldIndex: 2, // which parameter to extract the value from
+          targetContract: "0x..." // contract address to watch for the event/function
+        }
+      }),
+    ],
+  });
+  ```
+
+  <Config />
+</CodeGroup>
+
+<Info>
+  The manager parameter specifies an address that has administrative control over the incentive. This address can perform management operations like triggering clawbacks of undistributed rewards if needed.
+</Info>
+
+### Get an existing ERC20PeggedVariableCriteriaIncentive
+
+<CodeGroup>
+```ts index.ts
+// if an incentive address is known, directly construct it
+const incentive = core.ERC20PeggedVariableCriteriaIncentive("0xc55F719709bDad022B320E76f9DfF7e6F5680767")
+
+// or if you want a budget from a specific chain
+const incentiveOnBase = core.ERC20PeggedVariableCriteriaIncentive(
+  "0xc55F719709bDad022B320E76f9DfF7e6F5680767",
+  { chainId: 8453 }
+)
+
+// or accessible off of a a pre-exiting Boost
+const boost = await core.getBoost(0n)
+const incentive = boost.incentives.find((incentive) => incentive instanceof ERC20PeggedVariableCriteriaIncentive)
+```
+</CodeGroup>
