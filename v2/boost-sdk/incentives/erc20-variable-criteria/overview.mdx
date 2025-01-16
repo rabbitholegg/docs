@@ -103,6 +103,58 @@ const incentive = boost.incentives.find(incentive => incentive instanceof ERC20V
 ```
 </CodeGroup>
 
+## Setting Up Incentive Criteria
+
+The incentive criteria determines how the reward amount is extracted from transaction data. You can configure it to read values from either contract events or function calls.
+
+### Criteria Configuration
+
+The criteria object requires four fields:
+- `criteriaType`: Either `SignatureType.EVENT` for event logs or `SignatureType.FUNC` for function calls
+- `signature`: The event or function signature to match against
+- `fieldIndex`: Which parameter in the event/function to extract the value from (0-based index)
+- `targetContract`: The contract address to watch for the event/function
+
+<Info>
+  You can use the `@boostxyz/signatures` package to get pre-defined event signatures instead of using raw hex values. For example: `import { selectors } from '@boostxyz/signatures/events'`
+</Info>
+
+### Example: Event-based Criteria
+
+Here's an example setting up criteria to extract an amount from a Transfer event:
+
+```ts
+import { selectors } from '@boostxyz/signatures/events'
+import { SignatureType } from '@boostxyz/sdk'
+
+const criteria = {
+  criteriaType: SignatureType.EVENT,
+  // Use pre-defined signature for Transfer(address,address,uint256)
+  signature: selectors['Transfer(address indexed,address indexed,uint256)'],
+  fieldIndex: 2, // Extract amount from the third parameter
+  targetContract: '0xTokenContract' // Contract to watch for events
+}
+```
+
+### Example: Function-based Criteria
+
+Here's an example setting up criteria to extract an amount from a mint function:
+
+```ts
+import { selectors } from '@boostxyz/signatures/functions'
+import { SignatureType } from '@boostxyz/sdk/claiming'
+
+const criteria = {
+  criteriaType: SignatureType.FUNC,
+  // Use pre-defined signature for mint(uint256)
+  signature: selectors['mint(uint256)'],
+  fieldIndex: 0, // Extract amount from the first parameter (quantity)
+  targetContract: '0xNFTContract' // Contract to watch for function calls
+}
+```
+
+The extracted value will be used to calculate the reward amount, which is then capped by the `maxReward` parameter if necessary.
+
 ### Sign a claim amount
 
 ```ts
