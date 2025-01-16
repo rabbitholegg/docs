@@ -1,0 +1,142 @@
+---
+title: "Claims"
+description: Retrieve ERC20PeggedIncentive claim information
+---
+
+import ReadParams from '/snippets/read-params.mdx';
+import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
+import WriteParams from '/snippets/write-params.mdx';
+
+<SDKDisclaimer />
+
+The ERC20PeggedVariableCriteriaIncentive is designed to store and distribute assets that can be claimed by users. The Boost SDK provides several methods to retrieve information about claim state.
+
+## API
+
+### `claims`
+
+Retrieves the total number of completed claims.
+
+<CodeGroup>
+```ts index.ts
+await erc20PeggedVariableCriteriaIncentive.claims();
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Total claims" type="Promise<bigint>">
+  Returns the total number of claims.
+</ResponseField>
+
+### `claimed`
+
+Checks if an address has previously claimed this incentive.
+
+<CodeGroup>
+```ts index.ts
+await erc20PeggedVariableCriteriaIncentive.claimed(address);
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="address" type="Address">
+  The address to check claimed status.
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Has claimed" type="Promise<boolean>">
+ Returns true if address has claimed the incentive.
+</ResponseField>
+
+### `isClaimable`
+
+Check if an incentive is claimable by an address. Will return false if the recipient has already claimed, or total incentive claims has met the configured limit.
+
+<CodeGroup>
+```ts index.ts
+await erc20PeggedVariableCriteriaIncentive.isClaimable(address);
+```
+</CodeGroup>
+
+#### Parameters
+
+<ParamField path="address" type="Address">
+  The address to check eligibility for.
+</ParamField>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Eligibility" type="Promise<boolean>">
+ Returns true if address can claim incentive.
+</ResponseField>
+
+
+### `limit`
+
+The total number of tokens (in wei) that can be claimed from this incentive.
+
+<CodeGroup>
+```ts index.ts
+await erc20PeggedVariableCriteriaIncentive.limit();
+```
+</CodeGroup>
+
+#### Parameters
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Claim limit" type="Promise<bigint>">
+  Returns the maximum number of tokens that can be claimed from this incentive.
+</ResponseField>
+
+### `getRemainingClaimPotential`
+
+Retrieves the number of remaining possible claims for an incentive by comparing total claims against the limit. 
+Note that this does not check if a specific user is eligible to claim.
+
+<CodeGroup>
+```ts index.ts
+await erc20PeggedVariableCriteriaIncentive.getRemainingClaimPotential();
+```
+</CodeGroup>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField name="Remaining claims" type="Promise<bigint>">
+  Returns the number of remaining possible claims (limit minus current claims)
+</ResponseField>
+
+### `canBeClaimed`
+
+Checks if any claims remain for an incentive by comparing total claims against the limit. 
+Returns a boolean indicating if claims are still possible. 
+Note that this does not check if a specific user is eligible to claim.
+
+<CodeGroup>
+```ts index.ts
+await erc20PeggedVariableCriteriaIncentive.canBeClaimed();
+```
+</CodeGroup>
+
+<ReadParams />
+
+#### Returns
+
+<ResponseField type="Promise<boolean>">
+  Returns `true` if there are remaining claims available, `false` otherwise
+</ResponseField>
