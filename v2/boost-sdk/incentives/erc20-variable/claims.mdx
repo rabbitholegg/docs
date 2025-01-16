@@ -6,7 +6,6 @@ description: Retrieve ERC20 Incentive claim information and draw raffle
 import ReadParams from '/snippets/read-params.mdx';
 import SDKDisclaimer from '/snippets/sdk-disclaimer.mdx';
 import WriteParams from '/snippets/write-params.mdx';
-import CommonIncentiveMethods from '/snippets/common-incentive-methods.mdx';
 
 <SDKDisclaimer />
 
@@ -135,6 +134,6 @@ await erc20VariableIncentive.canBeClaimed();
 
 #### Returns
 
-<ResponseField name="Has remaining balance" type="Promise<boolean>">
+<ResponseField type="Promise<boolean>">
   Returns `true` if the incentive has a remaining balance, `false` otherwise
 </ResponseField>
