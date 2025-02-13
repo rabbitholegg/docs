@@ -1,0 +1,91 @@
+---
+title: "Quick Start"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+Integrating **Reward Kit** into your application is designed to be straightforward, and should be familiar to anyone developing React applications.
+
+
+```ts
+'use client'
+import { RewardKitProvider, RewardKitButton, useRewardKit } from "@boostxyz/reward-kit-react";
+
+export function Providers() {
+  return (
+    // All props except children are optional, and configurable at runtime via the `useRewardKit` hook.
+    <RewardKitProvider
+      // Is the modal open by default
+      defaultOpen={false}
+      // Supply a custom theme, or use the default styling
+      theme={{
+         accent: "#9a75ff",
+         primary: "#25292e",
+         "primary-foreground": "#fff",
+         secondary: "#989fa9",
+         card: "#f6f7f9",
+         dialog: "#fff",
+         "dialog-border": "#e5e7eb",
+         "dialog-overlay": "rgba(0, 0, 0, 0.2)",
+         skeleton: "#f7f6f8",
+         dim: "#f7f6f8",
+      }}
+      // Optionally scope displayed Boosts to this deployerAddress
+      deployerAddress={'0x0...'}
+      // Predefine a Boost ID to display UI for
+      boostId={'11155111:0x378632819F39C74c4F56B1429E760739c5fb51b7:33'}
+    >
+      <MyApplication />
+    </RewardKitProvider>
+  );
+}
+
+// The rest of your application logic
+function MyApplication() {
+  // Access the current RewardKit context
+  const rewardKit = useRewardKit()
+
+  // Reads currently applied theme
+  rewardKit.theme
+  // Is the modal currently open
+  rewardKit.isModalOpen
+  // The preconfigured deployer address, if any, to filter displayed rewards
+  rewardKit.deployerAddress
+  // The preconfigured Boost ID, if any
+  rewardKit.boostId
+  // Call this to update RewardKit theme variables
+  rewardKit.changeTheme({ primary: '#fff', ...})
+  // Open the modal with the current theme and configuration
+  rewardKit.openModal()
+  // Close the modal
+  rewardKit.closeModal()
+  // Toggle the modal's visibility
+  rewardKit.toggleModal()
+  // Reconfigure RewardKit to update either the "boostId" and/or "deployerAddress'
+  rewardKit.configure({ boostId: '', deployerAddress: '0x' })
+
+  return (
+  <>
+    // Basic usage, will render a button that, when clicked,
+    // opens the modal as configured on the provider
+    <RewardKitButton />
+
+    // With configuration, will call rewardKit.configure before opening the modal
+    <RewardKitButton
+      boostId="11155111:0x378632819F39C74c4F56B1429E760739c5fb51b7:33"
+      deployerAddress="0x000...."
+      className="custom-button"
+    >
+      <>Custom Text</>
+    </RewardKitButton>
+
+    // If using shadcn buttons, the RewardKitButton here inherits all of the classes automatically
+    <Button variant="secondary" size="sm" asChild>
+      <RewardKitButton />
+    </Button>
+  </>
+  )
+}
+```
