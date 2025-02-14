@@ -109,7 +109,7 @@ const allClaimData = boost.incentives.map(incentive => {
 // Sign a valid transaction with the variable reward amount
 const { data } = await axios.get('/signatures', {
   params: {
-    boostId: `${chainId}:${boost.id}`,
+    boostId: `${chainId}:${boostCoreAddress}:${boost.id}`,
     txHash,
     claimData: allClaimData.join(',')
   }

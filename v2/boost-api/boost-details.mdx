@@ -8,13 +8,13 @@ The Boost API allows you to fetch a single boost through the [GET /boosts/:id en
 ## Basic Usage
 
 <Note>
-  The `id` parameter is a combination of the chainId and boostId (e.g., `8453:12`).
+  The `id` parameter is a combination of the chainId, the BoostCore address, and the boostId (e.g., `8453:0x378632819f39c74c4f56b1429e760739c5fb51b7:12`).
 </Note>
 
 Fetch a specific boost using its ID:
 
 ```typescript
-const boostId = '8453:12';
+const boostId = '8453:0x378632819f39c74c4f56b1429e760739c5fb51b7:12';
 const response = await fetch(
   `https://api-v2.boost.xyz/boosts/${boostId}`
 );

@@ -199,7 +199,7 @@ Once a claimant has successfully completed the action, you can claim the incenti
 In order to successfully claim the reward for a claimant, you will need to generate the signature payload.
 To generate the signature payload you will need to call the Boost `/signatures` api endpoint with the following params:
 
-- `boostId`: The id of the boost where the action was completed. The format is `chainId:boostId` (e.g. `8453:69`)
+- `boostId`: The id of the boost where the action was completed. The format is `chainId:boostId` (e.g. `8453:0x378632819f39c74c4f56b1429e760739c5fb51b7:12`)
 - `txHash`: The hash of the transaction that completed the action.
 
 The signatures api will return an array of signatures, one for each available incentive on the boost.
@@ -213,7 +213,7 @@ The signatures api will return an array of signatures, one for each available in
 
   const { data } = await axios.get(`${BOOST_API_URL}/signatures`, {
     params: {
-      boostId: `${chainId}:${boost.id}`,
+      boostId: `${chainId}:${boostCoreAddress}:${boost.id}`,
       txHash,
     }
   });
