@@ -245,7 +245,7 @@ const rewardAmount =
 Once the reward amount is determined, we can generate the signature payload to allow us to claim the reward for the claimant.
 To generate the signature payload you will need to call the Boost `/signatures` api endpoint with the following params:
 
-- `boostId`: The id of the boost where the action was completed. The format is `chainId:boostId` (e.g. `8453:69`)
+- `boostId`: The id of the boost where the action was completed. The format is `chainId:boostId` (e.g. `8453:0x378632819f39c74c4f56b1429e760739c5fb51b7:12`)
 - `txHash`: The hash of the transaction that completed the action.
 - `claimData`: This is only nessecary for variableIncentives. For this parameter you would pass in the `rewardAmount` which is used to determine the amount of the incentive to claim.
 If you have more than one variable incentive you can pass in a comma-separated list of claimData values.
@@ -261,7 +261,7 @@ The signatures api will return an array of signatures, one for each available in
 
   const { data } = await axios.get(`${BOOST_API_URL}/signatures`, {
     params: {
-      boostId: `${chainId}:${boost.id}`,
+      boostId: `${chainId}:${boostCoreAddress}:${boost.id}`,
       txHash,
       claimData: rewardAmount.toString(),
     }
