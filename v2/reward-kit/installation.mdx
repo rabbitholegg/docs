@@ -39,6 +39,18 @@ Reward Kit is designed to work with React 18 and 19, and has no other dependenci
 "react-dom": ">=18.0.0"
 ```
 
+### CSP Configuration for Boost API
+
+If you have a strict CSP policy, you may have to explicitly allow `https://api-v2.boost.xyz`, and if you're targeting testnets; `https://api-v2-staging.boost.xyz`
+
+For example, you can configure your headers as follows:
+
+```
+Content-Security-Policy: connect-src https://api-v2.boost.xyz https://api-v2-staging.boost.xyz/;
+// or
+Content-Security-Policy: default-src https://api-v2.boost.xyz https://api-v2-staging.boost.xyz/;
+```
+
 ### Runtime Requirements
 
 Reward Kit is optimized for modern browsers. It is compatible with the following browser configurations:

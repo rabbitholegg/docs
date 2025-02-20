@@ -11,31 +11,48 @@ Integrating **Reward Kit** into your application is designed to be straightforwa
 
 ```ts
 'use client'
-import { RewardKitProvider, RewardKitButton, useRewardKit } from "@boostxyz/reward-kit-react";
+import { RewardKitProvider, RewardKitButton, RewardKitConfig, useRewardKit } from "@boostxyz/reward-kit-react";
 
-export function Providers() {
+// Optional configuration used for filtering shown Boosts at an appplication-wide level
+const config: RewardKitConfig = {
+  // Enable testnets / staging API
+  testnetsEnabled?: boolean,
+  // The preconfigured creator address, if any, to filter displayed rewards
+  creatorAddress?: Address,
+  // The preconfigured Boost ID, if any
+  boostId?: string,
+  // Only show offers from Boosts funded by this budget account
+  budgetAccount?: Address,
+  // Only show offers with actions that target a contract on this chain ID. You must specify this if also specifying `targetContract`
+  chainId?: number,
+  // Only show offers with actions that target this contract address. If specifying, you must also specify chainId
+  targetContract?: Address,
+  // Only show offers with actions targeting tokens, in the format `chainId:address`, or `chainId:address:tokenId`
+  tokens?: (`${number}:${Address}` | `${number}:${Address}:${number}`)[]
+}
+
+function App() {
   return (
-    // All props except children are optional, and configurable at runtime via the `useRewardKit` hook.
     <RewardKitProvider
+      // Specifying optional application-wide config
+      config={config}
       // Is the modal open by default
       defaultOpen={false}
       // Supply a custom theme, or use the default styling
       theme={{
-         accent: "#9a75ff",
-         primary: "#25292e",
-         "primary-foreground": "#fff",
-         secondary: "#989fa9",
-         card: "#f6f7f9",
-         dialog: "#fff",
-         "dialog-border": "#e5e7eb",
-         "dialog-overlay": "rgba(0, 0, 0, 0.2)",
-         skeleton: "#f7f6f8",
-         dim: "#f7f6f8",
+        accent: "#9a75ff",
+        primary: "#25292e",
+        "primary-foreground": "#fff",
+        secondary: "#989fa9",
+        card: "#f6f7f9",
+        dialog: "#fff",
+        "dialog-border": "#e5e7eb",
+        "dialog-overlay": "rgba(0, 0, 0, 0.2)",
+        skeleton: "#f7f6f8",
+        dim: "#f7f6f8",
+        "button-primary": "#25292e",
+        "button-secondary": "#f6f7f9",
       }}
-      // Optionally scope displayed Boosts to this deployerAddress
-      deployerAddress={'0x0...'}
-      // Predefine a Boost ID to display UI for
-      boostId={'11155111:0x378632819F39C74c4F56B1429E760739c5fb51b7:33'}
     >
       <MyApplication />
     </RewardKitProvider>
@@ -47,14 +64,12 @@ function MyApplication() {
   // Access the current RewardKit context
   const rewardKit = useRewardKit()
 
-  // Reads currently applied theme
+  // reads currently applied colors scheme
   rewardKit.theme
-  // Is the modal currently open
+  // Is the modal currently open.
   rewardKit.isModalOpen
-  // The preconfigured deployer address, if any, to filter displayed rewards
-  rewardKit.deployerAddress
-  // The preconfigured Boost ID, if any
-  rewardKit.boostId
+  // See RewardKitConfig interface, contains several optional parameters supplied to the API when requesting Boosts to display
+  rewardKit.config
   // Call this to update RewardKit theme variables
   rewardKit.changeTheme({ primary: '#fff', ...})
   // Open the modal with the current theme and configuration
@@ -63,8 +78,8 @@ function MyApplication() {
   rewardKit.closeModal()
   // Toggle the modal's visibility
   rewardKit.toggleModal()
-  // Reconfigure RewardKit to update either the "boostId" and/or "deployerAddress'
-  rewardKit.configure({ boostId: '', deployerAddress: '0x' })
+  // Reconfigure RewardKit to update what Boosts show in the modal
+  rewardKit.configure({ boostId: '', deployerAddress: '0x', ... })
 
   return (
   <>
@@ -74,8 +89,7 @@ function MyApplication() {
 
     // With configuration, will call rewardKit.configure before opening the modal
     <RewardKitButton
-      boostId="11155111:0x378632819F39C74c4F56B1429E760739c5fb51b7:33"
-      deployerAddress="0x000...."
+      config={config}
       className="custom-button"
     >
       <>Custom Text</>
