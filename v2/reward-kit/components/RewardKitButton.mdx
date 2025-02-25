@@ -1,0 +1,173 @@
+---
+title: "RewardKitButton"
+description: "Customizable component to trigger RewardKit UI"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A React component that renders a configurable button to trigger the RewardKit modal. This component handles the modal state management and configuration internally.
+
+<ParamField body="props" type="object">
+  <Expandable title="properties">
+    <ParamField path="config" type="RewardKitConfig" required>
+      Configuration object to configure the UI with before opening the modal.
+    </ParamField>
+    <ParamField path="className" type="string">
+      CSS class name for styling the button
+    </ParamField>
+    <ParamField path="children" type="ReactNode">
+      Content to render inside the button. Defaults to "Rewards"
+    </ParamField>
+    <ParamField path="...buttonProps" type="HTMLAttributes<HTMLButtonElement>">
+      Any valid HTML button attributes (except onClick)
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<Card
+  title="RewardKitButton TSDoc"
+  icon="file-lines"
+  href="https://rewardkit.boost.xyz/functions/RewardKitButton.html"
+>
+  See in-depth technical documentation
+</Card>
+
+## Basic Usage
+
+Here's a simple example of using the RewardKitButton:
+
+```tsx
+import { RewardKitButton } from '@boostxyz/reward-kit-react';
+
+function RewardsSection() {
+  return (
+    <RewardKitButton
+      config={{
+        creatorAddress: "0x123...",
+        tokens: ["1:0xabc..."]
+      }}
+    />
+  );
+}
+```
+
+## Custom Styling
+
+Example showing how to customize the button's appearance:
+
+```tsx
+import { RewardKitButton } from '@boostxyz/reward-kit-react';
+
+function CustomStyledRewards() {
+  return (
+    <RewardKitButton
+      config={{
+        creatorAddress: "0x123..."
+      }}
+      className="rewards-button"
+      disabled={false}
+      style={{
+        backgroundColor: '#4F46E5',
+        color: 'white',
+        padding: '12px 24px',
+        borderRadius: '8px'
+      }}
+    >
+      Claim Your Rewards
+    </RewardKitButton>
+  );
+}
+```
+
+## With Dynamic Configuration
+
+Example showing how to use dynamic configuration:
+
+```tsx
+import { RewardKitButton } from '@boostxyz/reward-kit-react';
+import { useState } from 'react';
+
+function DynamicRewards() {
+  const [isEnabled, setIsEnabled] = useState(true);
+
+  const config = {
+    creatorAddress: "0xdeadbeef",
+    tokens: ["1:0x0..."],
+    testnetsEnabled: process.env.NODE_ENV === 'development'
+  };
+
+  return (
+    <div>
+      <RewardKitButton
+        config={config}
+        className={`reward-button ${isEnabled ? 'active' : 'disabled'}`}
+        disabled={!isEnabled}
+        aria-label="Open rewards modal"
+      >
+        <span>🎁</span>
+        <span>Claim Rewards</span>
+      </RewardKitButton>
+
+      <label>
+        <input
+          type="checkbox"
+          checked={isEnabled}
+          onChange={(e) => setIsEnabled(e.target.checked)}
+        />
+        Enable Rewards
+      </label>
+    </div>
+  );
+}
+```
+
+## With Loading State
+
+Example implementing a loading state:
+
+```tsx
+import { RewardKitButton } from '@boostxyz/reward-kit-react';
+import { useState } from 'react';
+
+function LoadingRewardsButton() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = async () => {
+    setIsLoading(true);
+    // Simulate loading config
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    setIsLoading(false);
+  };
+
+  return (
+    <div className="rewards-container">
+      <RewardKitButton
+        config={{
+          creatorAddress: "0xdeadbeef"
+        }}
+        disabled={isLoading}
+        className={`rewards-button ${isLoading ? 'loading' : ''}`}
+        onMouseEnter={handleClick}
+      >
+        {isLoading ? (
+          <>
+            <span className="loading-spinner" />
+            Loading Rewards...
+          </>
+        ) : (
+          <>
+            <span>🎁</span>
+            View Rewards
+          </>
+        )}
+      </RewardKitButton>
+    </div>
+  );
+}
+```
+
+The button internally manages the RewardKit modal state and configuration through the `useRewardKit` hook. It can be styled and customized like a regular button while maintaining the reward claiming functionality.
+
+The component uses React's `forwardRef` to allow access to the underlying button element when needed, and it preserves all standard HTML button attributes except for `onClick` which is handled internally for modal management.

@@ -1,0 +1,245 @@
+---
+title: "useRewardKitBoosts"
+description: "Fetch Boosts for given RewardKit configuration"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A React Query hook that fetches paginated RewardKit Boosts with flexible filtering options. Supports filtering by creator, claimant, budget account, target contract, tokens, and chain ID.
+
+<ParamField body="params" type="object">
+  <Expandable title="properties">
+    <ParamField path="creatorAddress" type="Address">
+      Ethereum address of the boost creator
+    </ParamField>
+    <ParamField path="claimantAddress" type="Address">
+      Ethereum address of the boost claimant
+    </ParamField>
+    <ParamField path="budgetAccount" type="string">
+      Ethereum address of the budget account
+    </ParamField>
+    <ParamField path="targetContract" type="string">
+      Target contract address for the boosts
+    </ParamField>
+    <ParamField path="tokens" type="string[]">
+      Array of token identifiers in format "chainId:address" or "chainId:address:tokenId"
+    </ParamField>
+    <ParamField path="chainId" type="number">
+      Chain ID to filter boosts
+    </ParamField>
+    <ParamField path="pageSize" type="number" default="50">
+      Number of results per page
+    </ParamField>
+    <ParamField path="page" type="number" default="1">
+      Page number to fetch
+    </ParamField>
+    <ParamField path="status" type="RewardKitBoostStatus" default="claimed">
+      Status to filter boosts ("active", "claimed", "claimable")
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ResponseField name="Return Value" type="UseQueryResult<RewardKitBoostsResponse>">
+  <Expandable title="properties">
+    <ResponseField name="data" type="object">
+      <Expandable title="properties">
+        <ResponseField name="boosts" type="array">
+          Array of RewardKit boost objects
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="isPending" type="boolean">
+      Whether the query is loading
+    </ResponseField>
+    <ResponseField name="error" type="Error">
+      Any error that occurred during the query
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Card
+  title="useRewardKitBoosts TSDoc"
+  icon="file-lines"
+  href="https://rewardkit.boost.xyz/functions/useRewardKitBoosts.html"
+>
+  See in-depth technical documentation
+</Card>
+
+## Basic Usage
+
+Here's a simple example of fetching and displaying boosts:
+
+```typescript
+import { useRewardKitBoosts } from '@boostxyz/reward-kit-react';
+import { RewardKitBoostStatus } from '@boostxyz/reward-kit-react';
+
+function BoostsList() {
+  const { data, isPending } = useRewardKitBoosts({
+    creatorAddress: "0x123...",
+    claimantAddress: "0x456...",
+    status: RewardKitBoostStatus.ACTIVE
+  });
+
+  if (isPending) return <div>Loading boosts...</div>;
+
+  return (
+    <div>
+      <h2>Available Boosts</h2>
+      <ul>
+        {data?.boosts.map((boost, index) => (
+          <li key={index}>
+            {boost.name} - {boost.status}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+## Advanced Filtering
+
+Example showing how to use multiple filters:
+
+```typescript
+import { useRewardKitBoosts } from '@boostxyz/reward-kit-react';
+
+function FilteredBoostsList() {
+  const {
+    data,
+    isPending,
+    error
+  } = useRewardKitBoosts({
+    // Filter by creator
+    creatorAddress: "0x123...",
+
+    // Filter by chain
+    chainId: 1,
+
+    // Filter specific tokens
+    tokens: [
+      "1:0xabc...def", // ETH token
+      "137:0x789...123" // Polygon token
+    ],
+
+    // Filter by target contract
+    targetContract: "0xdef...",
+
+    // Pagination
+    pageSize: 10,
+    page: 1
+  });
+
+  if (error) {
+    return <div>Error loading boosts: {error.message}</div>;
+  }
+
+  return (
+    <div className="boosts-container">
+      {isPending ? (
+        <div>Loading filtered boosts...</div>
+      ) : (
+        <div>
+          <h2>Filtered Boosts</h2>
+          {data?.boosts.length === 0 ? (
+            <p>No boosts found matching filters</p>
+          ) : (
+            <ul>
+              {data?.boosts.map((boost, index) => (
+                <li key={index}>
+                  <h3>{boost.name}</h3>
+                  <p>Chain: {boost.chainId}</p>
+                  <p>Status: {boost.status}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## With Pagination
+
+Example implementing paginated boosts:
+
+```typescript
+import { useRewardKitBoosts } from '@boostxyz/reward-kit-react';
+import { useState } from 'react';
+
+function PaginatedBoosts() {
+  const [page, setPage] = useState(1);
+  const pageSize = 20;
+
+  const {
+    data,
+    isPending,
+    refetch
+  } = useRewardKitBoosts({
+    creatorAddress: "0x123...",
+    pageSize,
+    page
+  });
+
+  const handleNextPage = () => {
+    setPage(prev => prev + 1);
+  };
+
+  const handlePrevPage = () => {
+    setPage(prev => Math.max(1, prev - 1));
+  };
+
+  return (
+    <div>
+      <div className="boosts-list">
+        {isPending ? (
+          <div>Loading page {page}...</div>
+        ) : (
+          <>
+            <div className="boosts-grid">
+              {data?.boosts.map((boost, index) => (
+                <div key={index} className="boost-card">
+                  <h3>{boost.name}</h3>
+                  <div className="boost-details">
+                    <span>Chain: {boost.chainId}</span>
+                    <span>Status: {boost.status}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="pagination-controls">
+              <button
+                onClick={handlePrevPage}
+                disabled={page === 1}
+              >
+                Previous
+              </button>
+              <span>Page {page}</span>
+              <button
+                onClick={handleNextPage}
+                disabled={!data?.boosts.length}
+              >
+                Next
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+
+      <button
+        onClick={() => refetch()}
+        className="refresh-button"
+      >
+        Refresh Boosts
+      </button>
+    </div>
+  );
+}
+```
+
+The hook automatically handles address normalization and includes built-in caching with a 5-minute stale time. It only makes requests when a valid claimant address is provided and normalizes all addresses to lowercase before making the API request.

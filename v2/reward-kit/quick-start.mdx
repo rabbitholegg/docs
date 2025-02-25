@@ -34,14 +34,22 @@ const config: RewardKitConfig = {
 function App() {
   return (
     <RewardKitProvider
-      // Specifying optional application-wide config
-      config={config}
-      // Is the modal open by default
-      defaultOpen={false}
-      // Supply a custom theme, or use the default styling
+      // All configuration fields optional, tune your filters according to your application
+      config={{
+        testnetsEnabled: true,
+        creatorAddress: "0xdeadbeef...",
+        boostId: "11155111:0x378632819F39C74c4F56B1429E760739c5fb51b7:33",
+        budgetAccount: "0xdeadbeef",
+        targetContract: "0xdeadbeef",
+        chainId: 11155111,
+        tokens: ["7777777:0x777777722d078c97c6ad07d9f36801e653e356ae", "7777777:0x777777722d078c97c6ad07d9f36801e653e356ae:1"]
+      }}
+      // All theme configuration optional
       theme={{
         accent: "#9a75ff",
         primary: "#25292e",
+        "button-primary": "#25292e",
+        "button-secondary": "#f6f7f9",
         "primary-foreground": "#fff",
         secondary: "#989fa9",
         card: "#f6f7f9",
@@ -50,9 +58,10 @@ function App() {
         "dialog-overlay": "rgba(0, 0, 0, 0.2)",
         skeleton: "#f7f6f8",
         dim: "#f7f6f8",
-        "button-primary": "#25292e",
-        "button-secondary": "#f6f7f9",
+        scrollbar: "#989fa9",
       }}
+      // Handy for developing locally
+      defaultOpen={true}
     >
       <MyApplication />
     </RewardKitProvider>
@@ -89,7 +98,10 @@ function MyApplication() {
 
     // With configuration, will call rewardKit.configure before opening the modal
     <RewardKitButton
-      config={config}
+      config={{
+        creatorAddress: "0x123...",
+        tokens: ["1:0xabc..."]
+      }}
       className="custom-button"
     >
       <>Custom Text</>

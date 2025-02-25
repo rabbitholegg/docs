@@ -1,0 +1,188 @@
+---
+title: "useClaimIncentives"
+description: "Manually claim rewards"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A React Query mutation hook that handles claiming incentives for a specific boost. This hook manages the blockchain transaction process for claiming boost incentives, including signature verification.
+
+<ParamField body="params" type="object" required>
+  <Expandable title="properties">
+    <ParamField path="boostId" type="string" required>
+      The unique identifier of the boost in the format "chainId:coreAddress:index"
+    </ParamField>
+    <ParamField path="address" type="Address">
+      Address of the connected wallet attempting to claim
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ResponseField name="Return Value" type="UseMutationResult">
+  <Expandable title="properties">
+    <ResponseField name="mutate" type="function">
+      Function to execute the claim transaction
+      <Expandable title="parameters">
+        <ParamField path="signature" type="string" required>
+          The cryptographic signature authorizing the claim
+        </ParamField>
+        <ParamField path="claimant" type="string" required>
+          The Ethereum address of the claimant
+        </ParamField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="isPending" type="boolean">
+      Whether the mutation is currently in progress
+    </ResponseField>
+    <ResponseField name="error" type="Error">
+      Any error that occurred during the mutation
+    </ResponseField>
+    <ResponseField name="isSuccess" type="boolean">
+      Whether the mutation completed successfully
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<CardGroup cols={2}>
+  <Card title="Claiming Incentives" icon="rocket" href="/v2/boost-sdk/examples/claim-example">
+    Learn more about how claims work
+  </Card>
+  <Card
+    title="useClaimIncentives TSDoc"
+    icon="file-lines"
+    href="https://rewardkit.boost.xyz/functions/useClaimIncentives.html"
+  >
+    See in-depth technical documentation
+  </Card>
+</CardGroup>
+
+
+## Basic Usage
+
+Here's a simple example of using the `useClaimIncentives` hook:
+
+```typescript
+import { useClaimIncentives } from '@boostxyz/reward-kit-react';
+
+function ClaimButton() {
+  // Initialize the hook
+  const { mutate, isPending, isSuccess, error } = useClaimIncentives({
+    boostId: "11155111:0x378632819F39C74c4F56B1429E760739c5fb51b7:33",
+    address: "0x123..." // Connected wallet address
+  });
+
+  const handleClaim = () => {
+    mutate({
+      signature: "0xabc...", // Valid signature from backend
+      claimant: "0x123..." // Address of person claiming
+    });
+  };
+
+  return (
+    <div>
+      <button
+        onClick={handleClaim}
+        disabled={isPending}
+      >
+        {isPending ? 'Claiming...' : 'Claim Boost'}
+      </button>
+
+      {isSuccess && <p>Successfully claimed!</p>}
+      {error && <p>Error: {error.message}</p>}
+    </div>
+  );
+}
+```
+
+## Error Handling
+
+The hook includes built-in error handling for common scenarios:
+
+```typescript
+function ClaimWithErrorHandling() {
+  const { mutate, error } = useClaimIncentives({
+    boostId: "11155111:0x378632819F39C74c4F56B1429E760739c5fb51b7:33"
+  });
+
+  const handleClaim = async () => {
+    try {
+      await mutate({
+        signature: "0xabc...",
+        claimant: "0x123..."
+      });
+    } catch (err) {
+      // Handle specific error cases
+      if (error?.message.includes("No connected address")) {
+        // Handle wallet connection error
+      } else if (error?.message.includes("No permission")) {
+        // Handle permission error
+      }
+    }
+  };
+
+  return <button onClick={handleClaim}>Claim</button>;
+}
+```
+
+## Full Implementation
+
+Here's a more complete example showing how to integrate the hook with loading states and error handling:
+
+```typescript
+import { useClaimIncentives } from '@boostxyz/reward-kit-react';
+
+function BoostClaimInterface() {
+  const {
+    mutate,
+    isPending,
+    isSuccess,
+    error
+  } = useClaimIncentives({
+    boostId: "11155111:0x378632819F39C74c4F56B1429E760739c5fb51b7:33",
+    address: "0x123..."
+  });
+
+  // Track UI state
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleClaim = async () => {
+    try {
+      // Attempt to claim
+      await mutate({
+        signature: "0xabc...", // Valid signature
+        claimant: "0x123..." // Claimant address
+      });
+
+      // Show success message
+      setShowSuccess(true);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (err) {
+      console.error('Claim failed:', err);
+    }
+  };
+
+  return (
+    <div>
+      <button
+        onClick={handleClaim}
+        disabled={isPending || isSuccess}
+      >
+        {isPending ? 'Processing...' : 'Claim Boost'}
+      </button>
+
+      {/* Status messages */}
+      {isPending && <p>Transaction in progress...</p>}
+      {showSuccess && <p>Successfully claimed boost!</p>}
+      {error && (
+        <div className="error">
+          Failed to claim: {error.message}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+The hook integrates with React Query for efficient caching and state management of the claim process. It handles the complete lifecycle of the claim transaction, from simulation to execution on the blockchain.

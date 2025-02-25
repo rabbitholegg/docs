@@ -1,0 +1,214 @@
+---
+title: "useClaimSignatures"
+description: "Get signatures that can be used to claim rewards"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A React Query hook that fetches signature data required for claiming incentives from a boost. The hook manages the API request to get authorized signatures for claiming.
+
+<ParamField body="params" type="object" required>
+  <Expandable title="properties">
+    <ParamField path="boostId" type="string">
+      The unique identifier of the boost in the format "chainId:address:index"
+    </ParamField>
+    <ParamField path="address" type="Address">
+      Address of the claimant
+    </ParamField>
+    <ParamField path="incentiveId" type="number" required>
+      The ID of the incentive being claimed
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ResponseField name="Return Value" type="UseQueryResult<Signatures>">
+  <Expandable title="properties">
+    <ResponseField name="data" type="Array">
+      Array of signature objects, each containing:
+      <Expandable title="properties">
+        <ResponseField name="claimant" type="string">
+          The Ethereum address of the claimant
+        </ResponseField>
+        <ResponseField name="incentiveId" type="number">
+          The ID of the incentive
+        </ResponseField>
+        <ResponseField name="signature" type="string">
+          The hexadecimal signature required for claiming
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="isPending" type="boolean">
+      Whether the query is currently loading
+    </ResponseField>
+    <ResponseField name="error" type="Error">
+      Any error that occurred during the query
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<CardGroup cols={2}>
+  <Card title="Claiming Incentives" icon="rocket" href="/v2/boost-sdk/examples/claim-example">
+    Learn more about how claims work
+  </Card>
+  <Card
+    title="useClaimSignatures TSDoc"
+    icon="file-lines"
+    href="https://rewardkit.boost.xyz/functions/useClaimSignatures.html"
+  >
+    See in-depth technical documentation
+  </Card>
+</CardGroup>
+
+
+
+## Basic Usage
+
+Here's a simple example of using the `useClaimSignatures` hook:
+
+```typescript
+import { useClaimSignatures } from '@boostxyz/reward-kit-react';
+
+function ClaimSignatureDisplay() {
+  // Initialize the hook
+  const { data: signatures, isPending, error } = useClaimSignatures({
+    boostId: "1:0x123...789:0",  // chainId:address:index
+    address: "0xabc...def",      // Claimant address
+    incentiveId: 0               // Incentive ID
+  });
+
+  if (isPending) return <div>Loading signatures...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+    <div>
+      <h3>Available Signatures</h3>
+      {signatures?.map((sig, index) => (
+        <div key={index}>
+          <p>Claimant: {sig.claimant}</p>
+          <p>Incentive ID: {sig.incentiveId}</p>
+          <p>Signature: {sig.signature}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+## Integration with Claiming Process
+
+Here's how to use the hook as part of a complete claiming flow:
+
+```typescript
+import { useClaimSignatures } from '@boostxyz/reward-kit-react';
+import { useClaimIncentives } from '@boostxyz/reward-kit-react';
+
+function ClaimFlow() {
+  const boostId = "1:0x123...789:0";
+  const address = "0xabc...def";
+
+  // Fetch signatures
+  const { data: signatures, isPending: isLoadingSignatures } = useClaimSignatures({
+    boostId,
+    address,
+    incentiveId: 0
+  });
+
+  // Set up claim mutation
+  const { mutate: claim, isPending: isClaiming } = useClaimIncentives({
+    boostId,
+    address
+  });
+
+  const handleClaim = () => {
+    // Use first available signature to claim
+    const firstSignature = signatures?.[0];
+    if (firstSignature) {
+      claim({
+        signature: firstSignature.signature,
+        claimant: firstSignature.claimant
+      });
+    }
+  };
+
+  // Loading state
+  if (isLoadingSignatures) {
+    return <div>Loading claim data...</div>;
+  }
+
+  return (
+    <div>
+      <button
+        onClick={handleClaim}
+        disabled={!signatures?.length || isClaiming}
+      >
+        {isClaiming ? 'Claiming...' : 'Claim Boost'}
+      </button>
+
+      {/* Display signature status */}
+      <p>
+        {signatures?.length
+          ? `${signatures.length} signatures available`
+          : 'No signatures available'}
+      </p>
+    </div>
+  );
+}
+```
+
+## Error Handling
+
+Example showing comprehensive error handling:
+
+```typescript
+import { useClaimSignatures } from '@boostxyz/reward-kit-react';
+
+function ClaimSignaturesWithErrorHandling() {
+  const {
+    data: signatures,
+    isPending,
+    error,
+    refetch
+  } = useClaimSignatures({
+    boostId: "1:0x123...789:0",
+    address: "0xabc...def",
+    incentiveId: 0
+  });
+
+  // Handle different states
+  if (isPending) {
+    return <div>Fetching signatures...</div>;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <p>Error fetching signatures: {error.message}</p>
+        <button onClick={() => refetch()}>
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (!signatures?.length) {
+    return <div>No signatures available for claiming</div>;
+  }
+
+  return (
+    <div>
+      <h3>Valid Signatures Found</h3>
+      <ul>
+        {signatures.map((sig, index) => (
+          <li key={index}>
+            Signature {index + 1} for {sig.claimant}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+The hook automatically caches results and revalidates data every 10 seconds (configured via `staleTime`). It only fetches data when both `address` and `boostId` are provided, as controlled by the `enabled` option.

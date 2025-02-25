@@ -1,0 +1,164 @@
+---
+title: "RewardKitProvider"
+description: "Easily integrate your app with RewardKit"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A React context provider that manages the global state and configuration for RewardKit components, including theming, modal state, and reward filtering settings.
+
+<ParamField body="props" type="object" required>
+  <Expandable title="properties">
+    <ParamField path="config" type="object">
+      Configuration interface for RewardKit, controlling reward display filters and display settings
+      <Expandable title="properties">
+        <ParamField path="testnetsEnabled" type="boolean">
+          Enable testnet networks and staging API access
+        </ParamField>
+        <ParamField path="creatorAddress" type="Address">
+          The creator address to filter displayed rewards by
+        </ParamField>
+        <ParamField path="boostId" type="string">
+          The Boost ID to feature, in format "chainId:address:id"
+        </ParamField>
+        <ParamField path="targetContract" type="Address">
+          Only show offers with actions that target this contract address. If specifying, you must also specify `chainId`
+        </ParamField>
+        <ParamField path="chainId" type="number">
+          Only show offers with actions that target a contract on this chain ID. You must specify this if also specifying `targetContract`
+        </ParamField>
+        <ParamField path="tokens" type="Array<(`${chainId}:${Address}` | `${chainId}:${Address}:${tokenId}`)>">
+          Only show offers with actions targeting tokens, in the format `chainId:address`, or `chainId:address:tokenId`
+        </ParamField>
+        <ParamField path="budgetAccount" type="Address">
+          Filter to only show offers funded by this budget account.
+        </ParamField>
+      </Expandable>
+    </ParamField>
+    <ParamField path="theme" type="object">
+      An object containing configurable styles to apply to the RewardKit UI. Color values may be in either hex or rgb format.
+      <Expandable title="properties">
+        <ParamField path="accent" type="string">
+          Used for subtitles
+        </ParamField>
+        <ParamField path="primary" type="string">
+          Primary color for headers and icons
+        </ParamField>
+        <ParamField path="button-primary" type="string">
+          Primary color for call-to-actions, like button backgrounds
+        </ParamField>
+        <ParamField path="button-secondary" type="string">
+          Secondary color for interactive elements, like button backgrounds
+        </ParamField>
+        <ParamField path="primary-foreground" type="string">
+          The foreground color for primary call to action elements, like primary button text
+        </ParamField>
+        <ParamField path="secondary" type="string">
+          Foreground color for copy on neutral backgrounds
+        </ParamField>
+        <ParamField path="card" type="string">
+          Background color for raised container elements
+        </ParamField>
+        <ParamField path="dialog" type="string">
+          Background color intended to be behind interactive elements
+        </ParamField>
+        <ParamField path="dialog-border" type="string">
+          Border color around main dialog
+        </ParamField>
+        <ParamField path="dialog-overlay" type="string">
+          Color of shadow over page, behind main dialog
+        </ParamField>
+        <ParamField path="skeleton" type="string">
+          Color used for skeleton loaders
+        </ParamField>
+        <ParamField path="dim" type="string">
+          Muted color used to accent non-CTA elements
+        </ParamField>
+        <ParamField path="scrollbar" type="string">
+          Color of the scrollbar
+        </ParamField>
+      </Expandable>
+    </ParamField>
+    <ParamField path="defaultOpen" type="boolean">
+      The Ethereum address of the connected wallet attempting to claim
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<Card
+  title="RewardKitProvider TSDoc"
+  icon="file-lines"
+  href="https://rewardkit.boost.xyz/functions/RewardKitProvider.html"
+>
+  See in-depth technical documentation
+</Card>
+
+## Basic Usage
+
+Here's how to use the RewardKit context in your application:
+
+```tsx
+import { RewardKitProvider, useRewardKit } from '@boostxyz/reward-kit-react';
+
+// Wrap your app with the provider
+function App() {
+  return (
+    <RewardKitProvider
+      // All configuration fields optional, tune your filters according to your application
+      config={{
+        testnetsEnabled: true,
+        creatorAddress: "0x123...",
+        boostId: "11155111:0x378632819F39C74c4F56B1429E760739c5fb51b7:33",
+        budgetAccount: "0xd8f8d805f85518b2aedfe3148135bb6dce352aaf",
+        targetContract: "0xdcffce9d8185706780a46cf04d9c6b86b3451497",
+        chainId: 11155111,
+        tokens: ["7777777:0x777777722d078c97c6ad07d9f36801e653e356ae", "7777777:0x777777722d078c97c6ad07d9f36801e653e356ae:1"]
+      }}
+      // All theme configuration optional
+      theme={{
+        accent: "#9a75ff",
+        primary: "#25292e",
+        "button-primary": "#25292e",
+        "button-secondary": "#f6f7f9",
+        "primary-foreground": "#fff",
+        secondary: "#989fa9",
+        card: "#f6f7f9",
+        dialog: "#fff",
+        "dialog-border": "#e5e7eb",
+        "dialog-overlay": "rgba(0, 0, 0, 0.2)",
+        skeleton: "#f7f6f8",
+        dim: "#f7f6f8",
+        scrollbar: "#989fa9",
+      }}
+      // Handy for developing locally
+      defaultOpen={true}
+    >
+      <YourComponents />
+    </RewardKitProvider>
+  );
+}
+
+// Use the context in your components
+function RewardsButton() {
+  const { openModal, configure } = useRewardKit();
+
+  const handleClick = () => {
+    configure({ creatorAddress: "0x123..." }); // Update configuration
+    openModal(); // Open the modal
+  };
+
+  return <button onClick={handleClick}>View Rewards</button>;
+}
+```
+
+The RewardKit context system provides:
+
+- Centralized state management for rewards configuration
+- Theme customization through CSS variables
+- Modal visibility control
+- Auto-updating configuration
+- Integration with React Query and Wagmi
+- Shadow DOM isolation for styles
+- Memory routing for modal navigation

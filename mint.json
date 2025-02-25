@@ -1,7 +1,10 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "Boost Docs",
-  "versions": ["v1", "v2"],
+  "versions": [
+    "v1",
+    "v2"
+  ],
   "logo": {
     "dark": "/assets/boost-icon-white.svg",
     "light": "/assets/boost-icon-black.svg"
@@ -176,7 +179,9 @@
     {
       "group": "",
       "version": "v1",
-      "pages": ["v1/api-reference/openapi/openapi-json"]
+      "pages": [
+        "v1/api-reference/openapi/openapi-json"
+      ]
     },
     {
       "group": "auth",
@@ -303,15 +308,6 @@
       ]
     },
     {
-      "group": "Reward Kit",
-      "version": "v2",
-      "pages": [
-        "v2/reward-kit/overview",
-        "v2/reward-kit/installation",
-        "v2/reward-kit/quick-start"
-      ]
-    },
-    {
       "group": "Examples",
       "version": "v2",
       "pages": [
@@ -361,7 +357,9 @@
     {
       "group": "Claiming",
       "version": "v2",
-      "pages": ["v2/boost-api/get-signature"]
+      "pages": [
+        "v2/boost-api/get-signature"
+      ]
     },
     {
       "group": "Incentives",
@@ -420,7 +418,41 @@
     {
       "group": "",
       "version": "v2",
-      "pages": ["v2/api-reference/openapi-json"]
+      "pages": [
+        "v2/api-reference/openapi-json"
+      ]
+    },
+    {
+      "group": "Reward Kit",
+      "version": "v2",
+      "pages": [
+        "v2/reward-kit/overview",
+        "v2/reward-kit/installation",
+        "v2/reward-kit/quick-start"
+      ]
+    },
+    {
+      "group": "Components",
+      "version": "v2",
+      "pages": [
+        "v2/reward-kit/components/RewardKitProvider",
+        "v2/reward-kit/components/RewardKitButton"
+      ]
+    },
+    {
+      "group": "Hooks",
+      "version": "v2",
+      "pages": [
+        "v2/reward-kit/hooks/useRewardKit",
+        "v2/reward-kit/hooks/useClaimableBoostsCount",
+        "v2/reward-kit/hooks/useClaimIncentives",
+        "v2/reward-kit/hooks/useClaimSignatures",
+        "v2/reward-kit/hooks/useRewardKitBalances",
+        "v2/reward-kit/hooks/useRewardKitBoost",
+        "v2/reward-kit/hooks/useRewardKitBoosts",
+        "v2/reward-kit/hooks/useRewardKitProfile",
+        "v2/reward-kit/hooks/useTokenBalances"
+      ]
     }
   ],
   "footerSocials": {

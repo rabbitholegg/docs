@@ -1,0 +1,103 @@
+---
+title: "useClaimableBoostsCount"
+description: "Retrieve count of claimable Boosts for an address."
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A React hook that returns the count of claimable boosts available for a given claimant address.
+
+<ParamField body="config" type="object" required>
+  Configuration options for the hook
+  <Expandable title="properties">
+    <ParamField path="creatorAddress" type="Address" required>
+      The Ethereum address of the creator who made the boosts
+    </ParamField>
+    <ParamField path="claimantAddress" type="Address" required>
+      The Ethereum address of the user attempting to claim boosts
+    </ParamField>
+    <ParamField path="...config" type="RewardKitConfig">
+      Additional RewardKit configuration options
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ResponseField name="Return Value" type="object">
+  <Expandable title="properties">
+    <ResponseField name="isPending" type="boolean">
+      Loading state indicating if the count is still being fetched
+    </ResponseField>
+    <ResponseField name="count" type="number">
+      The number of boosts available for the claimant to claim
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Card
+  title="useClaimableBoostsCount TSDoc"
+  icon="file-lines"
+  href="https://rewardkit.boost.xyz/functions/useClaimableBoostsCount.html"
+>
+  See in-depth technical documentation
+</Card>
+
+## Usage Example
+
+Here's how to use the `useClaimableBoostsCount` hook in a React component:
+
+```typescript
+import { useClaimableBoostsCount } from '@boostxyz/reward-kit-react';
+
+function BoostCounter() {
+  // Set up configuration
+  const config = {
+    creatorAddress: "0x123...", // Creator's Ethereum address
+    claimantAddress: "0x456...", // Claimant's Ethereum address
+    // ... other RewardKit config options
+  };
+
+  // Use the hook
+  const { isPending, count } = useClaimableBoostsCount(config);
+
+  // Handle loading state
+  if (isPending) {
+    return <div>Loading available boosts...</div>;
+  }
+
+  // Render the count
+  return (
+    <div>
+      You have {count} boosts available to claim
+    </div>
+  );
+}
+```
+
+## Loading States
+
+The hook provides an `isPending` boolean that you can use to handle loading states in your UI:
+
+```typescript
+function BoostDisplay() {
+  const { isPending, count } = useClaimableBoostsCount({
+    creatorAddress: "0x123...",
+    claimantAddress: "0x456..."
+  });
+
+  // Show loading spinner while data is being fetched
+  if (isPending) {
+    return <LoadingSpinner />;
+  }
+
+  // Show different messages based on count
+  if (count === 0) {
+    return <p>No boosts available to claim</p>;
+  }
+
+  return <p>{count} boosts ready to claim</p>;
+}
+```
+
+The hook automatically handles fetching and caching of boost data through the `useRewardKitProfile` hook internally.

@@ -1,0 +1,232 @@
+---
+title: "useRewardKitBoost"
+description: "Get details about a single RewardKit Boost"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A React Query hook that fetches and validates detailed information about a single RewardKit Boost, including its claims and status for a specific claimant address.
+
+<ParamField body="params" type="object">
+  <Expandable title="properties">
+    <ParamField path="boostId" type="string">
+      The unique identifier of the boost in format "chainId:address:index"
+    </ParamField>
+    <ParamField path="claimantAddress" type="Address">
+      The Ethereum address of the potential claimant
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ResponseField name="Return Value" type="UseQueryResult<RewardKitBoostResponse>">
+  <Expandable title="properties">
+    <ResponseField name="data" type="object">
+      The boost response data containing:
+      <Expandable title="properties">
+        <ResponseField name="boost" type="object">
+          Details about the boost
+        </ResponseField>
+        <ResponseField name="totalClaims" type="number">
+          Total number of claims made for this boost
+        </ResponseField>
+        <ResponseField name="claims" type="array">
+          Array of claim objects for this boost
+        </ResponseField>
+        <ResponseField name="status" type="string">
+          Current status of the boost ("active", "claimed", or "claimable")
+        </ResponseField>
+        <ResponseField name="txHash" type="string">
+          Optional transaction hash for the claim
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="isPending" type="boolean">
+      Whether the query is loading
+    </ResponseField>
+    <ResponseField name="error" type="Error">
+      Any error that occurred during the query
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Card
+  title="useRewardKitBoost TSDoc"
+  icon="file-lines"
+  href="https://rewardkit.boost.xyz/functions/useRewardKitBoost.html"
+>
+  See in-depth technical documentation
+</Card>
+
+## Basic Usage
+
+Here's a simple example of using the hook to display boost information:
+
+```typescript
+import { useRewardKitBoost } from '@boostxyz/reward-kit-react';
+
+function BoostDisplay() {
+  const { data, isPending, error } = useRewardKitBoost({
+    boostId: "1:0x123...789:0",
+    claimantAddress: "0xabc...def"
+  });
+
+  if (isPending) return <div>Loading boost...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  if (!data) return null;
+
+  return (
+    <div>
+      <h2>Boost Status: {data.status}</h2>
+      <p>Total Claims: {data.totalClaims}</p>
+      {data.txHash && (
+        <p>Transaction: {data.txHash}</p>
+      )}
+    </div>
+  );
+}
+```
+
+## Detailed Implementation
+
+Here's a more comprehensive example showing boost details and claims:
+
+```typescript
+import { useRewardKitBoost } from '@boostxyz/reward-kit-react';
+
+function DetailedBoostView() {
+  const {
+    data: boostData,
+    isPending,
+    error,
+    refetch
+  } = useRewardKitBoost({
+    boostId: "1:0x123...789:0",
+    claimantAddress: "0xabc...def"
+  });
+
+  // Status badge component
+  const StatusBadge = ({ status }: { status: string }) => (
+    <span className={`status-badge ${status}`}>
+      {status.toUpperCase()}
+    </span>
+  );
+
+  if (isPending) {
+    return <div>Fetching boost details...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="error-container">
+        <p>Failed to load boost: {error.message}</p>
+        <button onClick={() => refetch()}>
+          Retry
+        </button>
+      </div>
+    );
+  }
+
+  if (!boostData) {
+    return <div>No boost data available</div>;
+  }
+
+  return (
+    <div className="boost-container">
+      <div className="boost-header">
+        <h2>Boost Details</h2>
+        <StatusBadge status={boostData.status} />
+      </div>
+
+      <div className="boost-stats">
+        <div>
+          <h3>Claims</h3>
+          <p>{boostData.totalClaims} total claims</p>
+        </div>
+
+        {boostData.txHash && (
+          <div>
+            <h3>Latest Transaction</h3>
+            <a
+              href={`https://etherscan.io/tx/${boostData.txHash}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View on Etherscan
+            </a>
+          </div>
+        )}
+      </div>
+
+      <div className="claims-list">
+        <h3>Recent Claims</h3>
+        <ul>
+          {boostData.claims.map((claim, index) => (
+            <li key={index}>
+              <p>Claimer: {claim.address}</p>
+              <p>Time: {new Date(claim.timestamp).toLocaleString()}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+}
+```
+
+## With Auto-Refresh
+
+Example showing how to implement automatic refresh of boost data:
+
+```typescript
+import { useRewardKitBoost } from '@boostxyz/reward-kit-react';
+import { useEffect } from 'react';
+
+function LiveBoostTracker() {
+  const {
+    data,
+    isPending,
+    refetch
+  } = useRewardKitBoost({
+    boostId: "1:0x123...789:0",
+    claimantAddress: "0xabc...def"
+  });
+
+  // Refresh data every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, [refetch]);
+
+  return (
+    <div>
+      <div className="status-header">
+        <h2>Live Boost Status</h2>
+        {isPending && <span>Refreshing...</span>}
+      </div>
+
+      {data && (
+        <div className="boost-info">
+          <div className="status">
+            Current Status: {data.status}
+          </div>
+          <div className="claims">
+            Claims: {data.totalClaims}
+          </div>
+          {data.status === 'claimed' && data.txHash && (
+            <div className="transaction">
+              Claimed in tx: {data.txHash}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+The hook automatically handles address normalization and validation, and includes built-in caching with a 5-minute stale time. It only fetches data when both a valid boost ID and claimant address are provided.

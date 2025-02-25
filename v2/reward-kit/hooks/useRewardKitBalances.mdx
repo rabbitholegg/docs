@@ -1,0 +1,227 @@
+---
+title: "useRewardKitBalances"
+description: "Get balances for reward tokens"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A React hook that fetches and tracks token balances specifically for tokens used in active and featured RewardKit Boosts. The hook automatically filters and sorts balances based on incentive asset addresses.
+
+<ParamField body="props" type="object">
+  <Expandable title="properties">
+    <ParamField path="address" type="Address">
+      Address to fetch token balances for
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ResponseField name="Return Value" type="object">
+  <Expandable title="properties">
+    <ResponseField name="balances" type="Array">
+      Array of token balance objects, sorted by USD value, containing:
+      <Expandable title="properties">
+        <ResponseField name="address" type="string">
+          The token contract address
+        </ResponseField>
+        <ResponseField name="symbol" type="string">
+          The token symbol
+        </ResponseField>
+        <ResponseField name="amount" type="string">
+          The token balance amount
+        </ResponseField>
+        <ResponseField name="amountUsd" type="string">
+          The USD value of the token balance
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="isPending" type="boolean">
+      Whether the balance data is still loading
+    </ResponseField>
+    <ResponseField name="error" type="Error">
+      Any error that occurred while fetching balances
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Card
+    title="useRewardKitBalances TSDoc"
+    icon="file-lines"
+    href="https://rewardkit.boost.xyz/functions/useRewardKitBalances.html"
+  >
+    See in-depth technical documentation
+  </Card>
+
+## Basic Usage
+
+Here's a simple example showing how to display token balances:
+
+```typescript
+import { useRewardKitBalances } from '@boostxyz/reward-kit-react';
+
+function TokenBalanceList() {
+  const { balances, isPending, error } = useRewardKitBalances({
+    address: "0x123..." // User's wallet address
+  });
+
+  if (isPending) {
+    return <div>Loading balances...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
+  return (
+    <div>
+      <h2>Your Token Balances</h2>
+      <ul>
+        {balances.map((balance) => (
+          <li key={balance.address}>
+            {balance.symbol}: {balance.amount}
+            <span>(${balance.amountUsd})</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+## Advanced Implementation
+
+Here's a more comprehensive example showing balance tracking with formatting:
+
+```typescript
+import { useRewardKitBalances } from '@boostxyz/reward-kit-react';
+import { formatUnits } from 'viem';
+
+function TokenBalanceTracker() {
+  const {
+    balances,
+    isPending,
+    error
+  } = useRewardKitBalances({
+    address: "0x123..."
+  });
+
+  // Format currency values
+  const formatUsd = (value: string) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(Number(value));
+  };
+
+  // Handle different states
+  if (isPending) {
+    return <div>Fetching token balances...</div>;
+  }
+
+  if (error) {
+    return (
+      <div className="error">
+        Failed to load balances: {error.message}
+      </div>
+    );
+  }
+
+  if (balances.length === 0) {
+    return <div>No relevant token balances found</div>;
+  }
+
+  return (
+    <div className="balance-container">
+      <h2>Token Balances</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Token</th>
+            <th>Balance</th>
+            <th>Value (USD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {balances.map((balance) => (
+            <tr key={balance.address}>
+              <td>{balance.symbol}</td>
+              <td>{balance.amount}</td>
+              <td>{formatUsd(balance.amountUsd)}</td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={2}>Total Value:</td>
+            <td>
+              {formatUsd(
+                balances.reduce((sum, b) =>
+                  sum + Number(b.amountUsd), 0
+                ).toString()
+              )}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  );
+}
+```
+
+## With Real-time Updates
+
+Example showing how to implement real-time balance updates:
+
+```typescript
+import { useRewardKitBalances } from '@boostxyz/reward-kit-react';
+import { useEffect, useState } from 'react';
+
+function RealTimeBalances() {
+  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const {
+    balances,
+    isPending,
+    refetch
+  } = useRewardKitBalances({
+    address: "0x123..."
+  });
+
+  // Refresh balances every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+      setLastUpdate(new Date());
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [refetch]);
+
+  return (
+    <div>
+      <div className="header">
+        <h2>Live Token Balances</h2>
+        <small>
+          Last updated: {lastUpdate.toLocaleTimeString()}
+        </small>
+      </div>
+
+      {isPending ? (
+        <div>Refreshing balances...</div>
+      ) : (
+        <ul>
+          {balances.map((balance) => (
+            <li key={balance.address}>
+              <strong>{balance.symbol}</strong>
+              <div>Amount: {balance.amount}</div>
+              <div>Value: ${balance.amountUsd}</div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+```
+
+The hook automatically integrates with RewardKit's configuration through `RewardKitProvider` and filters balances to only show tokens relevant to the configured boosts. It also handles multi-chain scenarios by tracking balances across all chains where boosts are active.

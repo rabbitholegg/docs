@@ -1,0 +1,242 @@
+---
+title: "useTokenBalances"
+description: "Fetch token balances and metadata"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A React Query hook that fetches token balances across multiple blockchain networks for a given address. The hook handles batched requests, error handling, and supports filtering of spam tokens.
+
+<ParamField body="params" type="object">
+  <Expandable title="properties">
+    <ParamField path="chainIds" type="number[]">
+      Array of blockchain network IDs to query. If not provided, uses all configured boost protocol chains
+    </ParamField>
+    <ParamField path="address" type="Address">
+      Address to fetch token balances for
+    </ParamField>
+    <ParamField path="excludeSpamTokens" type="boolean">
+      Whether to filter out suspected spam tokens from the results
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ResponseField name="Return Value" type="UseQueryResult<Record<string, GetBalancesResponse>>">
+  <Expandable title="properties">
+    <ResponseField name="data" type="object">
+      Object mapping chain IDs to balance responses:
+      <Expandable title="properties">
+        <ResponseField name="balances" type="array">
+          Array of token balance objects
+        </ResponseField>
+        <ResponseField name="isFudged" type="boolean">
+          Whether the balance values have been adjusted for testing
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="isPending" type="boolean">
+      Whether the query is loading
+    </ResponseField>
+    <ResponseField name="error" type="Error">
+      Any error that occurred during the query
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Card
+  title="useTokenBalances TSDoc"
+  icon="file-lines"
+  href="https://rewardkit.boost.xyz/functions/useTokenBalances.html"
+>
+  See in-depth technical documentation
+</Card>
+
+
+## Basic Usage
+
+Here's a simple example of fetching token balances:
+
+```typescript
+import { useTokenBalances } from '@boostxyz/reward-kit-react';
+
+function TokenBalances() {
+  const { data, isPending } = useTokenBalances({
+    address: "0x123...",
+    chainIds: [1, 137] // Ethereum and Polygon
+  });
+
+  if (isPending) return <div>Loading balances...</div>;
+
+  return (
+    <div>
+      {/* Display Ethereum balances */}
+      <h2>Ethereum Balances</h2>
+      {data?.[1]?.balances.map((balance, index) => (
+        <div key={index}>
+          {balance.symbol}: {balance.amount}
+        </div>
+      ))}
+
+      {/* Display Polygon balances */}
+      <h2>Polygon Balances</h2>
+      {data?.[137]?.balances.map((balance, index) => (
+        <div key={index}>
+          {balance.symbol}: {balance.amount}
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+## Multi-Chain Balance Display
+
+Example showing how to handle balances across multiple chains:
+
+```typescript
+import { useTokenBalances } from '@boostxyz/reward-kit-react';
+import { formatUnits } from 'viem';
+
+function MultiChainBalances() {
+  const networks = {
+    1: "Ethereum",
+    137: "Polygon",
+    42161: "Arbitrum"
+  };
+
+  const {
+    data,
+    isPending,
+    error
+  } = useTokenBalances({
+    address: "0x123...",
+    chainIds: Object.keys(networks).map(Number),
+    excludeSpamTokens: true
+  });
+
+  if (error) {
+    return <div>Error fetching balances: {error.message}</div>;
+  }
+
+  return (
+    <div className="balances-container">
+      {isPending ? (
+        <div>Loading balances across networks...</div>
+      ) : (
+        Object.entries(networks).map(([chainId, networkName]) => (
+          <div key={chainId} className="network-balances">
+            <h3>{networkName}</h3>
+            <div className="tokens-grid">
+              {data?.[chainId]?.balances.map((token, index) => (
+                <div key={index} className="token-balance">
+                  <img
+                    src={token.logoUrl}
+                    alt={token.symbol}
+                    width={24}
+                  />
+                  <div className="token-info">
+                    <span>{token.symbol}</span>
+                    <span className="amount">
+                      {formatUnits(token.amount, token.decimals)}
+                    </span>
+                    {token.amountUsd && (
+                      <span className="usd-value">
+                        ${Number(token.amountUsd).toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
+```
+
+## With Real-time Updates
+
+Example implementing automatic balance updates:
+
+```typescript
+import { useTokenBalances } from '@boostxyz/reward-kit-react';
+import { useEffect, useState } from 'react';
+
+function LiveBalanceTracker() {
+  const [totalValue, setTotalValue] = useState("0");
+
+  const {
+    data,
+    isPending,
+    refetch
+  } = useTokenBalances({
+    address: "0x123...",
+    chainIds: [1, 137],
+    excludeSpamTokens: true
+  });
+
+  // Update total value whenever data changes
+  useEffect(() => {
+    if (!data) return;
+
+    const total = Object.values(data).reduce((sum, chainData) => {
+      const chainTotal = chainData.balances.reduce((chainSum, token) => {
+        return chainSum + Number(token.amountUsd || 0);
+      }, 0);
+      return sum + chainTotal;
+    }, 0);
+
+    setTotalValue(total.toFixed(2));
+  }, [data]);
+
+  // Refresh every 30 seconds
+  useEffect(() => {
+    const interval = setInterval(() => {
+      refetch();
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, [refetch]);
+
+  return (
+    <div>
+      <div className="portfolio-header">
+        <h2>Portfolio Value</h2>
+        <span className="total-value">
+          ${totalValue}
+        </span>
+        {isPending && <span>Updating...</span>}
+      </div>
+
+      {Object.entries(data || {}).map(([chainId, chainData]) => (
+        <div key={chainId} className="chain-section">
+          <h3>Chain {chainId}</h3>
+          <div className="token-list">
+            {chainData.balances
+              .sort((a, b) => Number(b.amountUsd) - Number(a.amountUsd))
+              .map((token, idx) => (
+                <div key={idx} className="token-row">
+                  <span>{token.symbol}</span>
+                  <span>${token.amountUsd}</span>
+                </div>
+              ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+The hook includes built-in features such as:
+- Batched requests to prevent API overload
+- 30-second stale time for caching
+- Automatic testnet handling based on configuration
+- Spam token filtering
+- Address validation before making requests
+
+It integrates with the RewardKit configuration to respect testnet settings and uses the configured API URL for requests.

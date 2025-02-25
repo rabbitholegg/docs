@@ -1,0 +1,204 @@
+---
+title: "useRewardKit"
+description: "Configure, style, and manipulate the RewardKit UI"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A hook that provides access to RewardKit's context values and methods.
+
+<ResponseField name="Return Value" type="RewardKitContextValue">
+  <Expandable title="properties">
+    <ResponseField name="config" type="RewardKitConfig">
+      Current RewardKitConfig configuration for displaying Boosts
+    </ResponseField>
+    <ResponseField name="theme" type="CSSProperties">
+      Current theme CSS variables
+    </ResponseField>
+    <ResponseField name="isModalOpen" type="boolean">
+      Current modal visibility state
+    </ResponseField>
+    <ResponseField name="changeTheme" type="function">
+      Updates RewardKit theme variables
+    </ResponseField>
+    <ResponseField name="openModal" type="function">
+      Opens the RewardKit modal
+    </ResponseField>
+    <ResponseField name="closeModal" type="function">
+      Closes the RewardKit modal
+    </ResponseField>
+    <ResponseField name="toggleModal" type="function">
+      Toggles modal visibility
+    </ResponseField>
+    <ResponseField name="configure" type="function">
+      Updates RewardKit configuration
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Card
+  title="useRewardKit TSDoc"
+  icon="file-lines"
+  href="https://rewardkit.boost.xyz/functions/useRewardKit.html"
+>
+  See in-depth technical documentation
+</Card>
+
+## Basic Usage
+
+Here's how to use the hook in your application:
+
+```tsx
+import { RewardKitProvider, useRewardKit } from '@boostxyz/reward-kit-react';
+
+// Wrap your app with the provider
+function App() {
+  return (
+    <RewardKitProvider
+      theme={{ primary: "#4F46E5" }}
+      config={{
+        testnetsEnabled: true,
+        creatorAddress: "0x123..."
+      }}
+    >
+      <YourComponents />
+    </RewardKitProvider>
+  );
+}
+
+// Use the context in your components
+function RewardsButton() {
+  const { openModal, configure } = useRewardKit();
+
+  const handleClick = () => {
+    configure({ chainId: 1 }); // Update configuration
+    openModal(); // Open the modal
+  };
+
+  return <button onClick={handleClick}>View Rewards</button>;
+}
+```
+
+## Theme Customization
+
+Example showing theme customization:
+
+```tsx
+import { RewardKitProvider, useRewardKit } from '@boostxyz/reward-kit-react';
+
+function ThemedRewards() {
+  const customTheme = {
+    primary: "#4F46E5",
+    card: "#FFFFFF",
+    accent: "#1F2937",
+    secondary: "#E5E7EB"
+  };
+
+  return (
+    <RewardKitProvider theme={customTheme}>
+      <ThemeController />
+    </RewardKitProvider>
+  );
+}
+
+function ThemeController() {
+  const { changeTheme } = useRewardKit();
+
+  const toggleDarkMode = () => {
+    changeTheme({
+      card: "#1F2937",
+      accent: "#FFFFFF",
+      primary: "#374151"
+    });
+  };
+
+  return (
+    <button onClick={toggleDarkMode}>
+      Switch to Dark Mode
+    </button>
+  );
+}
+```
+
+## Configuration Management
+
+Example demonstrating dynamic configuration:
+
+```tsx
+import { RewardKitProvider, useRewardKit } from '@boostxyz/reward-kit-react';
+
+function ConfigurableRewards() {
+  const initialConfig = {
+    testnetsEnabled: process.env.NODE_ENV === 'development',
+    creatorAddress: "0x123..."
+  };
+
+  return (
+    <RewardKitProvider config={initialConfig}>
+      <RewardsFilter />
+    </RewardKitProvider>
+  );
+}
+
+function RewardsFilter() {
+  const { configure, openModal } = useRewardKit();
+
+  const filterByChain = (chainId: number) => {
+    configure({
+      chainId,
+      targetContract: "0x456..."
+    });
+    openModal();
+  };
+
+  return (
+    <div>
+      <button onClick={() => filterByChain(1)}>
+        Ethereum Rewards
+      </button>
+      <button onClick={() => filterByChain(137)}>
+        Polygon Rewards
+      </button>
+    </div>
+  );
+}
+```
+
+## Modal State Management
+
+Example showing modal state control:
+
+```tsx
+import { RewardKitProvider, useRewardKit } from '@boostxyz/reward-kit-react';
+
+function ModalController() {
+  const {
+    isModalOpen,
+    openModal,
+    closeModal,
+    toggleModal
+  } = useRewardKit();
+
+  return (
+    <div>
+      <button onClick={openModal}>
+        Open Rewards
+      </button>
+
+      <button onClick={toggleModal}>
+        {isModalOpen ? 'Close' : 'Open'} Rewards
+      </button>
+
+      {isModalOpen && (
+        <button onClick={closeModal}>
+          Close Modal
+        </button>
+      )}
+
+      <div>Modal is {isModalOpen ? 'open' : 'closed'}</div>
+    </div>
+  );
+}
+```
