@@ -1,0 +1,245 @@
+---
+title: "useRewardKitProfile"
+description: "Fetch token balances and metadata"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A React Query hook that fetches a user's complete RewardKit profile, including their active, claimed, and claimable boosts, along with total USD values.
+
+<ParamField body="params" type="object">
+  <Expandable title="properties">
+    <ParamField path="creatorAddress" type="Address">
+      Ethereum address of the boost creator to filter by
+    </ParamField>
+    <ParamField path="claimantAddress" type="Address">
+      Ethereum address of the user whose profile to fetch
+    </ParamField>
+    <ParamField path="budgetAccount" type="Address">
+      Filter boosts by funding account address
+    </ParamField>
+    <ParamField path="targetContract" type="Address">
+      Filter boosts by target contract address
+    </ParamField>
+    <ParamField path="tokens" type="Array<(`${chainId}:${Address}` | `${chainId}:${Address}:${tokenId}`)>">
+      Only show offers with actions targeting tokens, in the format `chainId:address`, or `chainId:address:tokenId`
+    </ParamField>
+    <ParamField path="chainId" type="number">
+      Filter boosts by specific blockchain network ID
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+<ResponseField name="Return Value" type="UseQueryResult<RewardKitProfileResponse>">
+  <Expandable title="properties">
+    <ResponseField name="data" type="object">
+      <Expandable title="properties">
+        <ResponseField name="activeBoosts" type="array">
+          List of currently active boosts
+        </ResponseField>
+        <ResponseField name="claimedBoosts" type="array">
+          List of boosts already claimed by the user
+        </ResponseField>
+        <ResponseField name="claimableBoosts" type="array">
+          List of boosts available for claiming
+        </ResponseField>
+        <ResponseField name="totalClaimedAmountUsd" type="number">
+          Total USD value of all claimed boosts
+        </ResponseField>
+        <ResponseField name="totalClaimableAmountUsd" type="number">
+          Total USD value of all claimable boosts
+        </ResponseField>
+      </Expandable>
+    </ResponseField>
+    <ResponseField name="isPending" type="boolean">
+      Whether the query is loading
+    </ResponseField>
+    <ResponseField name="error" type="Error">
+      Any error that occurred during the query
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<Card
+  title="useRewardKitProfile TSDoc"
+  icon="file-lines"
+  href="https://rewardkit.boost.xyz/functions/useRewardKitProfile.html"
+>
+  See in-depth technical documentation
+</Card>
+
+## Basic Usage
+
+Here's a simple example of fetching and displaying a user's profile:
+
+```tsx
+import { useRewardKitProfile } from '@reward-kit/react';
+
+function UserProfile() {
+  const { data, isPending } = useRewardKitProfile({
+    claimantAddress: "0x123...",
+    creatorAddress: "0x456..."
+  });
+
+  if (isPending) return <div>Loading profile...</div>;
+
+  return (
+    <div>
+      <h2>Your Rewards</h2>
+      <div className="stats">
+        <p>Claimable: ${data?.totalClaimableAmountUsd}</p>
+        <p>Claimed: ${data?.totalClaimedAmountUsd}</p>
+      </div>
+      <div className="boosts">
+        <p>Active Boosts: {data?.activeBoosts.length}</p>
+        <p>Available to Claim: {data?.claimableBoosts.length}</p>
+      </div>
+    </div>
+  );
+}
+```
+
+## With Filtering
+
+Example showing how to use multiple filters:
+
+```tsx
+import { useRewardKitProfile } from '@reward-kit/react';
+
+function FilteredProfile() {
+  const {
+    data,
+    isPending,
+    error
+  } = useRewardKitProfile({
+    claimantAddress: "0x123...",
+    chainId: 1, // Ethereum mainnet
+    tokens: [
+      "1:0xabc...def", // Specific token
+      "1:0xghi...jkl:1" // Specific NFT
+    ],
+    targetContract: "0x789..."
+  });
+
+  if (error) {
+    return <div>Error loading profile: {error.message}</div>;
+  }
+
+  return (
+    <div className="profile-container">
+      {isPending ? (
+        <div>Loading filtered profile...</div>
+      ) : (
+        <>
+          <div className="amounts">
+            <h3>Total Values</h3>
+            <p>Available: ${data?.totalClaimableAmountUsd}</p>
+            <p>Claimed: ${data?.totalClaimedAmountUsd}</p>
+          </div>
+
+          <div className="boosts-lists">
+            <div>
+              <h3>Claimable Boosts</h3>
+              <ul>
+                {data?.claimableBoosts.map((boost, index) => (
+                  <li key={index}>
+                    {boost.name} - ${boost.amountUsd}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <h3>Active Boosts</h3>
+              <ul>
+                {data?.activeBoosts.map((boost, index) => (
+                  <li key={index}>
+                    {boost.name} - Expires: {boost.expirationDate}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+```
+
+## With Auto-Refresh
+
+Example implementing real-time profile updates:
+
+```tsx
+import { useRewardKitProfile } from '@reward-kit/react';
+import { useState, useEffect } from 'react';
+
+function LiveProfile() {
+  const [lastUpdate, setLastUpdate] = useState(new Date());
+
+  const {
+    data,
+    isPending,
+    refetch
+  } = useRewardKitProfile({
+    claimantAddress: "0x123..."
+  });
+
+  // Hook automatically refreshes every 30 seconds
+  useEffect(() => {
+    if (!isPending) {
+      setLastUpdate(new Date());
+    }
+  }, [data, isPending]);
+
+  return (
+    <div className="live-profile">
+      <div className="header">
+        <h2>Live Rewards Status</h2>
+        <small>Last updated: {lastUpdate.toLocaleTimeString()}</small>
+        <button onClick={() => refetch()}>
+          Refresh Now
+        </button>
+      </div>
+
+      {isPending ? (
+        <div>Updating profile...</div>
+      ) : (
+        <div className="profile-data">
+          <div className="totals">
+            <h3>Total Available</h3>
+            <p className="amount">
+              ${data?.totalClaimableAmountUsd.toFixed(2)}
+            </p>
+          </div>
+
+          <div className="boost-counts">
+            <div>
+              Active: {data?.activeBoosts.length}
+            </div>
+            <div>
+              Claimable: {data?.claimableBoosts.length}
+            </div>
+            <div>
+              Claimed: {data?.claimedBoosts.length}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+The hook features:
+- Automatic address normalization and validation
+- Infinite stale time with 30-second refresh interval
+- Comprehensive filtering options
+- USD value aggregation
+- Type-safe response validation using Valibot
+- Integration with RewardKit's API URL configuration
+
+It's designed to be the primary data source for displaying a user's complete RewardKit profile and reward status.
