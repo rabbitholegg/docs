@@ -1,0 +1,203 @@
+---
+title: "Reward"
+description: "Headless component system for displaying Reward information"
+---
+
+import RewardKitDisclaimer from '/snippets/reward-kit-disclaimer.mdx';
+
+<RewardKitDisclaimer />
+
+A headless compound component system for displaying reward-related information including amounts, USD values, and token images. The system uses a context-based approach to share reward data between components.
+
+## Reward.Root
+
+The container component that provides reward data context to child components.
+
+<ParamField body="props" type="object">
+  <Expandable title="properties">
+    <ParamField path="id" type="string" required>
+      The unique identifier of the reward boost in format "chainId:contractAddress:boostId"
+    </ParamField>
+    <ParamField path="address" type="string">
+      Ethereum address of the reward claimant
+    </ParamField>
+    <ParamField path="children" type="ReactNode | ((queryResult: UseQueryResult) => React.React.Node)">
+      React children or render function that receives reward data, for more information see the [useRewardKitBoost documentation](https://docs.boost.xyz/v2/reward-kit/hooks/useRewardKitBoost).
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Reward.Amount
+
+Component that displays the reward amount with optional formatting.
+
+<ParamField body="props" type="object">
+  <Expandable title="properties">
+    <ParamField path="abbreviated" type="boolean" default="true">
+      Whether to show abbreviated numbers (e.g., 2.7M vs 2700000)
+    </ParamField>
+    <ParamField path="withSymbol" type="boolean" default="true">
+      Whether to show the token symbol (e.g., 2.7M ETH)
+    </ParamField>
+    <ParamField path="fallback" type="ReactNode">
+      Content to show when reward data is unavailable
+    </ParamField>
+    <ParamField path="children" type="ReactNode | ((value: RewardKitIncentive) => React.ReactNode)">
+      Optional render function for custom display, given the underlying reward data from the Boost
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Reward.USD
+
+Component that displays the USD value of rewards.
+
+<ParamField body="props" type="object">
+  <Expandable title="properties">
+    <ParamField path="abbreviated" type="boolean" default="true">
+      Whether to round to 2 decimal places, for example, either 2.00 or 2.00002
+    </ParamField>
+    <ParamField path="withSymbol" type="boolean" default="true">
+      Whether to show the USD symbol ($)
+    </ParamField>
+    <ParamField path="fallback" type="ReactNode">
+      Content to show when USD value is unavailable
+    </ParamField>
+    <ParamField path="children" type="((value: number) => React.React.Node)">
+      Optional render function receiving the raw USD value
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Reward.Image
+
+Component that displays the reward token's image.
+
+<ParamField body="props" type="object">
+  <Expandable title="properties">
+    <ParamField path="fallback" type="ReactNode">
+      Content to show when image is unavailable
+    </ParamField>
+    <ParamField path="...imgProps" type="HTMLImageAttributes">
+      Any valid HTML img element attributes
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+## Basic Usage
+
+Here's a simple example showing all components together:
+
+```tsx
+import { Reward } from '@boostxyz/reward-kit-react';
+
+function RewardDisplay() {
+  return (
+    <Reward.Root id="1:0x123...789:0" address="0xabc...def">
+      <div className="reward-container">
+        <Reward.Image
+          className="token-icon"
+          alt="Token"
+        />
+        <Reward.Amount abbreviated withSymbol />
+        <Reward.USD withSymbol />
+      </div>
+    </Reward.Root>
+  );
+}
+```
+
+## With Custom Rendering
+
+Example using render props for custom displays:
+
+```tsx
+import { Reward } from '@boostxyz/reward-kit-react';
+
+function CustomRewardDisplay() {
+  return (
+    <Reward.Root id="1:0x123...789:0">
+      {(reward) => (
+        <div className="custom-reward">
+          {reward.isPending ? (
+            <LoadingSpinner />
+          ) : (
+            <>
+              <Reward.Amount>
+                {(incentive) => (
+                  <div className="amount-display">
+                    <h3>Available Reward</h3>
+                    <p>{incentive.rewardAmount} {incentive.tokenSymbol}</p>
+                  </div>
+                )}
+              </Reward.Amount>
+
+              <Reward.USD>
+                {(usdValue) => (
+                  <div className="usd-value">
+                    Current Value: ${usdValue.toFixed(2)}
+                  </div>
+                )}
+              </Reward.USD>
+            </>
+          )}
+        </div>
+      )}
+    </Reward.Root>
+  );
+}
+```
+
+## With Fallback Content
+
+Example showing fallback handling:
+
+```tsx
+import { Reward } from '@boostxyz/reward-kit-react';
+
+function RewardWithFallbacks() {
+  return (
+    <Reward.Root id="1:0x123...789:0">
+      <div className="reward-info">
+        <Reward.Image
+          fallback={<DefaultTokenIcon />}
+          className="token-image"
+        />
+
+        <Reward.Amount
+          abbreviated
+          withSymbol
+          fallback="Reward amount unavailable"
+        />
+
+        <Reward.USD
+          abbreviated
+          withSymbol
+          fallback="USD value pending"
+        />
+      </div>
+    </Reward.Root>
+  );
+}
+```
+
+## Type Definitions
+
+<ResponseField name="RewardContextValue" type="UseQueryResult<RewardKitBoostResponse>">
+  The full query result containing boost data and status
+  <Expandable title="properties">
+    <ResponseField name="data" type="RewardKitBoostResponse">
+      The boost response data
+    </ResponseField>
+    <ResponseField name="isPending" type="boolean">
+      Whether the query is loading
+    </ResponseField>
+    <ResponseField name="error" type="Error">
+      Any error that occurred
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+The Reward components use React Context internally to share data and must be used within a `Reward.Root` component. The system automatically handles loading states, error cases, and data formatting.
+
+Each component can be used independently or together, allowing for flexible layouts and custom rendering through render props.

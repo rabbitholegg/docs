@@ -436,7 +436,8 @@
       "version": "v2",
       "pages": [
         "v2/reward-kit/components/RewardKitProvider",
-        "v2/reward-kit/components/RewardKitButton"
+        "v2/reward-kit/components/RewardKitButton",
+        "v2/reward-kit/components/Reward"
       ]
     },
     {
