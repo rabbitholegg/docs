@@ -432,13 +432,6 @@
       ]
     },
     {
-      "group": "",
-      "version": "v2",
-      "pages": [
-        "v2/api-reference/rewardkit-openapi-json"
-      ]
-    },
-    {
       "group": "Components",
       "version": "v2",
       "pages": [
