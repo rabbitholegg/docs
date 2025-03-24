@@ -121,7 +121,7 @@ The extracted value will be used to calculate the reward amount, which is then c
     action,
     allowList,
     incentives: [
-      core.ERC20PeggedVariableCriteriaIncentive({
+      core.ERC20PeggedVariableCriteriaIncentiveV2({
         asset: '0xRewardToken', // token that will be distributed
         peg: '0xPeggedToken' || zeroAddress, // token to peg the reward value to (e.g., USDC or ETH)
         maxReward: parseUnits("100", 6), // maximum reward per claim in pegged token value

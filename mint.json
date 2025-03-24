@@ -29,7 +29,7 @@
     "name": "boost.xyz",
     "url": "https://boost.xyz"
   },
-  "openapi": "https://api.boost.xyz/openapi.json",
+  "openapi": "https://api-v2.boost.xyz/openapi.json",
   "primaryTab": {
     "name": "Documentation"
   },
@@ -429,6 +429,13 @@
         "v2/reward-kit/overview",
         "v2/reward-kit/installation",
         "v2/reward-kit/quick-start"
+      ]
+    },
+    {
+      "group": "",
+      "version": "v2",
+      "pages": [
+        "v2/api-reference/rewardkit-openapi-json"
       ]
     },
     {
