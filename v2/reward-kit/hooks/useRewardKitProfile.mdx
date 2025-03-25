@@ -75,7 +75,7 @@ A React Query hook that fetches a user's complete RewardKit profile, including t
 Here's a simple example of fetching and displaying a user's profile:
 
 ```tsx
-import { useRewardKitProfile } from '@reward-kit/react';
+import { useRewardKitProfile } from '@boostxyz/reward-kit-react';
 
 function UserProfile() {
   const { data, isPending } = useRewardKitProfile({
@@ -106,7 +106,7 @@ function UserProfile() {
 Example showing how to use multiple filters:
 
 ```tsx
-import { useRewardKitProfile } from '@reward-kit/react';
+import { useRewardKitProfile } from '@boostxyz/reward-kit-react';
 
 function FilteredProfile() {
   const {
@@ -174,7 +174,7 @@ function FilteredProfile() {
 Example implementing real-time profile updates:
 
 ```tsx
-import { useRewardKitProfile } from '@reward-kit/react';
+import { useRewardKitProfile } from '@boostxyz/reward-kit-react';
 import { useState, useEffect } from 'react';
 
 function LiveProfile() {
