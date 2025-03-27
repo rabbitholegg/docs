@@ -419,7 +419,7 @@
       "group": "",
       "version": "v2",
       "pages": [
-        "v2/api-reference/openapi-json"
+        "v2/api-reference/openapi/openapi-json"
       ]
     },
     {
@@ -458,6 +458,6 @@
   ],
   "footerSocials": {
     "x": "https://x.com/boost_xyz",
-    "github": "https://github.com/rabbitholegg"
+    "github": "https://github.com/orgs/boostxyz/repositories?type=source&q=visibility%3Apublic+archived%3Afalse"
   }
 }
