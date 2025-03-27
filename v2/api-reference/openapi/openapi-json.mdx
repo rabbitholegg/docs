@@ -17,16 +17,16 @@ url: "https://api-v2.boost.xyz/openapi.json"
 ## Available Boost Endpoints
 
 <CardGroup cols={2}>
-  <Card title="List Boosts" icon="list" href="/v2/api-reference/boost/get-a-list-of-boosts">
+  <Card title="List Boosts" icon="list" href="/v2/api-reference/boost/get-boosts">
     `GET /boosts` - Get a paginated list of boosts with optional filters
   </Card>
-  <Card title="Get Boost Details" icon="circle-info" href="/v2/api-reference/boost/get-details-for-a-boost">
+  <Card title="Get Boost Details" icon="circle-info" href="/v2/api-reference/boost/get-boost">
     `GET /boosts/{id}` - Get detailed information about a specific boost
   </Card>
-  <Card title="Boost Activity" icon="chart-line" href="/v2/api-reference/boost/get-events-for-a-specific-boost">
+  <Card title="Boost Activity" icon="chart-line" href="/v2/api-reference/boost/get-boost-activity">
     `GET /boosts/{id}/activity` - Get activity history for a boost
   </Card>
-  <Card title="Claim Signatures" icon="signature" href="/v2/api-reference/boost/validate-&-sign-data-for-a-claim">
+  <Card title="Claim Signatures" icon="signature" href="/v2/api-reference/boost/get-signatures">
     `GET /signatures` - Get signatures required for boost claims
   </Card>
 </CardGroup>
@@ -34,16 +34,16 @@ url: "https://api-v2.boost.xyz/openapi.json"
 ## Available RewardKit Endpoints
 
 <CardGroup cols={2}>
-  <Card title="List RewardKit rewards" icon="list" href="/v2/api-reference/rewardkit/get-a-list-of-reward-kit-rewards">
+  <Card title="List RewardKit rewards" icon="list" href="/v2/api-reference/rewardkit/get-reward-kit-rewards">
     `GET /reward-kit/boosts` - Get a paginated list of RewardKit rewards
   </Card>
-  <Card title="Get RewardKit profile" icon="user" href="/v2/api-reference/boost/get-details-for-a-boost">
+  <Card title="Get RewardKit profile" icon="user" href="/v2/api-reference/boost/get-reward-kit">
     `GET /reward-kit?claimantAddress=0x...` - Get a user's RewardKit profile
   </Card>
-  <Card title="Get RewardKit reward detail" icon="circle-info" href="/v2/api-reference/rewardkit/get-a-single-rewardkit-reward">
+  <Card title="Get RewardKit reward detail" icon="circle-info" href="/v2/api-reference/rewardkit/get-reward-kit-reward">
     `GET /reward-kit/boosts/{id}` - Retrieve details on a reward, optionally providing a claimant address to decorate with additional claim context.
   </Card>
-  <Card title="Generate Claim Signature" icon="signature" href="/v2/api-reference/rewardkit/try-to-get-claim-signature-without-known-transaction">
+  <Card title="Generate Claim Signature" icon="signature" href="/v2/api-reference/rewardkit/find-tx-and-get-signature">
     `GET /transactions` - Generate a claim signature without a known transaction hash
   </Card>
 </CardGroup>
