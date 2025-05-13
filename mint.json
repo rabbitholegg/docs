@@ -29,7 +29,6 @@
     "name": "boost.xyz",
     "url": "https://boost.xyz"
   },
-  "openapi": "https://api-v2.boost.xyz/openapi.json",
   "primaryTab": {
     "name": "Documentation"
   },
@@ -37,6 +36,7 @@
     {
       "name": "API Reference",
       "url": "v1/api-reference",
+			"openapi": "https://api.boost.xyz/openapi.json",
       "version": "v1"
     },
     {
